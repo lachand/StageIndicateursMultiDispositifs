@@ -1,5 +1,3 @@
-from kivy.uix.widget import Widget
-
 class Utilisateur():
 
     def __init__(self, id, couleur):
@@ -8,6 +6,8 @@ class Utilisateur():
         self.validate=False
         self.Critere=[]
         self.CurrentImage=None
+        self.LiensPersos=0
+        self.LiensAutres=0
 
     def getID(self):
         return self.ID
@@ -29,9 +29,20 @@ class Utilisateur():
 
     def Validate(self):
         self.validate = True
+        print self.validate
 
     def Unvalidate(self):
         self.validate = False
+        print self.validate
 
     def getValidate(self):
         return self.validate
+
+    def nbCriteres(self):
+        return len(self.Critere)
+
+    def nbLiensPersos(self):
+        return self.LiensPersos
+
+    def nbLiensAutres(self):
+        return self.LiensAutres

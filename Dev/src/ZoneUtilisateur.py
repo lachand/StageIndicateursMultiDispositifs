@@ -30,10 +30,12 @@ class ZoneUtilisateur(Widget):
             print self.Couleur
             clav = Clavier(self.Utilisateur,self.Couleur,position,rotation)
             self.parent.add_widget(clav)
-        self.Utilisateur.Validate()
+        if self.collide_point(touch.x,touch.y):
+            self.Utilisateur.Validate()
 
     def on_touch_up(self, touch):
-        self.Utilisateur.Unvalidate()
+        if self.collide_point(touch.x,touch.y):
+            self.Utilisateur.Unvalidate()
 
     def getID(self):
         return self.Utilisateur.getID()

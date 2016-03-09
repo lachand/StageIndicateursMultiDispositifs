@@ -1,5 +1,4 @@
 from kivy.uix.scatter import Scatter
-from kivy.lang import Builder
 from kivy.uix.colorpicker import Color
 from kivy.graphics import Ellipse
 from kivy.uix.label import Label
@@ -41,16 +40,16 @@ class Critere(Scatter):
 
     def update(self, dt):
         from Animal import Animal
-        from Utilisateur import Utilisateur
         cpt = 0
         for child in self.parent.children :
             if child.__class__ == Animal and child.collide_point(self.center[0],self.center[1]) and child.getUtilisateur() != None:
                 self.addLink(child.getID(), child.getUtilisateur().getID())
                 child.removeUtilisateur()
 
-        for utilisateur in self.parent.Utilisateur:
+        for utilisateur in self.parent.getUtilisateurs():
             if utilisateur.getValidate() == True:
                 cpt += 1
+        print cpt
         if cpt == 4 :
             for child in self.parent.children :
                 if child.__class__ == Critere and child.collide_point(self.center[0],self.center[1]) and child != self:

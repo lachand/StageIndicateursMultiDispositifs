@@ -15,6 +15,7 @@ from kivy.properties import ListProperty
 from kivy.config import Config
 from importlib import import_module
 from kivy.lang import Builder
+from Groupe import Groupe
 
 Builder.load_file('template.kv')
 
@@ -32,11 +33,11 @@ class Table(Widget):
 
     def initialisation(self, size):
         self.size = size.size
-        ##
-        self.addUser(1,[float(255/255.), float(189/255.), float(1/255.)])
-        self.addUser(2,[float(0/255.), float(25/255.), float(255/255.)])
-        self.addUser(3,[float(12/255.), float(127/255.), float(0/255.)])
-        self.addUser(4,[float(204/255.), float(8/255.), float(0/255.)])
+        self.groupe=Groupe(1)
+        self.groupe.addUtilisateur(Utilisateur(1,[float(255/255.), float(189/255.), float(1/255.)]))
+        self.groupe.addUtilisateur(Utilisateur(2,[float(0/255.), float(25/255.), float(255/255.)]))
+        self.groupe.addUtilisateur(Utilisateur(3,[float(12/255.), float(127/255.), float(0/255.)]))
+        self.groupe.addUtilisateur(Utilisateur(4,[float(204/255.), float(8/255.), float(0/255.)]))
         ##
         r1 = self.get_root_window().width-200
         r2 = self.get_root_window().height-200
@@ -52,10 +53,10 @@ class Table(Widget):
         self.addAnimal(9,"Images/2092.jpg",[r1,r2])
         self.addAnimal(10,"Images/2094.jpg",[r1,r2])
         ##
-        self.addIndicateur(ZoneUtilisateur(self.Utilisateur[0],[self.width,0]))
-        self.addIndicateur(ZoneUtilisateur(self.Utilisateur[1],[self.width,self.height]))
-        self.addIndicateur(ZoneUtilisateur(self.Utilisateur[2],[0,self.height]))
-        self.addIndicateur(ZoneUtilisateur(self.Utilisateur[3],[0,0]))
+        self.addIndicateur(ZoneUtilisateur(self.getUtilisateur(1),[self.width,0]))
+        self.addIndicateur(ZoneUtilisateur(self.getUtilisateur(2),[self.width,self.height]))
+        self.addIndicateur(ZoneUtilisateur(self.getUtilisateur(3),[0,self.height]))
+        self.addIndicateur(ZoneUtilisateur(self.getUtilisateur(4),[0,0]))
         self.add_widget(Links())
 
     def addUser(self, id, couleur):
@@ -84,10 +85,10 @@ class Table(Widget):
                 child.update(dt)
 
     def getUtilisateur(self, id):
-        for utilisateur in self.Utilisateur :
-            if utilisateur.getID() == id :
-                return utilisateur
-        return None
+        return self.groupe.getUtilisateur(id)
+
+    def getUtilisateurs(self):
+        return self.groupe.getUtilisateurs()
 
 class TableApp(App):
     def build(self):
