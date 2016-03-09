@@ -11,6 +11,8 @@ class Configuration():
         ## Gestion des Images
         with open("..\cfg\ConfigSimple.json") as json_data:
             data = json.decode(json_data.read())
+
+        maxLvl = int(data["Images"]["MaxLvl"])
         for lvl in data["Images"]["Src"]:
             table.ImagesFolder.insert(int(lvl["Lvl"]),lvl["Src"])
             table.ObjectifCriteres.insert(int(lvl["Lvl"]),int(lvl["Objectif"]))
@@ -36,7 +38,8 @@ class Configuration():
             elif indicateur["Nom"] == "ProgressObjectif":
                 table.addIndicateur(ProgressObjectif(table.getObjectifCriteres(int(indicateur["Lvl"])),
                                                      [int(indicateur["Position"]["x"])*table.size[0]/100,
-                                                      int(indicateur["Position"]["y"])*table.size[1]/100]))
+                                                      int(indicateur["Position"]["y"])*table.size[1]/100],
+                                                     maxLvl))
             ## Indicateurs : Liens colores
             elif indicateur["Nom"] == "Links":
                 if indicateur["Colored"] == "True":

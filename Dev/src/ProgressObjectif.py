@@ -4,11 +4,12 @@ from kivy.uix.button import Button
 
 class ProgressObjectif(Widget):
 
-    def __init__(self, objectif, position):
+    def __init__(self, objectif, position, niveauMax):
         Widget.__init__(self)
         self.Objectif = objectif
         self.Avancement = 0
         self.Niveau = 0
+        self.NiveauMax = niveauMax
         btnNouvelleImage = Button(text='Nouvelles images',size=[200,50])
         btnNouvelleImage.pos=(position[0]- btnNouvelleImage.width / 2,position[1])
         btnNouvelleImage.bind(on_press=self.callback)
@@ -22,7 +23,7 @@ class ProgressObjectif(Widget):
         self.pb.value = self.Avancement
 
     def callback(instance,niveau):
-        if instance.Avancement == instance.Objectif :
+        if instance.Avancement == instance.Objectif  and instance.Niveau < instance.NiveauMax:
+            instance.Niveau += 1
             instance.Objectif = instance.parent.nouvellesImages(instance.Niveau)
             instance.pb.max = instance.Objectif
-            instance.Niveau += 1

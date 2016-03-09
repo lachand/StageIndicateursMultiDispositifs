@@ -16,9 +16,9 @@
   "Images":{
     "MaxLvl":"2",
     "Src": [
-      {"Lvl":"0","Src":"Images\\lvl1\\*.jpg","Objectif":"3"},
-      {"Lvl":"1","Src":"Images\\lvl2\\*.jpg","Objectif":"12"},
-      {"Lvl":"2","Src":"Images\\lvl3\\*.jpg","Objectif":"12"}
+      {"Lvl":"0","Src":"Images\\lvl1\\*.jpg","Objectif":"4"},
+      {"Lvl":"1","Src":"Images\\lvl2\\*.jpg","Objectif":"6"},
+      {"Lvl":"2","Src":"Images\\lvl3\\*.jpg","Objectif":"6"}
     ]
   },
   "Indicateurs":[
@@ -51,12 +51,12 @@
     {
       "Nom":"Links",
       "Source":"1",
-      "Colored":"False"
+      "Colored":"True"
     },
     {
       "Nom":"Criteres",
       "Source":"1",
-      "Colored":"False"
+      "Colored":"True"
     }
   ]
 }
