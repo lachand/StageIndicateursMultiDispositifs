@@ -1,0 +1,32 @@
+#:kivy 1.0.9
+
+<Critere>:
+    Scatter:
+        do_rotation: True
+        do_scale: True
+        do_translation: True
+
+<Animal>:
+    #canvas:
+    #    Color:
+    #        rgb: self.Couleur
+    #    Rectangle:
+    #        size: self.width+10, self.height+10
+    Scatter:
+        do_rotation: True
+        do_scale: True
+        do_translation: True
+
+<Table>:
+    size: root.size
+    pos: root.pos
+
+<ZoneUtilisateur>:
+    pos: self.Position
+    size: self.Taille
+    canvas:
+        Color:
+            rgb: self.Couleur
+        Ellipse:
+            pos: self.Position
+            size: self.Taille

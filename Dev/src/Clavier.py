@@ -1,0 +1,30 @@
+from kivy.uix.scatter import Scatter
+from kivy.uix.textinput import TextInput
+from Utilisateur import Utilisateur
+from Critere import Critere
+
+class Clavier(Scatter):
+
+    def __init__(self, utilisateur, couleur, position, angle):
+        Scatter.__init__(self)
+        self.Utilisateur = utilisateur
+        self.ID = self.Utilisateur.getID()
+        self.couleur = couleur
+        self.pos = position
+        self.rotation = angle
+        ti = TextInput(size_hint=(None, None),backgroud_color=self.couleur,multiline=False)
+        ti.bind(on_text_validate=self.validate)
+        self.do_rotation = False
+        self.do_scale = False
+        self.do_translation = False
+        self.add_widget(ti)
+
+    def validate(self, value):
+        if len(value.text)!=0:
+            couleur = 0,0,0
+            for fils in self.parent.children :
+                if fils.__class__ == Utilisateur and fils.getID() == self.ID:
+                    couleur = fils.getCouleur
+            critere = Critere(0,value.text, self.Utilisateur, self.pos)
+            self.parent.add_widget(critere)
+        self.parent.remove_widget(self)
