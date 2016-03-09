@@ -26,5 +26,5 @@ class Clavier(Scatter):
                 if fils.__class__ == Utilisateur and fils.getID() == self.ID:
                     couleur = fils.getCouleur
             critere = Critere(0,value.text, self.Utilisateur, self.pos)
-            self.parent.add_widget(critere)
+            self.parent.addCritere(critere)
         self.parent.remove_widget(self)

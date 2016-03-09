@@ -21,6 +21,12 @@ class Utilisateur():
         else :
             return True
 
+    def addLink(self, id):
+        if id != self.ID:
+            self.LiensAutres += 1
+        else:
+            self.LiensPersos += 1
+
     def addCritere(self, idCritere):
         self.Critere.append(idCritere)
 
@@ -29,11 +35,9 @@ class Utilisateur():
 
     def Validate(self):
         self.validate = True
-        print self.validate
 
     def Unvalidate(self):
         self.validate = False
-        print self.validate
 
     def getValidate(self):
         return self.validate

@@ -4,7 +4,6 @@ from random import randint
 from ZoneUtilisateur import ZoneUtilisateur
 from kivy.uix.colorpicker import Color
 from kivy.graphics import Rectangle
-#Builder.load_file('template.kv')
 
 class Animal(Scatter):
 
@@ -52,4 +51,3 @@ class Animal(Scatter):
             if child.__class__ == ZoneUtilisateur and child.collide_point(self.center[0],self.center[1]):
                 if self.Current_utilisateur == None :
                     self.setUtilisateur(child.getUtilisateur())
-                    print self.Couleur

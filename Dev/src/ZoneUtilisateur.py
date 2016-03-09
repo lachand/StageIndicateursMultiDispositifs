@@ -1,8 +1,5 @@
 from kivy.uix.widget import Widget
-from kivy.lang import Builder
 from Clavier import Clavier
-#Builder.load_file('template.kv')
-
 
 class ZoneUtilisateur(Widget):
 
@@ -27,7 +24,6 @@ class ZoneUtilisateur(Widget):
             elif self.getID() == 4:
                 position = 200,self.get_root_window().height/2
                 rotation = -90
-            print self.Couleur
             clav = Clavier(self.Utilisateur,self.Couleur,position,rotation)
             self.parent.add_widget(clav)
         if self.collide_point(touch.x,touch.y):
