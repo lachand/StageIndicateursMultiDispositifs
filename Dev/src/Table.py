@@ -31,28 +31,14 @@ class Table(Widget):
         configuration = Configuration()
         self.size = size.size
         self.groupe = Groupe(1)
-        self.groupe.addUtilisateur(Utilisateur(1, [float(255/255.), float(189/255.), float(1/255.)]))
-        self.groupe.addUtilisateur(Utilisateur(2, [float(0/255.), float(25/255.), float(255/255.)]))
-        self.groupe.addUtilisateur(Utilisateur(3, [float(12/255.), float(127/255.), float(0/255.)]))
-        self.groupe.addUtilisateur(Utilisateur(4, [float(204/255.), float(8/255.), float(0/255.)]))
-        ##
-        r1 = self.get_root_window().width-200
-        r2 = self.get_root_window().height-200
-        ##
-        #self.addAnimal(1, "Images/2084.jpg", [r1, r2])
-        #self.addAnimal(2, "Images/2085.jpg", [r1, r2])
-        #self.addAnimal(3, "Images/2086.jpg", [r1, r2])
-        #self.addAnimal(4, "Images/2087.jpg", [r1, r2])
-        #self.addAnimal(5, "Images/2088.jpg", [r1, r2])
-        #self.addAnimal(6, "Images/2089.jpg", [r1, r2])
-        ##
+
+        configuration.setConfig("..\cfg\ConfigSimple.json",self)
+
         self.addIndicateur(ZoneUtilisateur(self.getUtilisateur(1), [self.width ,0]))
         self.addIndicateur(ZoneUtilisateur(self.getUtilisateur(2), [self.width, self.height]))
         self.addIndicateur(ZoneUtilisateur(self.getUtilisateur(3), [0, self.height]))
         self.addIndicateur(ZoneUtilisateur(self.getUtilisateur(4), [0, 0]))
         self.add_widget(Links())
-
-        configuration.setConfig("..\cfg\ConfigSimple.json",self)
 
         self.pb = ProgressObjectif(self.ObjectifCriteres[self.CurrentLvl],[self.width/2, 0])
         self.add_widget(self.pb)
@@ -76,7 +62,6 @@ class Table(Widget):
         print self.ImagesFolder[lvl]
         for images in Images:
             self.addAnimal(len(self.Animaux)+1,images,[r1,r2])
-
 
     def addAnimal(self, id, image, pos):
         animal = Animal(id, image, pos)
