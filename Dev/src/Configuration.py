@@ -1,5 +1,7 @@
 import demjson as json
-from pprint import pprint
+from ZoneUtilisateur import ZoneUtilisateur
+from ProgressObjectif import ProgressObjectif
+from Links import Links
 
 class Configuration():
 
@@ -24,3 +26,27 @@ class Configuration():
             cptUtilisateurs += 1
 
         ## Gestion des Indicateurs
+        for indicateur in data["Indicateurs"]:
+            ## Indicateur : Zone personnelle
+            if indicateur["Nom"] == "ZoneUtilisateur":
+                table.addIndicateur(ZoneUtilisateur(table.getUtilisateur(int(indicateur["Source"])),
+                                                    [int(indicateur["Position"]["x"])*table.size[0]/100,
+                                                     int(indicateur["Position"]["y"])*table.size[1]/100]))
+            ## Indicateur : Progres de l'objectif
+            elif indicateur["Nom"] == "ProgressObjectif":
+                table.addIndicateur(ProgressObjectif(table.getObjectifCriteres(int(indicateur["Lvl"])),
+                                                     [int(indicateur["Position"]["x"])*table.size[0]/100,
+                                                      int(indicateur["Position"]["y"])*table.size[1]/100]))
+            ## Indicateurs : Liens colores
+            elif indicateur["Nom"] == "Links":
+                if indicateur["Colored"] == "True":
+                    table.setColoredLinks(True)
+                else:
+                    table.setColoredLinks(False)
+
+            ## Indicateurs : criteres colores
+            elif indicateur["Nom"] == "Criteres":
+                if indicateur["Colored"] == "True":
+                    table.setColoredCriteres(True)
+                else:
+                    table.setColoredCriteres(False)

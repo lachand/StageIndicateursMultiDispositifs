@@ -5,7 +5,7 @@ from kivy.uix.label import Label
 
 class Critere(Scatter):
 
-    def __init__(self, id, texte, createur, position):
+    def __init__(self, id, texte, createur, position, colored):
         Scatter.__init__(self)
         self.pos = position
         self.Nb_Liaisons = 0
@@ -16,7 +16,10 @@ class Critere(Scatter):
         self.Links = []
         self.size = len(texte)*1+100,50
         with self.canvas:
-            Color(self.couleur[0],self.couleur[1],self.couleur[2])
+            if colored :
+                Color(self.couleur[0],self.couleur[1],self.couleur[2])
+            else:
+                Color(.25,.25,.25)
             Ellipse(size=(self.size))
             Label(text=self.Texte,halign='left',size=self.size)
 

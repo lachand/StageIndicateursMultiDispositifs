@@ -12,7 +12,7 @@ class Clavier(Scatter):
         self.couleur = couleur
         self.pos = position
         self.rotation = angle
-        ti = TextInput(size_hint=(None, None),backgroud_color=self.couleur,multiline=False)
+        ti = TextInput(size_hint=(None, None),backgroud_color=self.couleur,multiline=False,size=(100,30))
         ti.bind(on_text_validate=self.validate)
         self.do_rotation = False
         self.do_scale = False
@@ -25,6 +25,6 @@ class Clavier(Scatter):
             for fils in self.parent.children :
                 if fils.__class__ == Utilisateur and fils.getID() == self.ID:
                     couleur = fils.getCouleur
-            critere = Critere(0,value.text, self.Utilisateur, self.pos)
+            critere = Critere(0,value.text, self.Utilisateur, self.pos, self.parent.getColoredCriteres())
             self.parent.addCritere(critere)
         self.parent.remove_widget(self)

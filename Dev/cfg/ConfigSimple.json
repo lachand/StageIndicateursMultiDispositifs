@@ -1,39 +1,62 @@
 {
   "Utilisateurs": [
     {
-      "Couleur": {"r": "1","g": "0,7411764705882353","b": "0,003921568627451"}
+      "Couleur": {"r": "1","g": "0.7411764705882353","b": "0.003921568627451"}
     },
     {
-      "Couleur": {"r": "0","g": "0,1111111111111111","b": "1"}
+      "Couleur": {"r": "0","g": "0.1111111111111111","b": "1"}
     },
     {
-      "Couleur": {"r": "0,0470588235294118","g": "0,4980392156862745","b": "0"}
+      "Couleur": {"r": "0.0470588235294118","g": "0.4980392156862745","b": "0"}
     },
     {
-      "Couleur": {"r": "0.8","g": "0,0313725490196078","b": "0"}
+      "Couleur": {"r": "0.8","g": "0.0313725490196078","b": "0"}
     }
   ],
-  "Images":"Images/",
+  "Images":{
+    "MaxLvl":"2",
+    "Src": [
+      {"Lvl":"0","Src":"Images\\lvl1\\*.jpg","Objectif":"3"},
+      {"Lvl":"1","Src":"Images\\lvl2\\*.jpg","Objectif":"12"},
+      {"Lvl":"2","Src":"Images\\lvl3\\*.jpg","Objectif":"12"}
+    ]
+  },
   "Indicateurs":[
     {
       "Nom":"ZoneUtilisateur",
       "Source":"1",
-      "Position":{"x": 0,"y": 0}
+      "Position":{"x": 100,"y": 0}
     },
     {
       "Nom":"ZoneUtilisateur",
       "Source":"2",
-      "Position":{"x": 0,"y": 100}
+      "Position":{"x": 100,"y": 100 }
     },
     {
       "Nom":"ZoneUtilisateur",
       "Source":"3",
-      "Position":{"x": 100,"y": 100}
+      "Position":{"x": 0,"y": 100}
     },
     {
       "Nom":"ZoneUtilisateur",
       "Source":"4",
-      "Position":{"x": 100,"y": 0}
+      "Position":{"x": 0,"y": 0}
+    },
+    {
+      "Nom":"ProgressObjectif",
+      "Source":"1",
+      "Lvl":"0",
+      "Position":{"x": 50,"y": 0}
+    },
+    {
+      "Nom":"Links",
+      "Source":"1",
+      "Colored":"False"
+    },
+    {
+      "Nom":"Criteres",
+      "Source":"1",
+      "Colored":"False"
     }
   ]
 }

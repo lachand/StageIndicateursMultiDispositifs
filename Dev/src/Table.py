@@ -1,16 +1,15 @@
 from Animal import Animal
 from Utilisateur import Utilisateur
 from Critere import Critere
-from ZoneUtilisateur import ZoneUtilisateur
-from Links import Links
 from kivy.clock import Clock
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.config import Config
 from kivy.lang import Builder
 from Groupe import Groupe
-from ProgressObjectif import ProgressObjectif
 from Configuration import Configuration
+from Links import Links
+from ProgressObjectif import ProgressObjectif
 import glob
 
 Builder.load_file('template.kv')
@@ -26,22 +25,15 @@ class Table(Widget):
     ImagesFolder = []
     ObjectifCriteres = []
     CurrentLvl = 0
+    ColoredLinks = True
+    ColoredCriteres = True
 
     def initialisation(self, size):
         configuration = Configuration()
         self.size = size.size
         self.groupe = Groupe(1)
-
         configuration.setConfig("..\cfg\ConfigSimple.json",self)
-
-        self.addIndicateur(ZoneUtilisateur(self.getUtilisateur(1), [self.width ,0]))
-        self.addIndicateur(ZoneUtilisateur(self.getUtilisateur(2), [self.width, self.height]))
-        self.addIndicateur(ZoneUtilisateur(self.getUtilisateur(3), [0, self.height]))
-        self.addIndicateur(ZoneUtilisateur(self.getUtilisateur(4), [0, 0]))
-        self.add_widget(Links())
-
-        self.pb = ProgressObjectif(self.ObjectifCriteres[self.CurrentLvl],[self.width/2, 0])
-        self.add_widget(self.pb)
+        self.add_widget(Links(self.ColoredLinks))
 
     def addUser(self, id, couleur):
         self.Utilisateur.append(Utilisateur(id, couleur))
@@ -82,6 +74,15 @@ class Table(Widget):
             elif child.__class__ == ProgressObjectif:
                 child.update(dt)
 
+    def getColoredCriteres(self):
+        return self.ColoredCriteres
+
+    def setColoredLinks(self,colored):
+        self.ColoredLinks = colored
+
+    def setColoredCriteres(self,colored):
+        self.ColoredCriteres = colored
+
     def getUtilisateur(self, id):
         return self.groupe.getUtilisateur(id)
 
@@ -90,6 +91,9 @@ class Table(Widget):
 
     def getNbCriteres(self):
         return len(self.Criteres)
+
+    def getObjectifCriteres(self,lvl):
+        return self.ObjectifCriteres[lvl]
 
 class TableApp(App):
     def build(self):
