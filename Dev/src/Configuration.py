@@ -5,14 +5,14 @@ from ZoneUtilisateur import ZoneUtilisateur
 
 
 class Configuration:
-    def __init__(self):
-        pass
+    def __init__(self, config_file):
+        self.config_file = config_file
 
-    def setConfigTable(self, configFile, table):
+    def setConfigTable(self, table):
         from Utilisateur import Utilisateur
 
         # Gestion des Images
-        with open(configFile) as json_data:
+        with open(self.config_file) as json_data:
             data = json.decode(json_data.read())
 
         maxLvl = int(data["Images"]["MaxLvl"])
@@ -57,6 +57,6 @@ class Configuration:
                 else:
                     table.setColoredCriteres(False)
 
-    def setConfigGenerateur(self, configFile, generateur):
-        with open(configFile) as json_data:
+    def setConfigGenerateur(self, generateur):
+        with open(self.config_file) as json_data:
             data = json.decode(json_data.read())

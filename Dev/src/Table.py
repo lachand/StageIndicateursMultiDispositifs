@@ -33,10 +33,10 @@ class Table(Widget):
     AvancementObjectif = []
 
     def initialisation(self, size):
-        configuration = Configuration()
+        configuration = Configuration("..\cfg\ConfigSimple.json")
         self.size = size.size
         self.groupe = Groupe(1)
-        configuration.setConfigTable("..\cfg\ConfigSimple.json", self)
+        configuration.setConfigTable(self)
         self.add_widget(Links(self.ColoredLinks))
 
     def addCritere(self, critere):
@@ -109,9 +109,9 @@ class TableApp(App):
         self.table.initialisation(self.root_window)
 
     def on_stop(self):
-        configuration = Configuration()
+        configuration = Configuration("..\cfg\ConfigSimple.json")
         generateur = GenerateurRapport()
-        configuration.setConfigGenerateur("..\cfg\ConfigSimple.json", generateur)
+        configuration.setConfigGenerateur( generateur)
         generateur.generation(self.table)
 
 
