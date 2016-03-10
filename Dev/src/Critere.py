@@ -39,8 +39,9 @@ class Critere(Scatter):
         if self.Createur.getid() != concept.Createur.getid() :
             if not self.fusionneurs.__contains__(concept.Createur) :
                 self.fusionneurs.append(concept.Createur)
+
         for fusionneur in concept.fusionneurs :
-            if self.Createur.getid() != fusionneur :
+            if self.Createur.getid() != fusionneur.getid() :
                 if not self.fusionneurs.__contains__(fusionneur) :
                     self.fusionneurs.append(fusionneur)
 
