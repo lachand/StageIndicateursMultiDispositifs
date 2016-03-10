@@ -41,12 +41,11 @@ class Animal(Scatter):
     def getUtilisateur(self):
         return self.Current_utilisateur
 
-    def getID(self):
+    def getid(self):
         return self.ID
 
     def update(self, dt):
-        from Utilisateur import Utilisateur
         for child in self.parent.children:
             if child.__class__ == ZoneUtilisateur and child.collide_point(self.center[0], self.center[1]):
-                if isinstance(self.Current_utilisateur, Utilisateur):
+                if self.Current_utilisateur is None:
                     self.setUtilisateur(child.getUtilisateur())
