@@ -1,10 +1,10 @@
-from kivy.uix.scatter import Scatter
-from kivy.uix.colorpicker import Color
 from kivy.graphics import Ellipse
+from kivy.uix.colorpicker import Color
 from kivy.uix.label import Label
+from kivy.uix.scatter import Scatter
+
 
 class Critere(Scatter):
-
     def __init__(self, id, texte, createur, position, colored):
         Scatter.__init__(self)
         self.pos = position
@@ -12,30 +12,30 @@ class Critere(Scatter):
         self.ID = id
         self.Texte = texte
         self.Createur = createur
-        self.couleur = self.Createur.getCouleur()
+        self.couleur = self.Createur.getcouleur()
         self.Links = []
-        self.size = len(texte)*1+100,50
+        self.size = len(texte) * 1 + 100, 50
         with self.canvas:
-            if colored :
-                Color(self.couleur[0],self.couleur[1],self.couleur[2])
+            if colored:
+                Color(self.couleur[0], self.couleur[1], self.couleur[2])
             else:
-                Color(.25,.25,.25)
-            Ellipse(size=(self.size))
-            Label(text=self.Texte,halign='left',size=self.size)
+                Color(.25, .25, .25)
+            Ellipse(size=self.size)
+            Label(text=self.Texte, halign='left', size=self.size)
 
     def addLink(self, id_img, id_usr):
         estDedans = False
-        for lien in self.Links :
+        for lien in self.Links:
             if id_img == lien[0]:
                 estDedans = True
                 if id_usr == lien[1]:
-                    self.Links.remove([id_img,id_usr])
-        if estDedans == False :
+                    self.Links.remove([id_img, id_usr])
+        if not estDedans:
             self.Links.append([id_img, id_usr])
 
-    def fuseConcept(self,concept):
+    def fuseConcept(self, concept):
         for lien in concept.Links:
-            self.addLink(lien[0],lien[1])
+            self.addLink(lien[0], lien[1])
         for fils in self.parent.children:
             if fils.__class__ == Critere and fils.collide_widget(self) and fils != self:
                 self.parent.remove_widget(fils)
@@ -43,16 +43,17 @@ class Critere(Scatter):
     def update(self, dt):
         from Animal import Animal
         cpt = 0
-        for child in self.parent.children :
-            if child.__class__ == Animal and child.collide_point(self.center[0],self.center[1]) and child.getUtilisateur() != None:
-                self.addLink(child.getID(), child.getUtilisateur().getID())
-                child.getUtilisateur().addLink(self.Createur.getID())
+        for child in self.parent.children:
+            if child.__class__ == Animal and child.collide_point(self.center[0],
+                                                                 self.center[1]) and child.getUtilisateur() != None:
+                self.addLink(child.getid(), child.getUtilisateur().getid())
+                child.getUtilisateur().addLink(self.Createur.getid())
                 child.removeUtilisateur()
 
         for utilisateur in self.parent.getUtilisateurs():
-            if utilisateur.getValidate() == True:
+            if utilisateur.getValidate():
                 cpt += 1
-        if cpt == 4 :
-            for child in self.parent.children :
-                if child.__class__ == Critere and child.collide_point(self.center[0],self.center[1]) and child != self:
+        if cpt == 4:
+            for child in self.parent.children:
+                if child.__class__ == Critere and child.collide_point(self.center[0], self.center[1]) and child != self:
                     self.fuseConcept(child)

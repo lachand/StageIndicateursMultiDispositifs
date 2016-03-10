@@ -1,18 +1,17 @@
-class Groupe():
-
-    def __init__(self,id):
+class Groupe:
+    def __init__(self, id):
         self.ID = id
-        self.Utilisateurs=[]
+        self.Utilisateurs = []
 
     def getID(self):
         return self.ID
 
-    def addUtilisateur(self,utilisateur):
+    def addUtilisateur(self, utilisateur):
         self.Utilisateurs.append(utilisateur)
 
-    def getUtilisateur(self,id):
-        for utilisateur in self.Utilisateurs :
-            if utilisateur.getID() == id :
+    def getUtilisateur(self, id):
+        for utilisateur in self.Utilisateurs:
+            if utilisateur.getid() == id:
                 return utilisateur
         return None
 

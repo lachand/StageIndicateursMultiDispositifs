@@ -1,23 +1,25 @@
-from Animal import Animal
-from Utilisateur import Utilisateur
-from Critere import Critere
-from kivy.clock import Clock
+import glob
+
 from kivy.app import App
-from kivy.uix.widget import Widget
+from kivy.clock import Clock
 from kivy.config import Config
 from kivy.lang import Builder
-from Groupe import Groupe
+from kivy.uix.widget import Widget
+
+from Animal import Animal
 from Configuration import Configuration
+from Critere import Critere
+from GenerateurRapport import GenerateurRapport
+from Groupe import Groupe
 from Links import Links
 from ProgressObjectif import ProgressObjectif
-from GenerateurRapport import GenerateurRapport
-import glob
 
 Builder.load_file('template.kv')
 
 Config.set('kivy', 'keyboard_mode', 'multi')
 Config.set('kivy', 'keyboard_layout', 'keyboard.json')
 Config.set('graphics', 'fullscreen', 'auto')
+
 
 class Table(Widget):
     Utilisateur = []
@@ -34,27 +36,24 @@ class Table(Widget):
         configuration = Configuration()
         self.size = size.size
         self.groupe = Groupe(1)
-        configuration.setConfigTable("..\cfg\ConfigSimple.json",self)
+        configuration.setConfigTable("..\cfg\ConfigSimple.json", self)
         self.add_widget(Links(self.ColoredLinks))
-
-    def addUser(self, id, couleur):
-        self.Utilisateur.append(Utilisateur(id, couleur))
 
     def addCritere(self, critere):
         self.add_widget(critere)
         self.Criteres.append(critere)
 
-    def nouvellesImages(self,niveau):
+    def nouvellesImages(self, niveau):
         self.addAnimalLvl(niveau)
         return self.ObjectifCriteres[self.CurrentLvl]
 
-    def addAnimalLvl(self,lvl):
-        r1 = self.get_root_window().width-200
-        r2 = self.get_root_window().height-200
+    def addAnimalLvl(self, lvl):
+        r1 = self.get_root_window().width - 200
+        r2 = self.get_root_window().height - 200
         Images = glob.glob(self.ImagesFolder[lvl])
         print self.ImagesFolder[lvl]
         for images in Images:
-            self.addAnimal(len(self.Animaux)+1,images,[r1,r2])
+            self.addAnimal(len(self.Animaux) + 1, images, [r1, r2])
 
     def addAnimal(self, id, image, pos):
         animal = Animal(id, image, pos)
@@ -81,10 +80,10 @@ class Table(Widget):
     def getColoredCriteres(self):
         return self.ColoredCriteres
 
-    def setColoredLinks(self,colored):
+    def setColoredLinks(self, colored):
         self.ColoredLinks = colored
 
-    def setColoredCriteres(self,colored):
+    def setColoredCriteres(self, colored):
         self.ColoredCriteres = colored
 
     def getUtilisateur(self, id):
@@ -96,13 +95,14 @@ class Table(Widget):
     def getNbCriteres(self):
         return len(self.Criteres)
 
-    def getObjectifCriteres(self,lvl):
+    def getObjectifCriteres(self, lvl):
         return self.ObjectifCriteres[lvl]
+
 
 class TableApp(App):
     def build(self):
         self.table = Table()
-        Clock.schedule_interval(self.table.update, 1.0/60.0)
+        Clock.schedule_interval(self.table.update, 1.0 / 60.0)
         return self.table
 
     def on_start(self):
@@ -111,8 +111,9 @@ class TableApp(App):
     def on_stop(self):
         configuration = Configuration()
         generateur = GenerateurRapport()
-        configuration.setConfigGenerateur("..\cfg\ConfigSimple.json",generateur)
+        configuration.setConfigGenerateur("..\cfg\ConfigSimple.json", generateur)
         generateur.generation(self.table)
+
 
 if __name__ == '__main__':
     TableApp().run()

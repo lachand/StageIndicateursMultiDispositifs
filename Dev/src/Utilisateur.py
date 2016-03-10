@@ -1,29 +1,28 @@
-class Utilisateur():
-
-    def __init__(self, id, couleur,maxLvl):
+class Utilisateur:
+    def __init__(self, id, couleur, maxlvl):
         self.ID = id
         self.Couleur = couleur
-        self.validate=False
-        self.Critere=[]
-        self.NbCriteres=[0,0,0,0]
-        self.CurrentImage=None
-        self.LiensPersos=0
-        self.LiensAutres=0
-        self.MaxLvl = maxLvl
+        self.validate = False
+        self.Critere = []
+        self.NbCriteres = [0, 0, 0, 0]
+        self.CurrentImage = None
+        self.LiensPersos = 0
+        self.LiensAutres = 0
+        self.MaxLvl = maxlvl
 
-        for i in range(0,maxLvl):
+        for i in range(0, maxlvl):
             self.NbCriteres.append(0)
 
-    def getID(self):
+    def getid(self):
         return self.ID
 
-    def getCouleur(self):
+    def getcouleur(self):
         return self.Couleur
 
     def hasCritere(self, idCritere):
         if self.Critere.getitem(idCritere).size == 0:
             return False
-        else :
+        else:
             return True
 
     def addLink(self, id):
@@ -35,7 +34,7 @@ class Utilisateur():
     def addCritere(self, idCritere):
         self.Critere.append(idCritere)
 
-    def setCurrentImage(self,idImage):
+    def setCurrentImage(self, idImage):
         self.CurrentImage = idImage
 
     def Validate(self):
@@ -53,7 +52,7 @@ class Utilisateur():
     def nbLiensPersos(self):
         return self.LiensPersos
 
-    def addCritereLvl(self,niveau):
+    def addCritereLvl(self, niveau):
         self.NbCriteres[niveau] += 1
 
     def nbLiensAutres(self):
