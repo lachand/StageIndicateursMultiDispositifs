@@ -42,19 +42,21 @@ class GenerateurRapport():
             values = {}
             labels = []
             data = []
+            colors = []
 
-            for i in range(0,len(table.getUtilisateurs())):
-                labels.append(str(i+1))
+            for i in range(1,len(table.getUtilisateurs())+1):
+                labels.append(str(i))
 
             for i in range(0,len(table.ObjectifCriteres)):
 
                 for utilisateur in table.getUtilisateurs():
                     values[i,utilisateur.getID()] = utilisateur.NbCriteres[i]
-                    print utilisateur.NbCriteres[i]
+                    colors.append('rgb('+str(int(utilisateur.Couleur[0]*255))+','+str(int(utilisateur.Couleur[1]*255))+','+str(int(utilisateur.Couleur[2]*255))+')')
 
                 data.append({
                     "values": self.getValues(values,i),
                     "labels": labels,
+                    'marker': {'colors': colors},
                     "domain": {"x": [0,1]},
                     "name": "Nombre de criteres",
                     "hoverinfo":"label+percent+name",
@@ -62,7 +64,6 @@ class GenerateurRapport():
                     "type": "pie"
                     })
 
-                print data[i]
                 fig = {
                     "data": [data[i]],
                     "layout": {
@@ -86,5 +87,5 @@ class GenerateurRapport():
         reponse = []
         for it in values.items():
             if it[0][0] == i :
-                reponse.append(it[1])
+                reponse.insert(it[0][1]-1,it[1])
         return reponse

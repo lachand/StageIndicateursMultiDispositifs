@@ -25,7 +25,7 @@ class ProgressObjectif(Widget):
         self.pb.value = self.Avancement
 
     def callback(instance,value):
-        if instance.Avancement == instance.Objectif and instance.Niveau < instance.NiveauMax:
+        if instance.Avancement >= instance.Objectif and instance.Niveau < instance.NiveauMax:
             table = instance.parent
             table.CurrentLvl += 1
             instance.Niveau += 1
