@@ -51,7 +51,6 @@ class Table(Widget):
         r1 = self.get_root_window().width - 200
         r2 = self.get_root_window().height - 200
         Images = glob.glob(self.ImagesFolder[lvl])
-        print self.ImagesFolder[lvl]
         for images in Images:
             self.addAnimal(len(self.Animaux) + 1, images, [r1, r2])
 
