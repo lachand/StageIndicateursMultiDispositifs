@@ -12,11 +12,13 @@ class Critere(Scatter):
         self.ID = id
         self.Texte = texte
         self.Createur = createur
+        self.fusionneurs = []
         self.couleur = self.Createur.getcouleur()
         self.Links = []
         self.size = len(texte) * 1 + 100, 50
+        self.colored = colored
         with self.canvas:
-            if colored:
+            if self.colored:
                 Color(self.couleur[0], self.couleur[1], self.couleur[2])
             else:
                 Color(.25, .25, .25)
@@ -34,6 +36,37 @@ class Critere(Scatter):
             self.Links.append([id_img, id_usr])
 
     def fuseConcept(self, concept):
+        if self.Createur.getid() != concept.Createur.getid() :
+            if not self.fusionneurs.__contains__(concept.Createur) :
+                self.fusionneurs.append(concept.Createur)
+        for fusionneur in concept.fusionneurs :
+            if self.Createur.getid() != fusionneur :
+                if not self.fusionneurs.__contains__(fusionneur) :
+                    self.fusionneurs.append(fusionneur)
+
+        cpt = 0
+        for fusionneur in self.fusionneurs:
+            with self.canvas:
+                if self.colored:
+                    Color(fusionneur.Couleur[0], fusionneur.Couleur[1], fusionneur.Couleur[2])
+                    Ellipse(size=self.size,angle_start=cpt,angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    cpt += 360/(len(self.fusionneurs)+1)
+                else:
+                    Color(.25, .25, .25)
+                    Ellipse(size=self.size,angle_start=cpt,angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    cpt += 360/(len(self.fusionneurs)+1)
+        with self.canvas:
+            if self.colored:
+                    Color(self.Createur.Couleur[0], self.Createur.Couleur[1], self.Createur.Couleur[2])
+                    Ellipse(size=self.size,angle_start=cpt,angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    cpt += 360/(len(self.fusionneurs)+1)
+            else:
+                    Color(.25, .25, .25)
+                    Ellipse(size=self.size,angle_start=cpt,angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    cpt += 360/(len(self.fusionneurs)+1)
+
+            Label(text=self.Texte, halign='left', size=self.size)
+
         for lien in concept.Links:
             self.addLink(lien[0], lien[1])
         for fils in self.parent.children:
