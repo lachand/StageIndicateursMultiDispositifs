@@ -36,13 +36,13 @@ class Critere(Scatter):
             self.Links.append([id_img, id_usr])
 
     def fuseConcept(self, concept):
-        if self.Createur.getid() != concept.Createur.getid() :
-            if not self.fusionneurs.__contains__(concept.Createur) :
+        if self.Createur.getid() != concept.Createur.getid():
+            if not self.fusionneurs.__contains__(concept.Createur):
                 self.fusionneurs.append(concept.Createur)
 
-        for fusionneur in concept.fusionneurs :
-            if self.Createur.getid() != fusionneur.getid() :
-                if not self.fusionneurs.__contains__(fusionneur) :
+        for fusionneur in concept.fusionneurs:
+            if self.Createur.getid() != fusionneur.getid():
+                if not self.fusionneurs.__contains__(fusionneur):
                     self.fusionneurs.append(fusionneur)
 
         cpt = 0
@@ -50,20 +50,20 @@ class Critere(Scatter):
             with self.canvas:
                 if self.colored:
                     Color(fusionneur.Couleur[0], fusionneur.Couleur[1], fusionneur.Couleur[2])
-                    Ellipse(size=self.size,angle_start=cpt,angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
                     cpt += 360/(len(self.fusionneurs)+1)
                 else:
                     Color(.25, .25, .25)
-                    Ellipse(size=self.size,angle_start=cpt,angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
                     cpt += 360/(len(self.fusionneurs)+1)
         with self.canvas:
             if self.colored:
                     Color(self.Createur.Couleur[0], self.Createur.Couleur[1], self.Createur.Couleur[2])
-                    Ellipse(size=self.size,angle_start=cpt,angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    Ellipse(size=self.size, angle_start=cpt ,angle_end=cpt+(360/(len(self.fusionneurs)+1)))
                     cpt += 360/(len(self.fusionneurs)+1)
             else:
                     Color(.25, .25, .25)
-                    Ellipse(size=self.size,angle_start=cpt,angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
                     cpt += 360/(len(self.fusionneurs)+1)
 
             Label(text=self.Texte, halign='left', size=self.size)
