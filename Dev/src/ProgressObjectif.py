@@ -10,9 +10,11 @@ class ProgressObjectif(Widget):
         self.Avancement = 0
         self.Niveau = 0
         self.NiveauMax = niveauMax
+
         btnNouvelleImage = Button(text='Nouvelles images',size=[200,50])
         btnNouvelleImage.pos=(position[0]- btnNouvelleImage.width / 2,position[1])
         btnNouvelleImage.bind(on_press=self.callback)
+
         self.pb = ProgressBar(max=self.Objectif, value=self.Avancement,size=[200,0])
         self.pb.pos=(position[0]-self.pb.width/2,position[1]+btnNouvelleImage.height)
         self.add_widget(btnNouvelleImage)
@@ -22,8 +24,10 @@ class ProgressObjectif(Widget):
         self.Avancement = self.parent.getNbCriteres()
         self.pb.value = self.Avancement
 
-    def callback(instance,niveau):
-        if instance.Avancement == instance.Objectif  and instance.Niveau < instance.NiveauMax:
+    def callback(instance,value):
+        if instance.Avancement == instance.Objectif and instance.Niveau < instance.NiveauMax:
+            table = instance.parent
+            table.CurrentLvl += 1
             instance.Niveau += 1
             instance.Objectif = instance.parent.nouvellesImages(instance.Niveau)
             instance.pb.max = instance.Objectif

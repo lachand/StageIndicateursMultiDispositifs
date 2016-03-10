@@ -1,24 +1,24 @@
 {
   "Utilisateurs": [
     {
-      "Couleur": {"r": "1","g": "0.7411764705882353","b": "0.003921568627451"}
+      "Couleur": {"r": "32","g": "119","b": "180"}
     },
     {
-      "Couleur": {"r": "0","g": "0.1111111111111111","b": "1"}
+      "Couleur": {"r": "255","g": "127","b": "14"}
     },
     {
-      "Couleur": {"r": "0.0470588235294118","g": "0.4980392156862745","b": "0"}
+      "Couleur": {"r": "214","g": "39","b": "40"}
     },
     {
-      "Couleur": {"r": "0.8","g": "0.0313725490196078","b": "0"}
+      "Couleur": {"r": "44","g": "160","b": "44"}
     }
   ],
   "Images":{
     "MaxLvl":"2",
     "Src": [
-      {"Lvl":"0","Src":"Images\\lvl1\\*.jpg","Objectif":"4"},
-      {"Lvl":"1","Src":"Images\\lvl2\\*.jpg","Objectif":"6"},
-      {"Lvl":"2","Src":"Images\\lvl3\\*.jpg","Objectif":"6"}
+      {"Lvl":"0","Src":"Images\\lvl1\\*.jpg","Objectif":"1"},
+      {"Lvl":"1","Src":"Images\\lvl2\\*.jpg","Objectif":"2"},
+      {"Lvl":"2","Src":"Images\\lvl3\\*.jpg","Objectif":"3"}
     ]
   },
   "Indicateurs":[

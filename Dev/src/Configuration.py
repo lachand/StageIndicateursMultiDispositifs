@@ -21,10 +21,10 @@ class Configuration():
         ## Gestion des Utilisateurs
         cptUtilisateurs = 1
         for utilisateur in data["Utilisateurs"]:
-            r = float(utilisateur["Couleur"]["r"])
-            g = float(utilisateur["Couleur"]["g"])
-            b = float(utilisateur["Couleur"]["b"])
-            table.groupe.addUtilisateur(Utilisateur(cptUtilisateurs,[r,g,b]))
+            r = float(utilisateur["Couleur"]["r"])/255.
+            g = float(utilisateur["Couleur"]["g"])/255.
+            b = float(utilisateur["Couleur"]["b"])/255.
+            table.groupe.addUtilisateur(Utilisateur(cptUtilisateurs,[r,g,b],maxLvl))
             cptUtilisateurs += 1
 
         ## Gestion des Indicateurs

@@ -1,13 +1,18 @@
 class Utilisateur():
 
-    def __init__(self, id, couleur):
+    def __init__(self, id, couleur,maxLvl):
         self.ID = id
         self.Couleur = couleur
         self.validate=False
         self.Critere=[]
+        self.NbCriteres=[0,0,0,0]
         self.CurrentImage=None
         self.LiensPersos=0
         self.LiensAutres=0
+        self.MaxLvl = maxLvl
+
+        for i in range(0,maxLvl):
+            self.NbCriteres.append(0)
 
     def getID(self):
         return self.ID
@@ -47,6 +52,9 @@ class Utilisateur():
 
     def nbLiensPersos(self):
         return self.LiensPersos
+
+    def addCritereLvl(self,niveau):
+        self.NbCriteres[niveau] += 1
 
     def nbLiensAutres(self):
         return self.LiensAutres

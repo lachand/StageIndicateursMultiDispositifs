@@ -28,6 +28,7 @@ class Table(Widget):
     CurrentLvl = 0
     ColoredLinks = True
     ColoredCriteres = True
+    AvancementObjectif = []
 
     def initialisation(self, size):
         configuration = Configuration()
@@ -45,7 +46,6 @@ class Table(Widget):
 
     def nouvellesImages(self,niveau):
         self.addAnimalLvl(niveau)
-        self.CurrentLvl += 1
         return self.ObjectifCriteres[self.CurrentLvl]
 
     def addAnimalLvl(self,lvl):
@@ -74,6 +74,9 @@ class Table(Widget):
                 child.update(dt)
             elif child.__class__ == ProgressObjectif:
                 child.update(dt)
+
+    def getCriteres(self):
+        return self.Criteres
 
     def getColoredCriteres(self):
         return self.ColoredCriteres
