@@ -10,6 +10,7 @@ from Groupe import Groupe
 from Configuration import Configuration
 from Links import Links
 from ProgressObjectif import ProgressObjectif
+from GenerateurRapport import GenerateurRapport
 import glob
 
 Builder.load_file('template.kv')
@@ -32,7 +33,7 @@ class Table(Widget):
         configuration = Configuration()
         self.size = size.size
         self.groupe = Groupe(1)
-        configuration.setConfig("..\cfg\ConfigSimple.json",self)
+        configuration.setConfigTable("..\cfg\ConfigSimple.json",self)
         self.add_widget(Links(self.ColoredLinks))
 
     def addUser(self, id, couleur):
@@ -105,15 +106,10 @@ class TableApp(App):
         self.table.initialisation(self.root_window)
 
     def on_stop(self):
-        import plotly.plotly as py
-        import plotly.graph_objs as go
-        py.sign_in('lachand', 'sxtpaevi0x') # Replace the username, and API key with your credentials.
-
-        trace = go.Bar(x=[2, 4, 6], y= [10, 12, 15])
-        data = [trace]
-        layout = go.Layout(title='A Simple Plot', width=800, height=640)
-        fig = go.Figure(data=data, layout=layout)
-        py.image.save_as(fig, filename='test.png')
+        configuration = Configuration()
+        generateur = GenerateurRapport()
+        configuration.setConfigGenerateur("..\cfg\ConfigSimple.json",generateur)
+        generateur.generation(self.table)
 
 if __name__ == '__main__':
     TableApp().run()

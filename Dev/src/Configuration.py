@@ -5,11 +5,11 @@ from Links import Links
 
 class Configuration():
 
-    def setConfig(self,configFile,table):
+    def setConfigTable(self,configFile,table):
         from Utilisateur import Utilisateur
 
         ## Gestion des Images
-        with open("..\cfg\ConfigSimple.json") as json_data:
+        with open(configFile) as json_data:
             data = json.decode(json_data.read())
 
         maxLvl = int(data["Images"]["MaxLvl"])
@@ -53,3 +53,7 @@ class Configuration():
                     table.setColoredCriteres(True)
                 else:
                     table.setColoredCriteres(False)
+
+    def setConfigGenerateur(self,configFile,generateur):
+        with open(configFile) as json_data:
+            data = json.decode(json_data.read())
