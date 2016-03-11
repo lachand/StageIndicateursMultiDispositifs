@@ -22,6 +22,9 @@ Config.set('graphics', 'fullscreen', 'auto')
 
 
 class Table(Widget):
+    """
+    A class to represent a table
+    """
     utilisateur = []
     animaux = []
     criteres = []
@@ -33,6 +36,10 @@ class Table(Widget):
     avancement_objectif = []
 
     def initialisation(self, size):
+        """
+        Initialize the table
+        :param size: the size of the screen
+        """
         configuration = Configuration("../cfg/ConfigSimple.json")
         self.size = size.size
         self.groupe = Groupe(1)
@@ -40,29 +47,54 @@ class Table(Widget):
         self.add_widget(Links(self.colored_links))
 
     def add_critere(self, critere):
+        """
+        Add a criterion to the table
+        :param critere: the criterion to add
+        """
         self.add_widget(critere)
         self.criteres.append(critere)
 
     def nouvelles_images(self, niveau):
+        """
+        Add images of a level to the table
+        :param niveau: the level of the images
+        """
         self.add_animal_lvl(niveau)
         return self.objectif_criteres[self.current_lvl]
 
     def add_animal_lvl(self, lvl):
+        """
+        Add images of a level to the table
+        :param lvl: the level of the images
+        """
         r1 = self.get_root_window().width - 200
         r2 = self.get_root_window().height - 200
-        Images = glob.glob(self.images_folder[lvl])
-        for images in Images:
+        images = glob.glob(self.images_folder[lvl])
+        for images in images:
             self.add_animal(len(self.animaux) + 1, images, [r1, r2])
 
     def add_animal(self, id, image, pos):
+        """
+        Add an animal to the table
+        :param id: the identifiant of the animal
+        :param image: the source of the image representing the animal
+        :param pos: the position where to add the animal
+        """
         animal = Animal(id, image, pos)
         self.animaux.append(id)
         self.add_widget(animal)
 
     def add_indicateur(self, indicateur):
+        """
+        Add an indicator to the table
+        :param indicateur: the indicator to add
+        """
         self.add_widget(indicateur)
 
     def update(self, dt):
+        """
+        Uodate the table
+        """
         for child in self.children:
             if child.__class__ == Critere:
                 child.update(dt)
@@ -74,6 +106,11 @@ class Table(Widget):
                 child.update(dt)
 
     def get_utilisateur(self, id):
+        """
+        Get a specific user of the table
+        :param id: the identifiant of the user to ger
+        :return: the user needed
+        """
         return self.groupe.get_utilisateur(id)
 
 

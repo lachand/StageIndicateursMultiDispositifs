@@ -5,7 +5,17 @@ from Critere import Critere
 
 
 class Clavier(Scatter):
+    """
+    A class representing a keyboard for criterion creation
+    """
     def __init__(self, utilisateur, couleur, position, angle):
+        """
+        Initialize the keyboard
+        :param utilisateur: the user wich is creating the criterion
+        :param couleur: the color of the user
+        :param position: the position of the keyboard
+        :param angle: the angle of the keyboard
+        """
         Scatter.__init__(self)
         self.utilisateur = utilisateur
         self.identifiant = self.utilisateur.identifiant
@@ -20,6 +30,9 @@ class Clavier(Scatter):
         self.add_widget(ti)
 
     def validate(self, value):
+        """
+        Validate the creation of the criterion
+        """
         if len(value.text) != 0:
             critere = Critere(0, value.text, self.utilisateur, self.pos, self.parent.colored_criteres)
             self.utilisateur.add_critere_lvl(self.parent.current_lvl)

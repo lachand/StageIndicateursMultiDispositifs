@@ -6,11 +6,21 @@ from kivy.graphics import Line
 
 
 class Links(Widget):
+    """
+    A class to view all links on the table
+    """
     def __init__(self, colored):
+        """
+        Initialize the canvas containing links
+        :param colored: if the links are colored or grey
+        """
         self.colored = colored
         Widget.__init__(self)
 
     def update(self, dt):
+        """
+        Update the view of links
+        """
         self.canvas.clear()
         for child in self.parent.children:
             if child.__class__ == Critere:

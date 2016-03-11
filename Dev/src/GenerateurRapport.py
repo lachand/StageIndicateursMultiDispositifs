@@ -5,12 +5,21 @@ from plotly.offline import download_plotlyjs, init_notebook_mode, iplot
 
 
 class GenerateurRapport:
+    """
+    A class to represent the repport's generator
+    """
     def __init__(self):
+        """
+        Initialize the generator
+        """
         self.ratio_liens_perso_collabo = True
         self.ratio_criteres_groupes = True
 
     def generation(self, table):
-
+        """
+        Generate a repport
+        :param table: the table where to use informations
+        """
         py.sign_in('lachand', 'sxtpaevi0x')
 
         if self.ratio_liens_perso_collabo:
@@ -87,6 +96,12 @@ class GenerateurRapport:
                 py.image.save_as(fig, filename='ratio_critere_groupe_but_' + str(i) + '.png')
 
     def get_values(self, values, i):
+        """
+        Get values with a part of a key in a dictionnary
+        :param values: the dictionnary
+        :param i: the part of the key
+        :return a table with eahc values having i as a part of their key
+        """
         reponse = []
         for it in values.items():
             if it[0][0] == i:

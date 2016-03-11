@@ -13,7 +13,7 @@ class Utilisateur:
         for i in range(0, max_lvl):
             self.nb_criteres.append(0)
 
-    def hasCritere(self, id_critere):
+    def has_critere(self, id_critere):
         if self.critere.getitem(id_critere).size == 0:
             return False
         else:

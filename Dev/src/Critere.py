@@ -5,7 +5,18 @@ from kivy.uix.scatter import Scatter
 
 
 class Critere(Scatter):
+    """
+    A class to represent a criterion
+    """
     def __init__(self, id, texte, createur, position, colored):
+        """
+        Initialize a criterion
+        :param id: the identifiant of the criterion
+        :param texte: the text of the criterion
+        :param createur: the creator of the criterion
+        :param position: the position of the criterion
+        :param colored: if the criterion is colored or in grey
+        """
         Scatter.__init__(self)
         self.pos = position
         self.nb_liaisons = 0
@@ -26,6 +37,11 @@ class Critere(Scatter):
             Label(text=self.texte, halign='left', size=self.size)
 
     def add_link(self, id_img, id_usr):
+        """
+        Add a link between the criterion and an animal
+        :param id_img: the identifiant of the animal
+        :param id_usr: the identifiant of the user focussing the animal
+        """
         est_dedans = False
         for lien in self.links:
             if id_img == lien[0]:
@@ -36,6 +52,10 @@ class Critere(Scatter):
             self.links.append([id_img, id_usr])
 
     def fuse_concept(self, concept):
+        """
+        Fuse two criterions togetehr
+        :param concept: the other criterion ton fuse
+        """
         if self.createur.identifiant != concept.createur.identifiant:
             if not self.fusionneurs.__contains__(concept.createur):
                 self.fusionneurs.append(concept.createur)
@@ -75,6 +95,9 @@ class Critere(Scatter):
                 self.parent.remove_widget(fils)
 
     def update(self, dt):
+        """
+        Update the criterion
+        """
         from Animal import Animal
         cpt = 0
         for child in self.parent.children:

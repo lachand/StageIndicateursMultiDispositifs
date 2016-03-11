@@ -5,10 +5,21 @@ from ZoneUtilisateur import ZoneUtilisateur
 
 
 class Configuration:
+    """
+    A class in order to dynamically configure the session
+    """
     def __init__(self, config_file):
+        """
+        Initialize the configuration
+        :param config_file: the configuration file
+        """
         self.config_file = config_file
 
     def config_table(self, table):
+        """
+        Configure the table
+        :param table: the table to configure
+        """
         from Utilisateur import Utilisateur
 
         # Gestion des Images
@@ -58,5 +69,9 @@ class Configuration:
                     table.colored_criteres = False
 
     def config_generateur(self, generateur):
+        """
+        Configure the indicator's generator
+        :param generateur: the generator to configure
+        """
         with open(self.config_file) as json_data:
             data = json.decode(json_data.read())
