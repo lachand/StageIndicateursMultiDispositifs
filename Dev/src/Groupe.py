@@ -1,40 +1,34 @@
 class Groupe:
     def __init__(self, id):
-        self.ID = id
-        self.Utilisateurs = []
+        self.identifiant = id
+        self.utilisateurs = []
 
-    def getID(self):
-        return self.ID
+    def add_utilisateur(self, utilisateur):
+        self.utilisateurs.append(utilisateur)
 
-    def addUtilisateur(self, utilisateur):
-        self.Utilisateurs.append(utilisateur)
-
-    def getUtilisateur(self, id):
-        for utilisateur in self.Utilisateurs:
-            if utilisateur.getid() == id:
+    def get_utilisateur(self, id):
+        for utilisateur in self.utilisateurs:
+            if utilisateur.identifiant == id:
                 return utilisateur
         return None
 
-    def getUtilisateurs(self):
-        return self.Utilisateurs
+    def nb_utilisateurs(self):
+        return len(self.utilisateurs)
 
-    def nbUtilisateurs(self):
-        return len(self.Utilisateurs)
-
-    def nbCriteres(self):
+    def nb_criteres(self):
         cpt = 0
-        for utilisateurs in self.Utilisateurs:
-            cpt += utilisateurs.nbCriteres
+        for utilisateur in self.utilisateurs:
+            cpt += utilisateur.nb_criteres
         return cpt
 
-    def nbLiensPersos(self):
+    def nb_liens_persos(self):
         cpt = 0
-        for utilisateurs in self.Utilisateurs:
-            cpt += utilisateurs.nbLiensPersos
+        for utilisateur in self.utilisateurs:
+            cpt += utilisateur.nb_liens_persos
         return cpt
 
-    def nbLiensAutres(self):
+    def nb_liens_autres(self):
         cpt = 0
-        for utilisateurs in self.Utilisateurs:
-            cpt += utilisateurs.nbLiensAutres
+        for utilisateur in self.utilisateurs:
+            cpt += utilisateur.nb_liens_autres
         return cpt

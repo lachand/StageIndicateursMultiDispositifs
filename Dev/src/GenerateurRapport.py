@@ -1,5 +1,7 @@
 import plotly.graph_objs as go
 import plotly.plotly as py
+from plotly import __version__
+from plotly.offline import download_plotlyjs, init_notebook_mode, iplot
 
 
 class GenerateurRapport:
@@ -15,26 +17,27 @@ class GenerateurRapport:
             id_utilisateur = []
             val_perso = []
             val_collabo = []
-            for utilisateur in table.getUtilisateurs():
-                id_utilisateur.append(utilisateur.getid())
-                val_collabo.append(utilisateur.nbLiensAutres())
-                val_perso.append(utilisateur.nbLiensPersos())
+            for utilisateur in table.groupe.utilisateurs:
+                id_utilisateur.append(utilisateur.identifiant)
+                val_collabo.append(utilisateur.liens_autres)
+                val_perso.append(utilisateur.liens_persos)
 
-            liensPersos = go.Bar(
+            liens_persos = go.Bar(
                 x=id_utilisateur,
                 y=val_perso,
                 name='Liens personnels'
             )
-            liensAutres = go.Bar(
+            liens_autres = go.Bar(
                 x=id_utilisateur,
                 y=val_collabo,
                 name='Liens collaboratifs'
             )
-            data = [liensAutres, liensPersos]
+            data = [liens_autres, liens_persos]
             layout = go.Layout(
                 barmode='stack'
             )
             fig = go.Figure(data=data, layout=layout)
+            print data
             py.image.save_as(fig, filename='ratio_liens_persos_collabo.png')
 
         if self.ratio_criteres_groupes:
@@ -43,18 +46,18 @@ class GenerateurRapport:
             data = []
             colors = []
 
-            for i in range(1, len(table.getUtilisateurs()) + 1):
+            for i in range(1, len(table.groupe.utilisateurs) + 1):
                 labels.append(str(i))
 
-            for i in range(0, len(table.ObjectifCriteres)):
+            for i in range(0, len(table.objectif_criteres)):
 
-                for utilisateur in table.getUtilisateurs():
-                    values[i, utilisateur.getid()] = utilisateur.NbCriteres[i]
-                    colors.append('rgb(' + str(int(utilisateur.Couleur[0] * 255)) + ',' + str(
-                        int(utilisateur.Couleur[1] * 255)) + ',' + str(int(utilisateur.Couleur[2] * 255)) + ')')
+                for utilisateur in table.groupe.utilisateurs:
+                    values[i, utilisateur.identifiant] = utilisateur.nb_criteres[i]
+                    colors.append('rgb(' + str(int(utilisateur.couleur[0] * 255)) + ',' + str(
+                        int(utilisateur.couleur[1] * 255)) + ',' + str(int(utilisateur.couleur[2] * 255)) + ')')
 
                 data.append({
-                    "values": self.getValues(values, i),
+                    "values": self.get_values(values, i),
                     "labels": labels,
                     'marker': {'colors': colors},
                     "domain": {"x": [0, 1]},
@@ -83,7 +86,7 @@ class GenerateurRapport:
 
                 py.image.save_as(fig, filename='ratio_critere_groupe_but_' + str(i) + '.png')
 
-    def getValues(self, values, i):
+    def get_values(self, values, i):
         reponse = []
         for it in values.items():
             if it[0][0] == i:

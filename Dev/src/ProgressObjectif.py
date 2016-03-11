@@ -4,30 +4,30 @@ from kivy.uix.widget import Widget
 
 
 class ProgressObjectif(Widget):
-    def __init__(self, objectif, position, niveauMax):
+    def __init__(self, objectif, position, niveau_max):
         Widget.__init__(self)
-        self.Objectif = objectif
-        self.Avancement = 0
-        self.Niveau = 0
-        self.NiveauMax = niveauMax
+        self.objectif = objectif
+        self.avancement = 0
+        self.niveau = 0
+        self.niveau_max = niveau_max
 
-        btnNouvelleImage = Button(text='Nouvelles images', size=[200, 50])
-        btnNouvelleImage.pos = (position[0] - btnNouvelleImage.width / 2, position[1])
-        btnNouvelleImage.bind(on_press=self.callback)
+        btn_nouvelle_image = Button(text='Nouvelles images', size=[200, 50])
+        btn_nouvelle_image.pos = (position[0] - btn_nouvelle_image.width / 2, position[1])
+        btn_nouvelle_image.bind(on_press=self.callback)
 
-        self.pb = ProgressBar(max=self.Objectif, value=self.Avancement, size=[200, 0])
-        self.pb.pos = (position[0] - self.pb.width / 2, position[1] + btnNouvelleImage.height)
-        self.add_widget(btnNouvelleImage)
+        self.pb = ProgressBar(max=self.objectif, value=self.avancement, size=[200, 0])
+        self.pb.pos = (position[0] - self.pb.width / 2, position[1] + btn_nouvelle_image.height)
+        self.add_widget(btn_nouvelle_image)
         self.add_widget(self.pb)
 
     def update(self, dt):
-        self.Avancement = self.parent.getNbCriteres()
-        self.pb.value = self.Avancement
+        self.avancement = len(self.parent.criteres)
+        self.pb.value = self.avancement
 
     def callback(instance, value):
-        if instance.Avancement >= instance.Objectif and instance.Niveau < instance.NiveauMax:
+        if instance.avancement >= instance.objectif and instance.niveau < instance.niveau_max:
             table = instance.parent
-            table.CurrentLvl += 1
-            instance.Niveau += 1
-            instance.Objectif = instance.parent.nouvellesImages(instance.Niveau)
-            instance.pb.max = instance.Objectif
+            table.current_lvl += 1
+            instance.niveau += 1
+            instance.objectif = instance.parent.nouvelles_images(instance.niveau)
+            instance.pb.max = instance.objectif

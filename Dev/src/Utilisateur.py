@@ -1,59 +1,32 @@
 class Utilisateur:
-    def __init__(self, id, couleur, maxlvl):
-        self.ID = id
-        self.Couleur = couleur
+    def __init__(self, id, couleur, max_lvl):
+        self.identifiant = id
+        self.couleur = couleur
         self.validate = False
-        self.Critere = []
-        self.NbCriteres = [0, 0, 0, 0]
-        self.CurrentImage = None
-        self.LiensPersos = 0
-        self.LiensAutres = 0
-        self.MaxLvl = maxlvl
+        self.critere = []
+        self.nb_criteres = [0, 0, 0, 0]
+        self.current_image = None
+        self.liens_persos = 0
+        self.liens_autres = 0
+        self.max_lvl = max_lvl
 
-        for i in range(0, maxlvl):
-            self.NbCriteres.append(0)
+        for i in range(0, max_lvl):
+            self.nb_criteres.append(0)
 
-    def getid(self):
-        return self.ID
-
-    def getcouleur(self):
-        return self.Couleur
-
-    def hasCritere(self, idCritere):
-        if self.Critere.getitem(idCritere).size == 0:
+    def hasCritere(self, id_critere):
+        if self.critere.getitem(id_critere).size == 0:
             return False
         else:
             return True
 
-    def addLink(self, id):
-        if id != self.ID:
-            self.LiensAutres += 1
+    def add_link(self, id):
+        if id != self.identifiant:
+            self.liens_autres += 1
         else:
-            self.LiensPersos += 1
+            self.liens_persos += 1
 
-    def addCritere(self, idCritere):
-        self.Critere.append(idCritere)
+    def add_critere(self, id_critere):
+        self.critere.append(id_critere)
 
-    def setCurrentImage(self, idImage):
-        self.CurrentImage = idImage
-
-    def Validate(self):
-        self.validate = True
-
-    def Unvalidate(self):
-        self.validate = False
-
-    def getValidate(self):
-        return self.validate
-
-    def nbCriteres(self):
-        return len(self.Critere)
-
-    def nbLiensPersos(self):
-        return self.LiensPersos
-
-    def addCritereLvl(self, niveau):
-        self.NbCriteres[niveau] += 1
-
-    def nbLiensAutres(self):
-        return self.LiensAutres
+    def add_critere_lvl(self, niveau):
+        self.nb_criteres[niveau] += 1

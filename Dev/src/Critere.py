@@ -8,13 +8,13 @@ class Critere(Scatter):
     def __init__(self, id, texte, createur, position, colored):
         Scatter.__init__(self)
         self.pos = position
-        self.Nb_Liaisons = 0
-        self.ID = id
-        self.Texte = texte
-        self.Createur = createur
+        self.nb_liaisons = 0
+        self.identifiant = id
+        self.texte = texte
+        self.createur = createur
         self.fusionneurs = []
-        self.couleur = self.Createur.getcouleur()
-        self.Links = []
+        self.couleur = self.createur.couleur
+        self.links = []
         self.size = len(texte) * 1 + 100, 50
         self.colored = colored
         with self.canvas:
@@ -23,25 +23,25 @@ class Critere(Scatter):
             else:
                 Color(.25, .25, .25)
             Ellipse(size=self.size)
-            Label(text=self.Texte, halign='left', size=self.size)
+            Label(text=self.texte, halign='left', size=self.size)
 
-    def addLink(self, id_img, id_usr):
-        estDedans = False
-        for lien in self.Links:
+    def add_link(self, id_img, id_usr):
+        est_dedans = False
+        for lien in self.links:
             if id_img == lien[0]:
-                estDedans = True
+                est_dedans = True
                 if id_usr == lien[1]:
-                    self.Links.remove([id_img, id_usr])
-        if not estDedans:
-            self.Links.append([id_img, id_usr])
+                    self.links.remove([id_img, id_usr])
+        if not est_dedans:
+            self.links.append([id_img, id_usr])
 
-    def fuseConcept(self, concept):
-        if self.Createur.getid() != concept.Createur.getid():
-            if not self.fusionneurs.__contains__(concept.Createur):
-                self.fusionneurs.append(concept.Createur)
+    def fuse_concept(self, concept):
+        if self.createur.identifiant != concept.createur.identifiant:
+            if not self.fusionneurs.__contains__(concept.createur):
+                self.fusionneurs.append(concept.createur)
 
         for fusionneur in concept.fusionneurs:
-            if self.Createur.getid() != fusionneur.getid():
+            if self.createur.identifiant != fusionneur.identifiant:
                 if not self.fusionneurs.__contains__(fusionneur):
                     self.fusionneurs.append(fusionneur)
 
@@ -49,7 +49,7 @@ class Critere(Scatter):
         for fusionneur in self.fusionneurs:
             with self.canvas:
                 if self.colored:
-                    Color(fusionneur.Couleur[0], fusionneur.Couleur[1], fusionneur.Couleur[2])
+                    Color(fusionneur.couleur[0], fusionneur.couleur[1], fusionneur.couleur[2])
                     Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
                     cpt += 360/(len(self.fusionneurs)+1)
                 else:
@@ -58,7 +58,7 @@ class Critere(Scatter):
                     cpt += 360/(len(self.fusionneurs)+1)
         with self.canvas:
             if self.colored:
-                    Color(self.Createur.Couleur[0], self.Createur.Couleur[1], self.Createur.Couleur[2])
+                    Color(self.createur.couleur[0], self.createur.couleur[1], self.createur.couleur[2])
                     Ellipse(size=self.size, angle_start=cpt ,angle_end=cpt+(360/(len(self.fusionneurs)+1)))
                     cpt += 360/(len(self.fusionneurs)+1)
             else:
@@ -66,10 +66,10 @@ class Critere(Scatter):
                     Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
                     cpt += 360/(len(self.fusionneurs)+1)
 
-            Label(text=self.Texte, halign='left', size=self.size)
+            Label(text=self.texte, halign='left', size=self.size)
 
-        for lien in concept.Links:
-            self.addLink(lien[0], lien[1])
+        for lien in concept.links:
+            self.add_link(lien[0], lien[1])
         for fils in self.parent.children:
             if fils.__class__ == Critere and fils.collide_widget(self) and fils != self:
                 self.parent.remove_widget(fils)
@@ -79,15 +79,15 @@ class Critere(Scatter):
         cpt = 0
         for child in self.parent.children:
             if child.__class__ == Animal and child.collide_point(self.center[0],
-                                                                 self.center[1]) and child.getUtilisateur() != None:
-                self.addLink(child.getid(), child.getUtilisateur().getid())
-                child.getUtilisateur().addLink(self.Createur.getid())
-                child.removeUtilisateur()
+                                                                 self.center[1]) and child.current_utilisateur != None:
+                self.add_link(child.identifiant, child.current_utilisateur.identifiant)
+                child.current_utilisateur.add_link(self.createur.identifiant)
+                child.remove_utilisateur()
 
-        for utilisateur in self.parent.getUtilisateurs():
-            if utilisateur.getValidate():
+        for utilisateur in self.parent.groupe.utilisateurs:
+            if utilisateur.validate:
                 cpt += 1
         if cpt == 4:
             for child in self.parent.children:
                 if child.__class__ == Critere and child.collide_point(self.center[0], self.center[1]) and child != self:
-                    self.fuseConcept(child)
+                    self.fuse_concept(child)

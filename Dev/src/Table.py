@@ -22,44 +22,44 @@ Config.set('graphics', 'fullscreen', 'auto')
 
 
 class Table(Widget):
-    Utilisateur = []
-    Animaux = []
-    Criteres = []
-    ImagesFolder = []
-    ObjectifCriteres = []
-    CurrentLvl = 0
-    ColoredLinks = True
-    ColoredCriteres = True
-    AvancementObjectif = []
+    utilisateur = []
+    animaux = []
+    criteres = []
+    images_folder = []
+    objectif_criteres = []
+    current_lvl = 0
+    colored_links = True
+    colored_criteres = True
+    avancement_objectif = []
 
     def initialisation(self, size):
-        configuration = Configuration("..\cfg\ConfigSimple.json")
+        configuration = Configuration("../cfg/ConfigSimple.json")
         self.size = size.size
         self.groupe = Groupe(1)
-        configuration.setConfigTable(self)
-        self.add_widget(Links(self.ColoredLinks))
+        configuration.config_table(self)
+        self.add_widget(Links(self.colored_links))
 
-    def addCritere(self, critere):
+    def add_critere(self, critere):
         self.add_widget(critere)
-        self.Criteres.append(critere)
+        self.criteres.append(critere)
 
-    def nouvellesImages(self, niveau):
-        self.addAnimalLvl(niveau)
-        return self.ObjectifCriteres[self.CurrentLvl]
+    def nouvelles_images(self, niveau):
+        self.add_animal_lvl(niveau)
+        return self.objectif_criteres[self.current_lvl]
 
-    def addAnimalLvl(self, lvl):
+    def add_animal_lvl(self, lvl):
         r1 = self.get_root_window().width - 200
         r2 = self.get_root_window().height - 200
-        Images = glob.glob(self.ImagesFolder[lvl])
+        Images = glob.glob(self.images_folder[lvl])
         for images in Images:
-            self.addAnimal(len(self.Animaux) + 1, images, [r1, r2])
+            self.add_animal(len(self.animaux) + 1, images, [r1, r2])
 
-    def addAnimal(self, id, image, pos):
+    def add_animal(self, id, image, pos):
         animal = Animal(id, image, pos)
-        self.Animaux.append(id)
+        self.animaux.append(id)
         self.add_widget(animal)
 
-    def addIndicateur(self, indicateur):
+    def add_indicateur(self, indicateur):
         self.add_widget(indicateur)
 
     def update(self, dt):
@@ -73,29 +73,8 @@ class Table(Widget):
             elif child.__class__ == ProgressObjectif:
                 child.update(dt)
 
-    def getCriteres(self):
-        return self.Criteres
-
-    def getColoredCriteres(self):
-        return self.ColoredCriteres
-
-    def setColoredLinks(self, colored):
-        self.ColoredLinks = colored
-
-    def setColoredCriteres(self, colored):
-        self.ColoredCriteres = colored
-
-    def getUtilisateur(self, id):
-        return self.groupe.getUtilisateur(id)
-
-    def getUtilisateurs(self):
-        return self.groupe.getUtilisateurs()
-
-    def getNbCriteres(self):
-        return len(self.Criteres)
-
-    def getObjectifCriteres(self, lvl):
-        return self.ObjectifCriteres[lvl]
+    def get_utilisateur(self, id):
+        return self.groupe.get_utilisateur(id)
 
 
 class TableApp(App):
@@ -108,9 +87,9 @@ class TableApp(App):
         self.table.initialisation(self.root_window)
 
     def on_stop(self):
-        configuration = Configuration("..\cfg\ConfigSimple.json")
+        configuration = Configuration("../cfg/ConfigSimple.json")
         generateur = GenerateurRapport()
-        configuration.setConfigGenerateur( generateur)
+        configuration.config_generateur(generateur)
         generateur.generation(self.table)
 
 

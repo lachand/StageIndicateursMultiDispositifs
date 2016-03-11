@@ -7,8 +7,8 @@ from Critere import Critere
 class Clavier(Scatter):
     def __init__(self, utilisateur, couleur, position, angle):
         Scatter.__init__(self)
-        self.Utilisateur = utilisateur
-        self.ID = self.Utilisateur.getid()
+        self.utilisateur = utilisateur
+        self.identifiant = self.utilisateur.identifiant
         self.couleur = couleur
         self.pos = position
         self.rotation = angle
@@ -21,7 +21,7 @@ class Clavier(Scatter):
 
     def validate(self, value):
         if len(value.text) != 0:
-            critere = Critere(0, value.text, self.Utilisateur, self.pos, self.parent.getColoredCriteres())
-            self.Utilisateur.addCritereLvl(self.parent.CurrentLvl)
-            self.parent.addCritere(critere)
+            critere = Critere(0, value.text, self.utilisateur, self.pos, self.parent.colored_criteres)
+            self.utilisateur.add_critere_lvl(self.parent.current_lvl)
+            self.parent.add_critere(critere)
         self.parent.remove_widget(self)

@@ -1,4 +1,4 @@
-{
+﻿{
   "Utilisateurs": [
     {
       "Couleur": {"r": "32","g": "119","b": "180"}
@@ -16,9 +16,9 @@
   "Images":{
     "MaxLvl":"2",
     "Src": [
-      {"Lvl":"0","Src":"Images\\lvl1\\*.jpg","Objectif":"1"},
-      {"Lvl":"1","Src":"Images\\lvl2\\*.jpg","Objectif":"2"},
-      {"Lvl":"2","Src":"Images\\lvl3\\*.jpg","Objectif":"3"}
+      {"Lvl":"0","Src":"Images/lvl1/*.jpg","Objectif":"1"},
+      {"Lvl":"1","Src":"Images/lvl2/*.jpg","Objectif":"2"},
+      {"Lvl":"2","Src":"Images/lvl3/*.jpg","Objectif":"3"}
     ]
   },
   "Indicateurs":[
