@@ -19,43 +19,43 @@ class Animal(Scatter):
         :param image: the path of the image for the animal
         :param pos: the square where the scater can be randomly placed
         """
-        self.couleur = [0, 0, 0]
+        self.color = [0, 0, 0]
         Scatter.__init__(self)
         self.src_image = image
         self.image = Image(source=image)
-        self.taille = self.image.size
+        self.size = self.image.size
         self.center = [randint(200, pos[0]), randint(200, pos[1])]
-        self.identifiant = id
-        self.current_utilisateur = None
+        self.identifier = id
+        self.current_user = None
         self.on_move = False
         with self.canvas:
             Color(1, 1, 1, 1)
-            Rectangle(source=self.src_image, size=[self.taille[0] - 10, self.taille[1] - 10])
+            Rectangle(source=self.src_image, size=[self.size[0] - 10, self.size[1] - 10])
 
-    def set_utilisateur(self, utilisateur):
+    def set_user(self, user):
         """
         Set the current user of the animal
-        :param utilisateur: the user that is using the animal
+        :param user: the user that is using the animal
         """
-        self.current_utilisateur = utilisateur
-        self.couleur = utilisateur.couleur
+        self.current_user = user
+        self.color = user.color
         self.canvas.clear()
         with self.canvas:
-            Color(self.couleur[0], self.couleur[1], self.couleur[2])
+            Color(self.color[0], self.color[1], self.color[2])
             Rectangle()
             Color(1, 1, 1, 1)
-            Rectangle(source=self.src_image, size=[self.taille[0] - 10, self.taille[1] - 10])
+            Rectangle(source=self.src_image, size=[self.size[0] - 10, self.size[1] - 10])
 
-    def remove_utilisateur(self):
+    def remove_user(self):
         """
         Remove the current user of the animal
         """
-        self.current_utilisateur = None
-        self.couleur = [1, 1, 1]
+        self.current_user = None
+        self.color = [1, 1, 1]
         self.canvas.clear()
         with self.canvas:
             Color(1, 1, 1, 1)
-            Rectangle(source=self.src_image, size=[self.taille[0] - 10, self.taille[1] - 10])
+            Rectangle(source=self.src_image, size=[self.size[0] - 10, self.size[1] - 10])
 
     def on_touch_move(self, touch):
         """
@@ -63,15 +63,15 @@ class Animal(Scatter):
         :param touch: the position of the touch
         """
         if self.collide_point(touch.x, touch.y) :
-            for critere in self.parent.criteres:
-                value = critere.has_link(self.identifiant)
+            for criterion in self.parent.criterions:
+                value = criterion.has_link(self.identifier)
                 if value != -1:
-                    critere.update_link(value,self.center)
+                    criterion.update_link(value,self.center)
 
             for child in self.parent.children:
                 if child.__class__ == ZoneUtilisateur and child.collide_point(self.center[0], self.center[1]):
-                    if self.current_utilisateur is None:
-                        self.set_utilisateur(child.utilisateur)
+                    if self.current_user is None:
+                        self.set_user(child.user)
             Scatter.on_touch_move(self, touch)
 
     def update_coordinate(self,x,y):
@@ -81,11 +81,11 @@ class Animal(Scatter):
         :param y: the new y coordinate
         """
         points = []
-        for critere in self.parent.criteres :
-            for lien in critere.links:
-                if lien.linked_to_animal(self.identifiant):
-                    x = critere.center_x + lien.distance*cos(lien.angle+pi)
-                    y = critere.center_y + lien.distance*sin(-lien.angle+pi)
+        for criterion in self.parent.criterions :
+            for link in criterion.links:
+                if link.linked_to_animal(self.identifier):
+                    x = criterion.center_x + link.distance*cos(link.angle+pi)
+                    y = criterion.center_y + link.distance*sin(-link.angle+pi)
                     points.append([x,y])
         if len(points) == 1 :
             if x > 0 and x < self.parent.size[0]:

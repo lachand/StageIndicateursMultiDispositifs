@@ -4,62 +4,62 @@ class Groupe:
     """
     def __init__(self, id):
         """
-        Initialize the groupe
-        :param id: the identifiant of the group
+        Initialize the group
+        :param id: the identifier of the group
         """
-        self.identifiant = id
-        self.utilisateurs = []
+        self.identifier = id
+        self.users = []
 
-    def add_utilisateur(self, utilisateur):
+    def add_user(self, user):
         """
-        Add an user to the groupe
-        :param utilisateur: the user to add
+        Add an user to the group
+        :param user: the user to add
         """
-        self.utilisateurs.append(utilisateur)
+        self.users.append(user)
 
-    def get_utilisateur(self, id):
+    def get_user(self, id):
         """
         Get a specific user of the group
-        :param id: the identifiant of the user
+        :param id: the identifier of the user
         """
-        for utilisateur in self.utilisateurs:
-            if utilisateur.identifiant == id:
-                return utilisateur
+        for user in self.users:
+            if user.identifier == id:
+                return user
         return None
 
-    def nb_utilisateurs(self):
+    def nb_users(self):
         """
         Get the number of users in the group
         :return: the number of users in the group
         """
-        return len(self.utilisateurs)
+        return len(self.users)
 
-    def nb_criteres(self):
+    def nb_criterions(self):
         """
         Get the number of criterions in the group
         :return: the number of criterions in the group
         """
         cpt = 0
-        for utilisateur in self.utilisateurs:
-            cpt += utilisateur.nb_criteres
+        for user in self.users:
+            cpt += user.nb_criterions
         return cpt
 
-    def nb_liens_persos(self):
+    def nb_links_persos(self):
         """
         Get the number of personal links in the group
         :return: the number of personal links in the group
         """
         cpt = 0
-        for utilisateur in self.utilisateurs:
-            cpt += utilisateur.nb_liens_persos
+        for user in self.users:
+            cpt += user.nb_links_persos
         return cpt
 
-    def nb_liens_autres(self):
+    def nb_links_others(self):
         """
         Get the number of collaborative links in the group
         :return: the number of collaborative links in the group
         """
         cpt = 0
-        for utilisateur in self.utilisateurs:
-            cpt += utilisateur.nb_liens_autres
+        for user in self.users:
+            cpt += user.nb_links_others
         return cpt

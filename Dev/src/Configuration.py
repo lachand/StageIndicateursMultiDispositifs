@@ -29,44 +29,44 @@ class Configuration:
         max_lvl = int(data["Images"]["MaxLvl"])
         for lvl in data["Images"]["Src"]:
             table.images_folder.insert(int(lvl["Lvl"]), lvl["Src"])
-            table.objectif_criteres.insert(int(lvl["Lvl"]), int(lvl["Objectif"]))
+            table.objective_criterions.insert(int(lvl["Lvl"]), int(lvl["Objectif"]))
         table.add_animal_lvl(0)
 
-        # Gestion des Utilisateurs
-        cpt_utilisateurs = 1
-        for utilisateur in data["Utilisateurs"]:
-            r = float(utilisateur["Couleur"]["r"]) / 255.
-            g = float(utilisateur["Couleur"]["g"]) / 255.
-            b = float(utilisateur["Couleur"]["b"]) / 255.
-            table.groupe.add_utilisateur(Utilisateur(cpt_utilisateurs, [r, g, b], max_lvl))
-            cpt_utilisateurs += 1
+        # Gestion des users
+        cpt_users = 1
+        for user in data["Utilisateurs"]:
+            r = float(user["Couleur"]["r"]) / 255.
+            g = float(user["Couleur"]["g"]) / 255.
+            b = float(user["Couleur"]["b"]) / 255.
+            table.group.add_user(Utilisateur(cpt_users, [r, g, b], max_lvl))
+            cpt_users += 1
 
         # Gestion des Indicateurs
         for indicateur in data["Indicateurs"]:
             # Indicateur : Zone personnelle
             if indicateur["Nom"] == "ZoneUtilisateur":
-                table.add_indicateur(ZoneUtilisateur(table.get_utilisateur(int(indicateur["Source"])),
+                table.add_indicateur(ZoneUtilisateur(table.get_user(int(indicateur["Source"])),
                                                     [int(indicateur["Position"]["x"]) * table.size[0] / 100,
                                                      int(indicateur["Position"]["y"]) * table.size[1] / 100]))
-            # Indicateur : Progres de l'objectif
+            # Indicateur : Progres de l'objective
             elif indicateur["Nom"] == "ProgressObjectif":
-                table.add_indicateur(ProgressObjectif(table.objectif_criteres[int(indicateur["Lvl"])],
+                table.add_indicateur(ProgressObjectif(table.objective_criterions[int(indicateur["Lvl"])],
                                                      [int(indicateur["Position"]["x"]) * table.size[0] / 100,
                                                       int(indicateur["Position"]["y"]) * table.size[1] / 100],
                                                      max_lvl))
-            # Indicateurs : Liens colores
+            # Indicateurs : links colored
             elif indicateur["Nom"] == "Links":
                 if indicateur["Colored"] == "True":
                     table.colored_links = True
                 else:
                     table.colored_links = False
 
-            # Indicateurs : criteres colores
-            elif indicateur["Nom"] == "Criteres":
+            # Indicateurs : criterions colored
+            elif indicateur["Nom"] == "criterions":
                 if indicateur["Colored"] == "True":
-                    table.colored_criteres = True
+                    table.colored_criterions = True
                 else:
-                    table.colored_criteres = False
+                    table.colored_criterions = False
 
     def config_generateur(self, generateur):
         """

@@ -2,33 +2,33 @@ class Utilisateur:
     """
     A class representing a user of the application
     """
-    def __init__(self, id, couleur, max_lvl):
+    def __init__(self, id, color, max_lvl):
         """
         Initialize an user
         :param id: the identifier of the user
-        :param couleur: the color of the user
+        :param color: the color of the user
         :param max_lvl: the max_lvl for objectives
         """
-        self.identifiant = id
-        self.couleur = couleur
+        self.identifier = id
+        self.color = color
         self.validate = False
-        self.critere = []
-        self.nb_criteres = [0, 0, 0, 0]
+        self.criterion = []
+        self.nb_criterions = [0, 0, 0, 0]
         self.current_image = None
-        self.liens_persos = 0
-        self.liens_autres = 0
+        self.links_persos = 0
+        self.links_others = 0
         self.max_lvl = max_lvl
 
         for i in range(0, max_lvl):
-            self.nb_criteres.append(0)
+            self.nb_criterions.append(0)
 
-    def has_critere(self, id_critere):
+    def has_criterion(self, id_criterion):
         """
         Return if the user is the creator of a specified criterion
-        :param id_critere: the identifier of the criterion
+        :param id_criterion: the identifier of the criterion
         :return: true if hte user is the creator, else false
         """
-        if self.critere.getitem(id_critere).size == 0:
+        if self.criterion.getitem(id_criterion).size == 0:
             return False
         else:
             return True
@@ -38,21 +38,21 @@ class Utilisateur:
         add a link to statistics
         :param id: the identifier of the link
         """
-        if id != self.identifiant:
-            self.liens_autres += 1
+        if id != self.identifier:
+            self.links_others += 1
         else:
-            self.liens_persos += 1
+            self.links_persos += 1
 
-    def add_critere(self, id_critere):
+    def add_criterion(self, id_criterion):
         """
         add a criterion to statistics
         :param id: the identifier of the criterion
         """
-        self.critere.append(id_critere)
+        self.criterion.append(id_criterion)
 
-    def add_critere_lvl(self, niveau):
+    def add_criterion_lvl(self, level):
         """
         add a criterion to statistics
-        :param niveau : the current level of the game
+        :param level : the current level of the game
         """
-        self.nb_criteres[niveau] += 1
+        self.nb_criterions[level] += 1

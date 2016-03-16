@@ -41,14 +41,14 @@ class Link:
         """
         return self.id_usr == id_usr
 
-    def update(self, center_animal, center_critere):
+    def update(self, center_animal, center_criterion):
         """
         Update the distance and angle of the link
         :param center_animal: the center of the animal
-        :param center_critere: the center of the criterion
+        :param center_criterion: the center of the criterion
         """
-        dx = center_critere[0] - center_animal[0]
-        dy = center_critere[1] - center_animal[1]
+        dx = center_criterion[0] - center_animal[0]
+        dy = center_criterion[1] - center_animal[1]
 
         self.distance = math.hypot(dx, dy)
         self.angle = math.atan2(-dy, dx)

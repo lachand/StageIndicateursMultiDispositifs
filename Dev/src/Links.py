@@ -24,14 +24,14 @@ class Links(Widget):
         self.canvas.clear()
         for child in self.parent.children:
             if child.__class__ == Critere:
-                for lien in child.links:
+                for link in child.links:
                     for child2 in self.parent.children:
-                        if child2.__class__ == Animal and lien.linked_to_animal(child2.identifiant):
-                            utilisateur = self.parent.get_utilisateur(lien.id_usr)
+                        if child2.__class__ == Animal and link.linked_to_animal(child2.identifier):
+                            user = self.parent.get_user(link.id_usr)
                             with self.canvas:
                                 if self.colored:
-                                    couleur = utilisateur.couleur
-                                    Color(couleur[0], couleur[1], couleur[2])
+                                    color = user.color
+                                    Color(color[0], color[1], color[2])
                                 else:
                                     Color(.25, .25, .25)
                                 Line(points=[child.center[0], child.center[1], child2.center[0], child2.center[1]],

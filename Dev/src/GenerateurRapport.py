@@ -12,8 +12,8 @@ class GenerateurRapport:
         """
         Initialize the generator
         """
-        self.ratio_liens_perso_collabo = True
-        self.ratio_criteres_groupes = True
+        self.ratio_links_perso_collabo = True
+        self.ratio_criterions_groups = True
 
     def generation(self, table):
         """
@@ -22,55 +22,55 @@ class GenerateurRapport:
         """
         py.sign_in('lachand', 'sxtpaevi0x')
 
-        if self.ratio_liens_perso_collabo:
-            id_utilisateur = []
+        if self.ratio_links_perso_collabo:
+            id_user = []
             val_perso = []
             val_collabo = []
-            for utilisateur in table.groupe.utilisateurs:
-                id_utilisateur.append(utilisateur.identifiant)
-                val_collabo.append(utilisateur.liens_autres)
-                val_perso.append(utilisateur.liens_persos)
+            for user in table.group.users:
+                id_user.append(user.identifier)
+                val_collabo.append(user.links_others)
+                val_perso.append(user.links_persos)
 
-            liens_persos = go.Bar(
-                x=id_utilisateur,
+            links_persos = go.Bar(
+                x=id_user,
                 y=val_perso,
-                name='Liens personnels'
+                name='links personnels'
             )
-            liens_autres = go.Bar(
-                x=id_utilisateur,
+            links_others = go.Bar(
+                x=id_user,
                 y=val_collabo,
-                name='Liens collaboratifs'
+                name='links collaboratifs'
             )
-            data = [liens_autres, liens_persos]
+            data = [links_others, links_persos]
             layout = go.Layout(
                 barmode='stack'
             )
             fig = go.Figure(data=data, layout=layout)
             print data
-            py.image.save_as(fig, filename='ratio_liens_persos_collabo.png')
+            py.image.save_as(fig, filename='ratio_links_persos_collabo.png')
 
-        if self.ratio_criteres_groupes:
+        if self.ratio_criterions_groups:
             values = {}
             labels = []
             data = []
             colors = []
 
-            for i in range(1, len(table.groupe.utilisateurs) + 1):
+            for i in range(1, len(table.group.users) + 1):
                 labels.append(str(i))
 
-            for i in range(0, len(table.objectif_criteres)):
+            for i in range(0, len(table.objective_criterions)):
 
-                for utilisateur in table.groupe.utilisateurs:
-                    values[i, utilisateur.identifiant] = utilisateur.nb_criteres[i]
-                    colors.append('rgb(' + str(int(utilisateur.couleur[0] * 255)) + ',' + str(
-                        int(utilisateur.couleur[1] * 255)) + ',' + str(int(utilisateur.couleur[2] * 255)) + ')')
+                for user in table.group.users:
+                    values[i, user.identifier] = user.nb_criterions[i]
+                    colors.append('rgb(' + str(int(user.color[0] * 255)) + ',' + str(
+                        int(user.color[1] * 255)) + ',' + str(int(user.color[2] * 255)) + ')')
 
                 data.append({
                     "values": self.get_values(values, i),
                     "labels": labels,
                     'marker': {'colors': colors},
                     "domain": {"x": [0, 1]},
-                    "name": "Nombre de criteres",
+                    "name": "Nombre de criterions",
                     "hoverinfo": "label+percent+name",
                     "hole": .4,
                     "type": "pie"
@@ -79,7 +79,7 @@ class GenerateurRapport:
                 fig = {
                     "data": [data[i]],
                     "layout": {
-                        "title": "Nombre de criteres par joueurs en fonction du groupe : But " + str(i),
+                        "title": "Nombre de criterions par joueurs en fonction du group : But " + str(i),
                         "annotations":
                             {
                                 "font": {
@@ -93,17 +93,17 @@ class GenerateurRapport:
                     }
                 }
 
-                py.image.save_as(fig, filename='ratio_critere_groupe_but_' + str(i) + '.png')
+                py.image.save_as(fig, filename='ratio_criterion_group_but_' + str(i) + '.png')
 
     def get_values(self, values, i):
         """
-        Get values with a part of a key in a dictionnary
-        :param values: the dictionnary
+        Get values with a part of a key in a dictionary
+        :param values: the dictionary
         :param i: the part of the key
-        :return a table with eahc values having i as a part of their key
+        :return a table with each values having i as a part of their key
         """
-        reponse = []
+        answer = []
         for it in values.items():
             if it[0][0] == i:
-                reponse.insert(it[0][1] - 1, it[1])
-        return reponse
+                answer.insert(it[0][1] - 1, it[1])
+        return answer

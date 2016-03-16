@@ -25,15 +25,16 @@ class Table(Widget):
     """
     A class to represent a table
     """
-    utilisateur = []
-    animaux = []
-    criteres = []
+    user = []
+    animals = []
+    criterions = []
     images_folder = []
-    objectif_criteres = []
+    objective_criterions = []
     current_lvl = 0
     colored_links = True
-    colored_criteres = True
-    avancement_objectif = []
+    colored_criterions = True
+    progress_objective = []
+    group = Groupe(1)
 
     def initialisation(self, size):
         """
@@ -42,25 +43,24 @@ class Table(Widget):
         """
         configuration = Configuration("..\\cfg\\ConfigSimple.json")
         self.size = size.size
-        self.groupe = Groupe(1)
         configuration.config_table(self)
         self.add_widget(Links(self.colored_links))
 
-    def add_critere(self, critere):
+    def add_criterion(self, criterion):
         """
         Add a criterion to the table
-        :param critere: the criterion to add
+        :param criterion: the criterion to add
         """
-        self.add_widget(critere)
-        self.criteres.append(critere)
+        self.add_widget(criterion)
+        self.criterions.append(criterion)
 
-    def nouvelles_images(self, niveau):
+    def news_images(self, level):
         """
         Add images of a level to the table
-        :param niveau: the level of the images
+        :param level: the level of the images
         """
-        self.add_animal_lvl(niveau)
-        return self.objectif_criteres[self.current_lvl]
+        self.add_animal_lvl(level)
+        return self.objective_criterions[self.current_lvl]
 
     def add_animal_lvl(self, lvl):
         """
@@ -71,17 +71,17 @@ class Table(Widget):
         r2 = self.get_root_window().height - 200
         images = glob.glob(self.images_folder[lvl])
         for images in images:
-            self.add_animal(len(self.animaux) + 1, images, [r1, r2])
+            self.add_animal(len(self.animals) + 1, images, [r1, r2])
 
     def add_animal(self, id, image, pos):
         """
         Add an animal to the table
-        :param id: the identifiant of the animal
+        :param id: the identifier of the animal
         :param image: the source of the image representing the animal
         :param pos: the position where to add the animal
         """
         animal = Animal(id, image, pos)
-        self.animaux.append(id)
+        self.animals.append(id)
         self.add_widget(animal)
 
     def add_indicateur(self, indicateur):
@@ -103,13 +103,13 @@ class Table(Widget):
             elif child.__class__ == ProgressObjectif:
                 child.update(dt)
 
-    def get_utilisateur(self, id):
+    def get_user(self, id):
         """
         Get a specific user of the table
-        :param id: the identifiant of the user to ger
+        :param id: the identifier of the user to ger
         :return: the user needed
         """
-        return self.groupe.get_utilisateur(id)
+        return self.group.get_user(id)
 
 
 class TableApp(App):
