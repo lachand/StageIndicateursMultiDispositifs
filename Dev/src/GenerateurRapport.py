@@ -1,12 +1,10 @@
 import plotly.graph_objs as go
 import plotly.plotly as py
-from plotly import __version__
-from plotly.offline import download_plotlyjs, init_notebook_mode, iplot
 
 
 class GenerateurRapport:
     """
-    A class to represent the repport's generator
+    A class to represent the report's generator
     """
     def __init__(self):
         """
@@ -17,7 +15,7 @@ class GenerateurRapport:
 
     def generation(self, table):
         """
-        Generate a repport
+        Generate a report
         :param table: the table where to use informations
         """
         py.sign_in('lachand', 'sxtpaevi0x')
@@ -95,7 +93,8 @@ class GenerateurRapport:
 
                 py.image.save_as(fig, filename='ratio_criterion_group_but_' + str(i) + '.png')
 
-    def get_values(self, values, i):
+    @staticmethod
+    def get_values(values, i):
         """
         Get values with a part of a key in a dictionary
         :param values: the dictionary

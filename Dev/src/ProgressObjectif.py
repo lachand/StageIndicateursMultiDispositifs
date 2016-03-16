@@ -10,7 +10,7 @@ class ProgressObjectif(Widget):
     def __init__(self, objective, position, level_max):
         """
         Initialize the indicator
-        :param objective: a table of differents objectives
+        :param objective: a table of different objectives
         :param position: the position of the indicator
         :param level_max: the max number of objectives
         """
@@ -36,13 +36,13 @@ class ProgressObjectif(Widget):
         self.progress = len(self.parent.criterions)
         self.pb.value = self.progress
 
-    def callback(instance, value):
+    def callback(self, value):
         """
         Add new animals to the table if the current objective is done
         """
-        if instance.progress >= instance.objective and instance.level < instance.level_max:
-            table = instance.parent
+        if self.progress >= self.objective and self.level < self.level_max:
+            table = self.parent
             table.current_lvl += 1
-            instance.level += 1
-            instance.objective = instance.parent.news_images(instance.level)
-            instance.pb.max = instance.objective
+            self.level += 1
+            self.objective = self.parent.news_images(self.level)
+            self.pb.max = self.objective

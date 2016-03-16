@@ -73,15 +73,15 @@ class Table(Widget):
         for images in images:
             self.add_animal(len(self.animals) + 1, images, [r1, r2])
 
-    def add_animal(self, id, image, pos):
+    def add_animal(self, identifier, image, pos):
         """
         Add an animal to the table
-        :param id: the identifier of the animal
+        :param identifier: the identifier of the animal
         :param image: the source of the image representing the animal
         :param pos: the position where to add the animal
         """
-        animal = Animal(id, image, pos)
-        self.animals.append(id)
+        animal = Animal(identifier, image, pos)
+        self.animals.append(identifier)
         self.add_widget(animal)
 
     def add_indicateur(self, indicateur):
@@ -93,23 +93,19 @@ class Table(Widget):
 
     def update(self, dt):
         """
-        Uodate the table
+        Update the table
         """
         for child in self.children:
-            if child.__class__ == Critere:
-                child.update(dt)
-            elif child.__class__ == Links:
-                child.update(dt)
-            elif child.__class__ == ProgressObjectif:
+            if child.__class__ == Critere or child.__class__ == Links or child.__class__ == ProgressObjectif:
                 child.update(dt)
 
-    def get_user(self, id):
+    def get_user(self, identifier):
         """
         Get a specific user of the table
-        :param id: the identifier of the user to ger
+        :param identifier: the identifier of the user to ger
         :return: the user needed
         """
-        return self.group.get_user(id)
+        return self.group.get_user(identifier)
 
 
 class TableApp(App):

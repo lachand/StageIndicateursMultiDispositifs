@@ -46,14 +46,14 @@ class Configuration:
             # Indicateur : Zone personnelle
             if indicateur["Nom"] == "ZoneUtilisateur":
                 table.add_indicateur(ZoneUtilisateur(table.get_user(int(indicateur["Source"])),
-                                                    [int(indicateur["Position"]["x"]) * table.size[0] / 100,
+                                                     [int(indicateur["Position"]["x"]) * table.size[0] / 100,
                                                      int(indicateur["Position"]["y"]) * table.size[1] / 100]))
             # Indicateur : Progres de l'objective
             elif indicateur["Nom"] == "ProgressObjectif":
                 table.add_indicateur(ProgressObjectif(table.objective_criterions[int(indicateur["Lvl"])],
-                                                     [int(indicateur["Position"]["x"]) * table.size[0] / 100,
+                                                      [int(indicateur["Position"]["x"]) * table.size[0] / 100,
                                                       int(indicateur["Position"]["y"]) * table.size[1] / 100],
-                                                     max_lvl))
+                                                      max_lvl))
             # Indicateurs : links colored
             elif indicateur["Nom"] == "Links":
                 if indicateur["Colored"] == "True":

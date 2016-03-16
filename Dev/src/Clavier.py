@@ -1,8 +1,7 @@
 from kivy.uix.scatter import Scatter
 from kivy.uix.textinput import TextInput
-from Utilisateur import Utilisateur
+
 from Critere import Critere
-from kivy.uix.vkeyboard import VKeyboard
 
 
 class Clavier(Scatter):
@@ -12,7 +11,7 @@ class Clavier(Scatter):
     def __init__(self, user, color, position, angle):
         """
         Initialize the keyboard
-        :param user: the user wich is creating the criterion
+        :param user: the user which is creating the criterion
         :param color: the color of the user
         :param position: the position of the keyboard
         :param angle: the angle of the keyboard
@@ -31,8 +30,7 @@ class Clavier(Scatter):
         self.do_translation = False
         self.add_widget(self.ti)
         self.ti.background_color = self.color+[1]
-        self.ti.foreground_color = [1,1,1,1]
-
+        self.ti.foreground_color = [1, 1, 1, 1]
 
     def destroy(self, value):
         self.ti.focus = False

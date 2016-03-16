@@ -2,12 +2,12 @@ class Groupe:
     """
     A class to represent a group
     """
-    def __init__(self, id):
+    def __init__(self, identifier):
         """
         Initialize the group
-        :param id: the identifier of the group
+        :param identifier: the identifier of the group
         """
-        self.identifier = id
+        self.identifier = identifier
         self.users = []
 
     def add_user(self, user):
@@ -17,13 +17,13 @@ class Groupe:
         """
         self.users.append(user)
 
-    def get_user(self, id):
+    def get_user(self, identifier):
         """
         Get a specific user of the group
-        :param id: the identifier of the user
+        :param identifier: the identifier of the user
         """
         for user in self.users:
-            if user.identifier == id:
+            if user.identifier == identifier:
                 return user
         return None
 

@@ -2,14 +2,14 @@ class Utilisateur:
     """
     A class representing a user of the application
     """
-    def __init__(self, id, color, max_lvl):
+    def __init__(self, identifier, color, max_lvl):
         """
         Initialize an user
-        :param id: the identifier of the user
+        :param identifier: the identifier of the user
         :param color: the color of the user
         :param max_lvl: the max_lvl for objectives
         """
-        self.identifier = id
+        self.identifier = identifier
         self.color = color
         self.validate = False
         self.criterion = []
@@ -33,12 +33,12 @@ class Utilisateur:
         else:
             return True
 
-    def add_link(self, id):
+    def add_link(self, identifier):
         """
         add a link to statistics
-        :param id: the identifier of the link
+        :param identifier: the identifier of the link
         """
-        if id != self.identifier:
+        if identifier != self.identifier:
             self.links_others += 1
         else:
             self.links_persos += 1
@@ -46,7 +46,7 @@ class Utilisateur:
     def add_criterion(self, id_criterion):
         """
         add a criterion to statistics
-        :param id: the identifier of the criterion
+        :param id_criterion: the identifier of the criterion
         """
         self.criterion.append(id_criterion)
 
