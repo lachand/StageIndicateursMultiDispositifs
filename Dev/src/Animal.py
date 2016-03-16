@@ -87,6 +87,11 @@ class Animal(Scatter):
         if len(points) == 1 :
             self.center_x = x
             self.center_y = y
+        elif len(points) == 2 :
+            x = (points[0][0] + points[1][0])/2
+            y = (points[0][1] + points[1][1])/2
+            self.center_x = x
+            self.center_y = y
         elif len(points) > 2 :
             poly = Polygon(points)
             point = poly.centroid

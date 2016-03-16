@@ -42,6 +42,12 @@ class Link:
         return self.id_usr == id_usr
 
     def update(self, center_animal, center_critere):
+        """
+
+        :param center_animal:
+        :param center_critere:
+        :return:
+        """
         dx = center_critere[0] - center_animal[0]
         dy = center_critere[1] - center_animal[1]
 
