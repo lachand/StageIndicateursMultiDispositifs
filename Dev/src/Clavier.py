@@ -2,6 +2,7 @@ from kivy.uix.scatter import Scatter
 from kivy.uix.textinput import TextInput
 from Utilisateur import Utilisateur
 from Critere import Critere
+from kivy.uix.vkeyboard import VKeyboard
 
 
 class Clavier(Scatter):
@@ -22,12 +23,21 @@ class Clavier(Scatter):
         self.color = color
         self.pos = position
         self.rotation = angle
-        ti = TextInput(size_hint=(None, None), backgroud_color=self.color, multiline=False, size=(100, 30))
-        ti.bind(on_text_validate=self.validate)
+        self.ti = TextInput(size_hint=(None, None), multiline=False, size=(100, 30))
+        self.ti.bind(on_text_validate=self.validate)
+        self.ti.bind(on_double_tap=self.destroy)
         self.do_rotation = False
         self.do_scale = False
         self.do_translation = False
-        self.add_widget(ti)
+        self.add_widget(self.ti)
+        self.ti.background_color = self.color+[1]
+        self.ti.foreground_color = [1,1,1,1]
+
+
+    def destroy(self, value):
+        self.ti.focus = False
+        self.remove_widget(self.ti)
+        self.parent.remove_widget(self)
 
     def validate(self, value):
         """
