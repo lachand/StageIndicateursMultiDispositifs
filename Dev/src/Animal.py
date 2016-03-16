@@ -27,6 +27,7 @@ class Animal(Scatter):
         self.center = [randint(200, pos[0]), randint(200, pos[1])]
         self.identifiant = id
         self.current_utilisateur = None
+        self.on_move = False
         with self.canvas:
             Color(1, 1, 1, 1)
             Rectangle(source=self.src_image, size=[self.taille[0] - 10, self.taille[1] - 10])
@@ -58,23 +59,20 @@ class Animal(Scatter):
 
     def on_touch_move(self, touch):
         """
-        Update the distance and angle between the animal and each of his links
+        Update the distance and angle between the animal and each of his links and set the user touching the animal
         :param touch: the position of the touch
         """
-        for critere in self.parent.criteres:
-            value = critere.has_link(self.identifiant)
-            if value != -1:
-                critere.update_link(value,self.center)
-        Scatter.on_touch_move(self, touch)
+        if self.collide_point(touch.x, touch.y) :
+            for critere in self.parent.criteres:
+                value = critere.has_link(self.identifiant)
+                if value != -1:
+                    critere.update_link(value,self.center)
 
-    def update(self, dt):
-        """
-        Create link between the animal and a concept the animal is used by someone and collid with a concept
-        """
-        for child in self.parent.children:
-            if child.__class__ == ZoneUtilisateur and child.collide_point(self.center[0], self.center[1]):
-                if self.current_utilisateur is None:
-                    self.set_utilisateur(child.utilisateur)
+            for child in self.parent.children:
+                if child.__class__ == ZoneUtilisateur and child.collide_point(self.center[0], self.center[1]):
+                    if self.current_utilisateur is None:
+                        self.set_utilisateur(child.utilisateur)
+            Scatter.on_touch_move(self, touch)
 
     def update_coordinate(self,x,y):
         points = []
@@ -85,15 +83,21 @@ class Animal(Scatter):
                     y = critere.center_y + lien.distance*sin(-lien.angle+pi)
                     points.append([x,y])
         if len(points) == 1 :
-            self.center_x = x
-            self.center_y = y
+            if x > 0 and x < self.parent.size[0]:
+                self.center_x = x
+            if y > 0 and y < self.parent.size[1]:
+                self.center_y = y
         elif len(points) == 2 :
             x = (points[0][0] + points[1][0])/2
             y = (points[0][1] + points[1][1])/2
-            self.center_x = x
-            self.center_y = y
+            if x > 0 and x < self.parent.size[0]:
+                self.center_x = x
+            if y > 0 and y < self.parent.size[1]:
+                self.center_y = y
         elif len(points) > 2 :
             poly = Polygon(points)
             point = poly.centroid
-            self.center_x = point.x
-            self.center_y = point.y
+            if x > 0 and x < self.parent.size[0]:
+                self.center_x = point.x
+            if y > 0 and y < self.parent.size[1]:
+                self.center_y = point.y

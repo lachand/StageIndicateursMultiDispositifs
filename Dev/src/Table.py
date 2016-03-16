@@ -98,8 +98,6 @@ class Table(Widget):
         for child in self.children:
             if child.__class__ == Critere:
                 child.update(dt)
-            elif child.__class__ == Animal:
-                child.update(dt)
             elif child.__class__ == Links:
                 child.update(dt)
             elif child.__class__ == ProgressObjectif:
