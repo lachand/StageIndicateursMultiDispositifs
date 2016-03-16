@@ -2,6 +2,8 @@ from kivy.graphics import Ellipse
 from kivy.uix.colorpicker import Color
 from kivy.uix.label import Label
 from kivy.uix.scatter import Scatter
+from Link import Link
+import math
 
 
 class Critere(Scatter):
@@ -44,16 +46,16 @@ class Critere(Scatter):
         """
         est_dedans = False
         for lien in self.links:
-            if id_img == lien[0]:
+            if lien.linked_to_animal(id_img):
                 est_dedans = True
-                if id_usr == lien[1]:
-                    self.links.remove([id_img, id_usr])
+                if lien.linked_to_user(id_usr):
+                    self.links.remove(lien)
         if not est_dedans:
-            self.links.append([id_img, id_usr])
+            self.links.append(Link(id_img, id_usr))
 
     def fuse_concept(self, concept):
         """
-        Fuse two criterions togetehr
+        Fuse two criterions together
         :param concept: the other criterion ton fuse
         """
         if self.createur.identifiant != concept.createur.identifiant:
@@ -89,10 +91,30 @@ class Critere(Scatter):
             Label(text=self.texte, halign='left', size=self.size)
 
         for lien in concept.links:
-            self.add_link(lien[0], lien[1])
+            self.add_link(lien.id_img, lien.id_usr)
         for fils in self.parent.children:
             if fils.__class__ == Critere and fils.collide_widget(self) and fils != self:
                 self.parent.remove_widget(fils)
+
+    def has_link(self, identifiant):
+        """
+        Return if the criterion is linked to a specified animal
+        :param identifiant: The identifiant of the animal
+        :return: the position of the animal in the link's table or -1 if the criterion is not linked to the animal
+        """
+        for lien in self.links :
+            if lien.linked_to_animal(identifiant):
+                return self.links.index(lien)
+        return -1
+
+    def update_link(self, index, center):
+        """
+        Update the distance and angle between an animal and the criterion
+        :param index: the index of hte animal
+        :param center: the center of the animal
+        """
+        self.links[index].update(center, self.center)
+
 
     def update(self, dt):
         """
@@ -101,11 +123,12 @@ class Critere(Scatter):
         from Animal import Animal
         cpt = 0
         for child in self.parent.children:
-            if child.__class__ == Animal and child.collide_point(self.center[0],
-                                                                 self.center[1]) and child.current_utilisateur != None:
-                self.add_link(child.identifiant, child.current_utilisateur.identifiant)
-                child.current_utilisateur.add_link(self.createur.identifiant)
-                child.remove_utilisateur()
+            if child.__class__ == Animal :
+                if child.collide_point(self.center[0],
+                                       self.center[1]) and child.current_utilisateur != None:
+                    self.add_link(child.identifiant, child.current_utilisateur.identifiant)
+                    child.current_utilisateur.add_link(self.createur.identifiant)
+                    child.remove_utilisateur()
 
         for utilisateur in self.parent.groupe.utilisateurs:
             if utilisateur.validate:
@@ -114,3 +137,14 @@ class Critere(Scatter):
             for child in self.parent.children:
                 if child.__class__ == Critere and child.collide_point(self.center[0], self.center[1]) and child != self:
                     self.fuse_concept(child)
+
+    def on_touch_move(self, touch):
+        from Animal import Animal
+        for child in self.parent.children:
+            if child.__class__ == Animal :
+                for lien in self.links:
+                    if lien.linked_to_animal(child.identifiant):
+                        x = self.center_x + lien.distance*math.cos(lien.angle+math.pi)
+                        y = self.center_y + lien.distance*math.sin(-lien.angle+math.pi)
+                        child.update_coordinate(x,y)
+        Scatter.on_touch_move(self,touch)

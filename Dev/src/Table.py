@@ -40,7 +40,7 @@ class Table(Widget):
         Initialize the table
         :param size: the size of the screen
         """
-        configuration = Configuration("../cfg/ConfigSimple.json")
+        configuration = Configuration("..\\cfg\\ConfigSimple.json")
         self.size = size.size
         self.groupe = Groupe(1)
         configuration.config_table(self)
@@ -124,7 +124,7 @@ class TableApp(App):
         self.table.initialisation(self.root_window)
 
     def on_stop(self):
-        configuration = Configuration("../cfg/ConfigSimple.json")
+        configuration = Configuration("..\\cfg\\ConfigSimple.json")
         generateur = GenerateurRapport()
         configuration.config_generateur(generateur)
         generateur.generation(self.table)

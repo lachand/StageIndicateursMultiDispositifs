@@ -26,8 +26,8 @@ class Links(Widget):
             if child.__class__ == Critere:
                 for lien in child.links:
                     for child2 in self.parent.children:
-                        if child2.__class__ == Animal and lien[0] == child2.identifiant:
-                            utilisateur = self.parent.get_utilisateur(lien[1])
+                        if child2.__class__ == Animal and lien.linked_to_animal(child2.identifiant):
+                            utilisateur = self.parent.get_utilisateur(lien.id_usr)
                             with self.canvas:
                                 if self.colored:
                                     couleur = utilisateur.couleur

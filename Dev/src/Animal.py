@@ -4,6 +4,8 @@ from random import randint
 from ZoneUtilisateur import ZoneUtilisateur
 from kivy.uix.colorpicker import Color
 from kivy.graphics import Rectangle
+from shapely.geometry import Polygon
+from math import sin, cos, pi
 
 
 class Animal(Scatter):
@@ -45,14 +47,25 @@ class Animal(Scatter):
 
     def remove_utilisateur(self):
         """
-         Remove the current user of the animal
-         """
+        Remove the current user of the animal
+        """
         self.current_utilisateur = None
         self.couleur = [1, 1, 1]
         self.canvas.clear()
         with self.canvas:
             Color(1, 1, 1, 1)
             Rectangle(source=self.src_image, size=[self.taille[0] - 10, self.taille[1] - 10])
+
+    def on_touch_move(self, touch):
+        """
+        Update the distance and angle between the animal and each of his links
+        :param touch: the position of the touch
+        """
+        for critere in self.parent.criteres:
+            value = critere.has_link(self.identifiant)
+            if value != -1:
+                critere.update_link(value,self.center)
+        Scatter.on_touch_move(self, touch)
 
     def update(self, dt):
         """
@@ -62,3 +75,20 @@ class Animal(Scatter):
             if child.__class__ == ZoneUtilisateur and child.collide_point(self.center[0], self.center[1]):
                 if self.current_utilisateur is None:
                     self.set_utilisateur(child.utilisateur)
+
+    def update_coordinate(self,x,y):
+        points = []
+        for critere in self.parent.criteres :
+            for lien in critere.links:
+                if lien.linked_to_animal(self.identifiant):
+                    x = critere.center_x + lien.distance*cos(lien.angle+pi)
+                    y = critere.center_y + lien.distance*sin(-lien.angle+pi)
+                    points.append([x,y])
+        if len(points) == 1 :
+            self.center_x = x
+            self.center_y = y
+        elif len(points) > 2 :
+            poly = Polygon(points)
+            point = poly.centroid
+            self.center_x = point.x
+            self.center_y = point.y
