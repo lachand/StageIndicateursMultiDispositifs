@@ -7,10 +7,9 @@ class Link:
     """
     def __init__(self, id_img, id_usr):
         """
-
-        :param id_img:
-        :param id_usr:
-        :return:
+        Initialization of a link
+        :param id_img: the id of the image to link
+        :param id_usr: the id of the user creating the link
         """
         self.id_img = id_img
         self.id_usr = id_usr
@@ -19,34 +18,34 @@ class Link:
 
     def linked_to(self, id_img, id_usr):
         """
-
-        :param id_img:
-        :return:
+        Return if the link is between a specified animal and a specified user
+        :param id_img: the id of the specified animal
+        :param id_usr: the id of the specified user
+        :return: true if the link exists, else false
         """
         return self.id_img == id_img and self.id_usr == id_usr
 
     def linked_to_animal(self, id_img):
         """
-
-        :param id_img:
-        :return:
+        Return if the link is between a specified animal
+        :param id_img: the id of the specified animal
+        :return: true if the link exists, else false
         """
         return self.id_img == id_img
 
     def linked_to_user(self, id_usr):
         """
-
-        :param id_img:
-        :return:
+        Return if the link is between a specified user
+        :param id_usr: the id of the specified user
+        :return: true if the link exists, else false
         """
         return self.id_usr == id_usr
 
     def update(self, center_animal, center_critere):
         """
-
-        :param center_animal:
-        :param center_critere:
-        :return:
+        Update the distance and angle of the link
+        :param center_animal: the center of the animal
+        :param center_critere: the center of the criterion
         """
         dx = center_critere[0] - center_animal[0]
         dy = center_critere[1] - center_animal[1]

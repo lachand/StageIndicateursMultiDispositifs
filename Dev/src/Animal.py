@@ -75,6 +75,11 @@ class Animal(Scatter):
             Scatter.on_touch_move(self, touch)
 
     def update_coordinate(self,x,y):
+        """
+        Update the coordinate of the Animal considering his links
+        :param x: the new x coordinate
+        :param y: the new y coordinate
+        """
         points = []
         for critere in self.parent.criteres :
             for lien in critere.links:
