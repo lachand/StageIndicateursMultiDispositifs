@@ -43,6 +43,30 @@
       "Position":{"x": 0,"y": 0}
     },
     {
+      "Nom":"ZoneVote",
+      "Source":"1",
+      "Position":{"x": 100,"y": 0},
+      "Angle":"90"
+    },
+    {
+      "Nom":"ZoneVote",
+      "Source":"2",
+      "Position":{"x": 100,"y": 100 },
+      "Angle":"180"
+    },
+    {
+      "Nom":"ZoneVote",
+      "Source":"3",
+      "Position":{"x": 0,"y": 100},
+      "Angle":"270"
+    },
+    {
+      "Nom":"ZoneVote",
+      "Source":"4",
+      "Position":{"x": 0,"y": 0},
+      "Angle":"0"
+    },
+    {
       "Nom":"ProgressObjectif",
       "Source":"1",
       "Lvl":"0",

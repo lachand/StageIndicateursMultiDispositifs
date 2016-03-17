@@ -5,6 +5,7 @@ import demjson as json
 
 from ProgressObjectif import ProgressObjectif
 from ZoneUtilisateur import ZoneUtilisateur
+from ZoneVote import ZoneVote
 
 
 class Configuration:
@@ -51,6 +52,12 @@ class Configuration:
                 table.add_indicateur(ZoneUtilisateur(table.get_user(int(indicateur["Source"])),
                                                      [int(indicateur["Position"]["x"]) * table.size[0] / 100,
                                                      int(indicateur["Position"]["y"]) * table.size[1] / 100]))
+            # Indicateur : Zone de vote
+            if indicateur["Nom"] == "ZoneVote":
+                table.add_indicateur(ZoneVote(table.get_user(int(indicateur["Source"])),
+                                                     [int(indicateur["Position"]["x"]) * table.size[0] / 100,
+                                                     int(indicateur["Position"]["y"]) * table.size[1] / 100],
+                                                     int(indicateur["Angle"])))
             # Indicateur : Progres de l'objective
             elif indicateur["Nom"] == "ProgressObjectif":
                 table.add_indicateur(ProgressObjectif(table.objective_criterions[int(indicateur["Lvl"])],
