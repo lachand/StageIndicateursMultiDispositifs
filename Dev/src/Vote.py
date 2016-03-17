@@ -53,6 +53,17 @@ class Vote(Widget):
                 else:
                     Color(0,1,0,1)
                 Ellipse(pos=self.pos,size=self.size)
+            for criterion in self.parent.parent.criterions:
+                if self.collide_widget(criterion):
+                    criterion.validate_by_user(self.id_usr, self.value)
+                    self.canvas.clear()
+                    self.pos = self.Position
+                    with self.canvas:
+                        if self.value == 0:
+                            Color(1,0,0,1)
+                        else:
+                            Color(0,1,0,1)
+                        Ellipse(pos=self.pos,size=self.size)
 
     def on_touch_up(self, touch):
         if self.collide_point(touch.x,touch.y):

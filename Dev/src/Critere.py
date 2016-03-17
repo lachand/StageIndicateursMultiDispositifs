@@ -31,6 +31,8 @@ class Critere(Scatter):
         self.texte = text
         self.createur = creator
         self.fusionneurs = []
+        self.validator = []
+        self.validated = False
         self.color = self.createur.color
         self.links = []
         self.size = len(text) * 1 + 100, 50
@@ -119,6 +121,16 @@ class Critere(Scatter):
         :param center: the center of the animal
         """
         self.links[index].update(center, self.center)
+
+    def validate_by_user(self, user, value):
+        if not self.validated:
+            if self.validator.__contains__(user) :
+                if value == 0:
+                    self.validator.remove(user)
+            elif value == 1:
+                self.validator.append(user)
+            if len(self.validator) == len(self.parent.group.users):
+                self.validated = True
 
     def update(self, dt):
         """
