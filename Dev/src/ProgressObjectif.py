@@ -1,3 +1,6 @@
+#!/usr/local/bin/python
+#  -*- coding: utf-8 -*-
+
 from kivy.uix.button import Button
 from kivy.uix.progressbar import ProgressBar
 from kivy.uix.widget import Widget

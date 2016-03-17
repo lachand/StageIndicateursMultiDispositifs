@@ -1,3 +1,6 @@
+#!/usr/local/bin/python
+#  -*- coding: utf-8 -*-
+
 class Utilisateur:
     """
     A class representing a user of the application

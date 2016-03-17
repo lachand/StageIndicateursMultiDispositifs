@@ -1,5 +1,9 @@
+#!/usr/local/bin/python
+#  -*- coding: utf-8 -*-
+
+import datetime
+
 import plotly.graph_objs as go
-import plotly.plotly as py
 
 
 class GenerateurRapport:
@@ -18,7 +22,16 @@ class GenerateurRapport:
         Generate a report
         :param table: the table where to use informations
         """
-        py.sign_in('lachand', 'sxtpaevi0x')
+        import plotly
+        print plotly.__version__  # version >1.9.4 required
+
+        html_string = '''<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+        <style>body{ margin:0 100; background:whitesmoke; }</style>
+    </head>
+    <body>
+        <h1>Rapport d'activité du '''+datetime.datetime.now().strftime('%A %d %b')+'''</h1>'''
 
         if self.ratio_links_perso_collabo:
             id_user = []
@@ -32,20 +45,21 @@ class GenerateurRapport:
             links_persos = go.Bar(
                 x=id_user,
                 y=val_perso,
-                name='links personnels'
+                name='liens personnels'
             )
             links_others = go.Bar(
                 x=id_user,
                 y=val_collabo,
-                name='links collaboratifs'
+                name='liens collaboratifs'
             )
             data = [links_others, links_persos]
             layout = go.Layout(
                 barmode='stack'
             )
             fig = go.Figure(data=data, layout=layout)
-            print data
-            py.image.save_as(fig, filename='ratio_links_persos_collabo.png')
+            rapport = plotly.offline.plot(fig, filename="ratio_liens_collabo_persos")
+            html_string = html_string + '''<h2>Liens collaboratifs et personnels par utilisateur</h2>
+            <iframe width="1000" height="550" frameborder="0" seamless="seamless" scrolling="no" src="''' + rapport + '''"></iframe>'''
 
         if self.ratio_criterions_groups:
             values = {}
@@ -68,7 +82,7 @@ class GenerateurRapport:
                     "labels": labels,
                     'marker': {'colors': colors},
                     "domain": {"x": [0, 1]},
-                    "name": "Nombre de criterions",
+                    "name": "Nombre de critères",
                     "hoverinfo": "label+percent+name",
                     "hole": .4,
                     "type": "pie"
@@ -77,24 +91,18 @@ class GenerateurRapport:
                 fig = {
                     "data": [data[i]],
                     "layout": {
-                        "title": "Nombre de criterions par joueurs en fonction du group : But " + str(i),
-                        "annotations":
-                            {
-                                "font": {
-                                    "size": 20
-                                },
-                                "showarrow": False,
-                                "text": "But 1 : ",
-                                "x": 0.15,
-                                "y": 0.5
-                            }
+                        "title": "Nombre de critères par joueur en fonction du groupe : But " + str(i),
+
                     }
                 }
+                rapport = plotly.offline.plot(fig, filename='ratio_criterion_group_but_' + str(i))
+                html_string = html_string + '''<h2>'''+fig["layout"]["title"]+'''</h2>
+                <iframe width="1000" height="550" frameborder="0" seamless="seamless" scrolling="no" src="''' + rapport + '''"></iframe>'''
 
-                py.image.save_as(fig, filename='ratio_criterion_group_but_' + str(i) + '.png')
+        html_string = html_string+'''</body></html>'''
+        print html_string
 
-    @staticmethod
-    def get_values(values, i):
+    def get_values(self, values, i):
         """
         Get values with a part of a key in a dictionary
         :param values: the dictionary

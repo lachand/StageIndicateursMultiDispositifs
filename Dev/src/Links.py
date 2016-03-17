@@ -1,8 +1,12 @@
-from kivy.uix.widget import Widget
-from Critere import Critere
-from Animal import Animal
-from kivy.uix.colorpicker import Color
+#!/usr/local/bin/python
+#  -*- coding: utf-8 -*-
+
 from kivy.graphics import Line
+from kivy.uix.colorpicker import Color
+from kivy.uix.widget import Widget
+
+from Animal import Animal
+from Critere import Critere
 
 
 class Links(Widget):

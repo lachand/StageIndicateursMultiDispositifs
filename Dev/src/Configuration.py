@@ -1,3 +1,6 @@
+#!/usr/local/bin/python
+#  -*- coding: utf-8 -*-
+
 import demjson as json
 
 from ProgressObjectif import ProgressObjectif
