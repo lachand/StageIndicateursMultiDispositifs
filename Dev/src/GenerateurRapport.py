@@ -3,6 +3,8 @@
 
 import datetime
 
+#locale.setlocale(locale.LC_TIME, "fr_FR.utf8")
+
 import plotly.graph_objs as go
 
 
@@ -27,6 +29,7 @@ class GenerateurRapport:
 
         html_string = '''<html>
     <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
         <style>body{ margin:0 100; background:whitesmoke; }</style>
     </head>
@@ -37,6 +40,15 @@ class GenerateurRapport:
             id_user = []
             val_perso = []
             val_collabo = []
+            colors = []
+            colors2 = []
+            for user in table.group.users:
+                    colors.append('rgb(' + str(int(user.color[0] * 255)) + ',' + str(
+                        int(user.color[1] * 255)) + ',' + str(int(user.color[2] * 255)) + ')')
+                    colors2.append('rgb(' + str(int(user.color[0] * 125)) + ',' + str(
+                        int(user.color[1] * 125)) + ',' + str(int(user.color[2] * 125)) + ')')
+
+
             for user in table.group.users:
                 id_user.append(user.identifier)
                 val_collabo.append(user.links_others)
@@ -45,19 +57,21 @@ class GenerateurRapport:
             links_persos = go.Bar(
                 x=id_user,
                 y=val_perso,
-                name='liens personnels'
+                name='liens personnels',
+                marker=dict(color=colors)
             )
             links_others = go.Bar(
                 x=id_user,
                 y=val_collabo,
-                name='liens collaboratifs'
+                name='liens collaboratifs',
+                marker=dict(color=colors2)
             )
             data = [links_others, links_persos]
             layout = go.Layout(
                 barmode='stack'
             )
             fig = go.Figure(data=data, layout=layout)
-            rapport = plotly.offline.plot(fig, filename="ratio_liens_collabo_persos")
+            rapport = plotly.offline.plot(fig, filename="ratio_liens_collabo_persos",auto_open=False)
             html_string = html_string + '''<h2>Liens collaboratifs et personnels par utilisateur</h2>
             <iframe width="1000" height="550" frameborder="0" seamless="seamless" scrolling="no" src="''' + rapport + '''"></iframe>'''
 
@@ -95,12 +109,14 @@ class GenerateurRapport:
 
                     }
                 }
-                rapport = plotly.offline.plot(fig, filename='ratio_criterion_group_but_' + str(i))
+                rapport = plotly.offline.plot(fig, filename='ratio_criterion_group_but_' + str(i), auto_open=False)
                 html_string = html_string + '''<h2>'''+fig["layout"]["title"]+'''</h2>
                 <iframe width="1000" height="550" frameborder="0" seamless="seamless" scrolling="no" src="''' + rapport + '''"></iframe>'''
 
         html_string = html_string+'''</body></html>'''
-        print html_string
+        file_ = open('Rapport_'+datetime.datetime.now().strftime('%A_%d_%b')+'.html', 'w')
+        file_.write(html_string)
+        file_.close()
 
     def get_values(self, values, i):
         """
