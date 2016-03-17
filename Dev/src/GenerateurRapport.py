@@ -25,7 +25,6 @@ class GenerateurRapport:
         :param table: the table where to use informations
         """
         import plotly
-        print plotly.__version__  # version >1.9.4 required
 
         html_string = '''<html>
     <head>
@@ -71,7 +70,7 @@ class GenerateurRapport:
                 barmode='stack'
             )
             fig = go.Figure(data=data, layout=layout)
-            rapport = plotly.offline.plot(fig, filename="ratio_liens_collabo_persos",auto_open=False)
+            rapport = plotly.offline.plot(fig, filename="ratio_liens_collabo_persos.html",auto_open=False)
             html_string = html_string + '''<h2>Liens collaboratifs et personnels par utilisateur</h2>
             <iframe width="1000" height="550" frameborder="0" seamless="seamless" scrolling="no" src="''' + rapport + '''"></iframe>'''
 
@@ -109,7 +108,7 @@ class GenerateurRapport:
 
                     }
                 }
-                rapport = plotly.offline.plot(fig, filename='ratio_criterion_group_but_' + str(i), auto_open=False)
+                rapport = plotly.offline.plot(fig, filename='ratio_criterion_group_but_' + str(i) + ".html", auto_open=False)
                 html_string = html_string + '''<h2>'''+fig["layout"]["title"]+'''</h2>
                 <iframe width="1000" height="550" frameborder="0" seamless="seamless" scrolling="no" src="''' + rapport + '''"></iframe>'''
 

@@ -35,7 +35,6 @@ class Vote(Widget):
             self.Position = pos[0]+(200*cos(self.angle))+move_x, pos[1]+(200*sin(self.angle))+move_y
         self.pos = self.Position
         Widget.__init__(self)
-        print self.pos
         with self.canvas:
             if self.value == 0:
                 Color(1,0,0,1)
