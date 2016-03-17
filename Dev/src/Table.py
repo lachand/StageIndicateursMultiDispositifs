@@ -56,6 +56,9 @@ class Table(Widget):
         """
         self.add_widget(criterion)
         self.criterions.append(criterion)
+        for child in self.children:
+            if child.__class__ == ProgressObjectif:
+                child.update()
 
     def news_images(self, level):
         """
@@ -99,7 +102,7 @@ class Table(Widget):
         Update the table
         """
         for child in self.children:
-            if child.__class__ == Critere or child.__class__ == Links or child.__class__ == ProgressObjectif:
+            if child.__class__ == Critere or child.__class__ == Links:
                 child.update(dt)
 
     def get_user(self, identifier):
