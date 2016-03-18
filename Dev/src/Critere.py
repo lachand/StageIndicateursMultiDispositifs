@@ -130,7 +130,36 @@ class Critere(Scatter):
             elif value == 1:
                 self.validator.append(user)
             if len(self.validator) == len(self.parent.group.users):
-                self.validated = True
+                self.validate()
+
+    def validate(self):
+        self.validated = True
+        cpt = 0
+        with self.canvas:
+            Color(1, 1, 1, 1)
+            Ellipse(size=(self.size[0]+10,self.size[1]+10),pos=(-5,-5))
+
+        for fusionneur in self.fusionneurs:
+            with self.canvas:
+                if self.colored:
+                    Color(fusionneur.color[0], fusionneur.color[1], fusionneur.color[2])
+                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    cpt += 360/(len(self.fusionneurs)+1)
+                else:
+                    Color(.25, .25, .25)
+                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    cpt += 360/(len(self.fusionneurs)+1)
+        with self.canvas:
+            if self.colored:
+                    Color(self.createur.color[0], self.createur.color[1], self.createur.color[2])
+                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    cpt += 360/(len(self.fusionneurs)+1)
+            else:
+                    Color(.25, .25, .25)
+                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    cpt += 360/(len(self.fusionneurs)+1)
+
+            Label(text=self.texte, halign='left', size=self.size)
 
     def update(self, dt):
         """

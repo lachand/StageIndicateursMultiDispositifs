@@ -53,7 +53,7 @@ class Vote(Widget):
                     Color(0,1,0,1)
                 Ellipse(pos=self.pos,size=self.size)
             for criterion in self.parent.parent.criterions:
-                if self.collide_widget(criterion):
+                if self.collide_point(criterion.center[0],criterion.center[1]):
                     criterion.validate_by_user(self.id_usr, self.value)
                     self.canvas.clear()
                     self.pos = self.Position
