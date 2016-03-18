@@ -7,7 +7,6 @@ from ProgressObjectif import ProgressObjectif
 from ZoneUtilisateur import ZoneUtilisateur
 from ZoneVote import ZoneVote
 
-
 class Configuration:
     """
     A class in order to dynamically configure the session

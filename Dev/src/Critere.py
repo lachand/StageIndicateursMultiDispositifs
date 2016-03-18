@@ -37,6 +37,7 @@ class Critere(Scatter):
         self.links = []
         self.size = len(text) * 1 + 100, 50
         self.colored = colored
+        self.fused = False
         with self.canvas:
             if self.colored:
                 Color(self.color[0], self.color[1], self.color[2])
@@ -68,11 +69,21 @@ class Critere(Scatter):
         if self.createur.identifier != concept.createur.identifier:
             if not self.fusionneurs.__contains__(concept.createur):
                 self.fusionneurs.append(concept.createur)
+                self.parent.criterions[self.parent.criterions.index(concept)].fused = True
 
         for fusionneur in concept.fusionneurs:
             if self.createur.identifier != fusionneur.identifier:
                 if not self.fusionneurs.__contains__(fusionneur):
                     self.fusionneurs.append(fusionneur)
+                    self.parent.criterions[self.parent.criterions.index(concept)].fused = True
+
+        for link in concept.links:
+            if self.has_link(link.id_img) == -1:
+                self.add_link(link.id_img, link.id_usr)
+
+        for fils in self.parent.children:
+            if fils.__class__ == Critere and fils.collide_widget(self) and fils != self:
+                self.parent.remove_widget(fils)
 
         cpt = 0
         for fusionneur in self.fusionneurs:
@@ -97,11 +108,6 @@ class Critere(Scatter):
 
             Label(text=self.texte, halign='left', size=self.size)
 
-        for link in concept.links:
-            self.add_link(link.id_img, link.id_usr)
-        for fils in self.parent.children:
-            if fils.__class__ == Critere and fils.collide_widget(self) and fils != self:
-                self.parent.remove_widget(fils)
 
     def has_link(self, identifier):
         """

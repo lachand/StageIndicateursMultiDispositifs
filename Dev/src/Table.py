@@ -16,12 +16,15 @@ from GenerateurRapport import GenerateurRapport
 from Groupe import Groupe
 from Links import Links
 from ProgressObjectif import ProgressObjectif
+import os
 
 Builder.load_file('template.kv')
 
 Config.set('kivy', 'keyboard_mode', 'multi')
 Config.set('kivy', 'keyboard_layout', 'keyboard.json')
 Config.set('graphics', 'fullscreen', 'auto')
+
+PATH = os.path.join("..", "cfg", "ConfigSimple.json")
 
 
 class Table(Widget):
@@ -44,7 +47,7 @@ class Table(Widget):
         Initialize the table
         :param size: the size of the screen
         """
-        configuration = Configuration("../cfg/ConfigSimple.json")
+        configuration = Configuration(PATH)
         self.size = size.size
         configuration.config_table(self)
         self.add_widget(Links(self.colored_links))
@@ -124,7 +127,7 @@ class TableApp(App):
         self.table.initialisation(self.root_window)
 
     def on_stop(self):
-        configuration = Configuration("../cfg/ConfigSimple.json")
+        configuration = Configuration(PATH)
         generateur = GenerateurRapport()
         configuration.config_generateur(generateur)
         generateur.generation(self.table)
