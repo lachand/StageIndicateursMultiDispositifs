@@ -85,6 +85,7 @@ class Animal(Scatter):
         :param x: the new x coordinate
         :param y: the new y coordinate
         """
+        points = []
         for criterion in self.parent.criterions:
             for link in criterion.links:
                 if link.linked_to_animal(self.identifier) and criterion.fused == False:

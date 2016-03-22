@@ -16,6 +16,7 @@ from GenerateurRapport import GenerateurRapport
 from Groupe import Groupe
 from Links import Links
 from ProgressObjectif import ProgressObjectif
+from PhysicalIndicator import PhysicalIndicator
 import os
 
 Builder.load_file('template.kv')
@@ -51,6 +52,8 @@ class Table(Widget):
         self.size = size.size
         configuration.config_table(self)
         self.add_widget(Links(self.colored_links))
+        physical = PhysicalIndicator()
+        self.add_widget(physical)
 
     def add_criterion(self, criterion):
         """
@@ -105,7 +108,7 @@ class Table(Widget):
         Update the table
         """
         for child in self.children:
-            if child.__class__ == Critere or child.__class__ == Links:
+            if child.__class__ == Critere or child.__class__ == Links or child.__class__ == PhysicalIndicator:
                 child.update(dt)
 
     def get_user(self, identifier):

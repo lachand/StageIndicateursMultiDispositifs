@@ -41,7 +41,9 @@ class Configuration:
             r = float(user["Couleur"]["r"]) / 255.
             g = float(user["Couleur"]["g"]) / 255.
             b = float(user["Couleur"]["b"]) / 255.
-            table.group.add_user(Utilisateur(cpt_users, [r, g, b], max_lvl))
+            table.group.add_user(Utilisateur(cpt_users, [r, g, b], max_lvl,
+                                 [int(user["Position"]["x"]) * table.size[0] / 100,
+                                  int(user["Position"]["y"]) * table.size[1] / 100]))
             cpt_users += 1
 
         # Gestion des Indicateurs

@@ -5,7 +5,7 @@ class Utilisateur:
     """
     A class representing a user of the application
     """
-    def __init__(self, identifier, color, max_lvl):
+    def __init__(self, identifier, color, max_lvl, pos):
         """
         Initialize an user
         :param identifier: the identifier of the user
@@ -17,10 +17,12 @@ class Utilisateur:
         self.validate = False
         self.criterion = []
         self.nb_criterions = [0, 0, 0, 0]
+        self.nb_criterion = 0
         self.current_image = None
         self.links_persos = 0
         self.links_others = 0
         self.max_lvl = max_lvl
+        self.position = pos
 
         for i in range(0, max_lvl):
             self.nb_criterions.append(0)
@@ -59,3 +61,4 @@ class Utilisateur:
         :param level : the current level of the game
         """
         self.nb_criterions[level] += 1
+        self.nb_criterion += 1
