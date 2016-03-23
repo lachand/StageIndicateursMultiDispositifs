@@ -9,6 +9,7 @@ from kivy.uix.label import Label
 from kivy.uix.scatter import Scatter
 
 from Link import Link
+from PhysicalIndicator import PhysicalIndicator
 
 
 class Critere(Scatter):
@@ -60,6 +61,9 @@ class Critere(Scatter):
                     self.links.remove(link)
         if not est_dedans:
             self.links.append(Link(id_img, id_usr))
+            for indicator in self.parent.indicators:
+                if indicator.__class__ == PhysicalIndicator :
+                    indicator.add_ball(id_usr, self.parent.group.get_user(id_usr).position)
 
     def fuse_concept(self, concept):
         """

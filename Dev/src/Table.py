@@ -2,6 +2,7 @@
 #  -*- coding: utf-8 -*-
 
 import glob
+import os
 
 from kivy.app import App
 from kivy.clock import Clock
@@ -15,9 +16,8 @@ from Critere import Critere
 from GenerateurRapport import GenerateurRapport
 from Groupe import Groupe
 from Links import Links
-from ProgressObjectif import ProgressObjectif
 from PhysicalIndicator import PhysicalIndicator
-import os
+from ProgressObjectif import ProgressObjectif
 
 Builder.load_file('template.kv')
 
@@ -42,6 +42,7 @@ class Table(Widget):
     colored_criterions = True
     progress_objective = []
     group = Groupe(1)
+    indicators = []
 
     def initialisation(self, size):
         """
@@ -53,6 +54,7 @@ class Table(Widget):
         configuration.config_table(self)
         self.add_widget(Links(self.colored_links))
         physical = PhysicalIndicator()
+        self.indicators.append(physical)
         self.add_widget(physical)
 
     def add_criterion(self, criterion):

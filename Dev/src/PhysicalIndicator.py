@@ -1,9 +1,7 @@
 import pymunk
-import random
-
-from kivy.uix.widget import Widget
-from kivy.uix.colorpicker import Color
 from kivy.graphics import Ellipse
+from kivy.uix.colorpicker import Color
+from kivy.uix.widget import Widget
 
 class PhysicalIndicator(Widget):
 
@@ -14,18 +12,17 @@ class PhysicalIndicator(Widget):
         self.balls = [[],[],[],[]]
         self.ticks_to_next_ball = 10
 
-
-    def add_ball(self,space, position):
+    def add_ball(self, user_identifier, position):
         mass = 1
         radius = 30
-        inertia = pymunk.moment_for_circle(mass, 0, radius) # 1
-        body = pymunk.Body(mass, inertia) # 2
+        inertia = pymunk.moment_for_circle(mass, 0, radius)
+        body = pymunk.Body(mass, inertia)
         x = position[0]
         y = position[1]
-        body.position = x, y # 3
-        shape = pymunk.Circle(body, radius) # 4
-        space.add(body, shape)
-        return shape
+        body.position = x, y
+        shape = pymunk.Circle(body, radius)
+        self.space.add(body, shape)
+        self.balls[user_identifier-1].append(shape)
 
     def draw_balls(self):
         for balls in self.balls:
@@ -37,24 +34,15 @@ class PhysicalIndicator(Widget):
 
     def update(self, dt):
         self.canvas.clear()
-        self.ticks_to_next_ball -= 1
-
-        for user in self.parent.group.users:
-            if user.nb_criterion > 0 and self.ticks_to_next_ball % (60/user.nb_criterion) <= 0:
-                ball_shape = self.add_ball(self.space, user.position)
-                self.balls[user.identifier-1].append(ball_shape)
-
-        if self.ticks_to_next_ball == 0:
-                self.ticks_to_next_ball = 60
 
         balls_to_remove = []
 
         for balls in self.balls:
             for ball in balls:
-                xtmp = self.parent.size[0]/2-ball.body.position.x
+                xtmp = self.parent.size[1]/2-ball.body.position.x
                 ytmp = self.parent.size[1]/2-ball.body.position.y
-                ball.body.velocity = xtmp*2, ytmp*2
-                ball.unsafe_set_radius(ball.radius - .05)
+                ball.body.velocity = xtmp, ytmp
+                ball.unsafe_set_radius(ball.radius - .005)
                 if ball.radius <= 0.1:
                     balls_to_remove.append(ball)
 
