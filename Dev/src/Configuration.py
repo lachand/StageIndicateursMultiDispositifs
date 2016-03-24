@@ -50,9 +50,11 @@ class Configuration:
         for indicateur in data["Indicateurs"]:
             # Indicateur : Zone personnelle
             if indicateur["Nom"] == "ZoneUtilisateur":
-                table.add_indicateur(ZoneUtilisateur(table.get_user(int(indicateur["Source"])),
+                zone = ZoneUtilisateur(table.get_user(int(indicateur["Source"])),
                                                      [int(indicateur["Position"]["x"]) * table.size[0] / 100,
-                                                     int(indicateur["Position"]["y"]) * table.size[1] / 100]))
+                                                     int(indicateur["Position"]["y"]) * table.size[1] / 100])
+                table.add_indicateur(zone)
+                table.user_zones.append(zone)
             # Indicateur : Zone de vote
             if indicateur["Nom"] == "ZoneVote":
                 table.add_indicateur(ZoneVote(table.get_user(int(indicateur["Source"])),

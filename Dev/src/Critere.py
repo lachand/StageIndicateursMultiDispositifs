@@ -65,6 +65,13 @@ class Critere(Scatter):
                 if indicator.__class__ == PhysicalIndicator :
                     indicator.add_ball(id_usr, self.parent.group.get_user(id_usr).position)
 
+    def collide_with_zone(self):
+        print self.parent.user_zones
+        for element in self.parent.user_zones :
+            if self.collide_widget(element):
+                return True
+        return False
+
     def fuse_concept(self, concept):
         """
         Fuse two criterions together
@@ -180,7 +187,7 @@ class Critere(Scatter):
         for child in self.parent.children:
             if child.__class__ == Animal:
                 if child.collide_point(self.center[0],
-                                       self.center[1]) and child.current_user is not None:
+                                       self.center[1]) and child.current_user is not None and not self.collide_with_zone():
                     self.add_link(child.identifier, child.current_user.identifier)
                     child.current_user.add_link(self.createur.identifier)
                     child.remove_user()

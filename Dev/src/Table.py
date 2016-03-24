@@ -43,6 +43,7 @@ class Table(Widget):
     progress_objective = []
     group = Groupe(1)
     indicators = []
+    user_zones = []
 
     def initialisation(self, size):
         """
