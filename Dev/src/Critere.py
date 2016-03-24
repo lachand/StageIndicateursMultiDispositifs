@@ -3,6 +3,7 @@
 
 import math
 
+from kivy.clock import Clock
 from kivy.graphics import Ellipse
 from kivy.uix.colorpicker import Color
 from kivy.uix.label import Label
@@ -39,6 +40,8 @@ class Critere(Scatter):
         self.size = len(text) * 1 + 100, 50
         self.colored = colored
         self.fused = False
+        self.last_touch = (0,0)
+        self.vote_activated = False
         with self.canvas:
             if self.colored:
                 Color(self.color[0], self.color[1], self.color[2])
@@ -96,28 +99,7 @@ class Critere(Scatter):
             if fils.__class__ == Critere and fils.collide_widget(self) and fils != self:
                 self.parent.remove_widget(fils)
 
-        cpt = 0
-        for fusionneur in self.fusionneurs:
-            with self.canvas:
-                if self.colored:
-                    Color(fusionneur.color[0], fusionneur.color[1], fusionneur.color[2])
-                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
-                    cpt += 360/(len(self.fusionneurs)+1)
-                else:
-                    Color(.25, .25, .25)
-                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
-                    cpt += 360/(len(self.fusionneurs)+1)
-        with self.canvas:
-            if self.colored:
-                    Color(self.createur.color[0], self.createur.color[1], self.createur.color[2])
-                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
-                    cpt += 360/(len(self.fusionneurs)+1)
-            else:
-                    Color(.25, .25, .25)
-                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
-                    cpt += 360/(len(self.fusionneurs)+1)
-
-            Label(text=self.texte, halign='left', size=self.size)
+        self.draw_critere(self.fusionneurs, self.size)
 
 
     def has_link(self, identifier):
@@ -151,30 +133,33 @@ class Critere(Scatter):
 
     def validate(self):
         self.validated = True
-        cpt = 0
+        self.canvas.clear()
         with self.canvas:
             Color(1, 1, 1, 1)
             Ellipse(size=(self.size[0]+10,self.size[1]+10),pos=(-5,-5))
+        self.draw_critere(self.fusionneurs, self.size)
 
-        for fusionneur in self.fusionneurs:
+    def draw_critere(self, users, size, pos=(0,0)):
+        cpt = 0
+        for user in users:
             with self.canvas:
                 if self.colored:
-                    Color(fusionneur.color[0], fusionneur.color[1], fusionneur.color[2])
-                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
-                    cpt += 360/(len(self.fusionneurs)+1)
+                    Color(user.color[0], user.color[1], user.color[2])
+                    Ellipse(pos=pos, size=size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    cpt += 360/(len(users)+1)
                 else:
                     Color(.25, .25, .25)
-                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
-                    cpt += 360/(len(self.fusionneurs)+1)
+                    Ellipse(size=size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    cpt += 360/(len(users)+1)
         with self.canvas:
             if self.colored:
                     Color(self.createur.color[0], self.createur.color[1], self.createur.color[2])
-                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
-                    cpt += 360/(len(self.fusionneurs)+1)
+                    Ellipse(pos=pos, size=size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    cpt += 360/(len(users)+1)
             else:
                     Color(.25, .25, .25)
-                    Ellipse(size=self.size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
-                    cpt += 360/(len(self.fusionneurs)+1)
+                    Ellipse(pos=pos, size=size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
+                    cpt += 360/(len(users)+1)
 
             Label(text=self.texte, halign='left', size=self.size)
 
@@ -196,6 +181,7 @@ class Critere(Scatter):
             if user.validate:
                 cpt += 1
         if cpt == 4:
+            self.canvas.clear()
             for child in self.parent.children:
                 if child.__class__ == Critere and child.collide_point(self.center[0], self.center[1]) and child != self:
                     self.fuse_concept(child)
@@ -211,3 +197,51 @@ class Critere(Scatter):
                         child.update_coordinate(x,
                                                 y)
         Scatter.on_touch_move(self, touch)
+
+    def on_touch_down(self, touch):
+        Scatter.on_touch_down(self, touch)
+        self.last_touch = touch.pos
+        Clock.schedule_once(self.is_touched, 2)
+
+    def activate_vote(self):
+        self.vote_activated = True
+        self.size = self.size[0]+100, self.size[1]+100
+        self.pos = self.pos[0]-50, self.pos[1]-50
+        self.canvas.clear()
+        for user in self.parent.group.users:
+            x = user.position[0]/self.parent.size[0]
+            y = user.position[1]/self.parent.size[1]
+            if x == 0 :
+                if y == 0:
+                    angle = 180
+                else:
+                    angle = 270
+            else:
+                if y == 0:
+                    angle = 90
+                else:
+                    angle = 0
+            with self.canvas:
+                    Color(user.color[0], user.color[1], user.color[2], 1)
+                    Ellipse(size=(self.size[0],self.size[1]), angle_start=angle, angle_end=angle+360/(self.parent.group.nb_users()*2))
+                    angle += 360/(self.parent.group.nb_users()*2)
+                    Color(user.color[0], user.color[1], user.color[2], .50)
+                    Ellipse(size=(self.size[0],self.size[1]), angle_start=angle, angle_end=angle+360/(self.parent.group.nb_users()*2))
+                    angle += 360/(self.parent.group.nb_users()*2)
+        self.draw_critere(self.fusionneurs, (self.size[0]-100, self.size[1]-100), (50,50))
+
+    def desactivate_vote(self):
+        self.vote_activated = False
+        self.size = self.size[0]-100, self.size[1]-100
+        self.pos = self.pos[0]+50, self.pos[1]+50
+        self.canvas.clear()
+        self.draw_critere(self.fusionneurs,self.size)
+
+
+    def is_touched(self, touch):
+        if len(self._touches) == 1:
+            if self._touches[0].pos == self.last_touch :
+                if self.vote_activated == False :
+                    self.activate_vote()
+                else :
+                    self.desactivate_vote()
