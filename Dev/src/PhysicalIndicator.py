@@ -62,10 +62,10 @@ class PhysicalIndicator(Widget):
 
         for balls in self.balls:
             for ball in balls:
-                xtmp = self.parent.size[1] / 2 - ball.body.position.x
+                xtmp = self.parent.size[0] / 2 - ball.body.position.x
                 ytmp = self.parent.size[1] / 2 - ball.body.position.y
                 ball.body.velocity = xtmp, ytmp
-                ball.unsafe_set_radius(ball.radius - .005)
+                ball.unsafe_set_radius(ball.radius - .000)
                 if ball.radius <= 0.1:
                     balls_to_remove.append(ball)
 
