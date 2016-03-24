@@ -37,6 +37,9 @@ class Clavier(Scatter):
         self.ti.foreground_color = [1, 1, 1, 1]
 
     def destroy(self, value):
+        """
+        Destroy the keyboard
+        """
         self.ti.focus = False
         self.remove_widget(self.ti)
         self.parent.remove_widget(self)
@@ -49,7 +52,7 @@ class Clavier(Scatter):
             criterion = Critere(0, value.text, self.user, self.pos, self.parent.colored_criterions)
             self.user.add_criterion_lvl(self.parent.current_lvl)
             self.parent.add_criterion(criterion)
-            for indicator in self.parent.indicators :
-                if indicator.__class__ == PhysicalIndicator :
+            for indicator in self.parent.indicators:
+                if indicator.__class__ == PhysicalIndicator:
                     indicator.add_ball(self.user.identifier, self.user.position)
         self.parent.remove_widget(self)

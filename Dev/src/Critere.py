@@ -18,6 +18,7 @@ class Critere(Scatter):
     """
     A class to represent a criterion
     """
+
     def __init__(self, identifier, text, creator, position, colored):
         """
         Initialize a criterion
@@ -41,7 +42,7 @@ class Critere(Scatter):
         self.size = len(text) + 100, 50
         self.colored = colored
         self.fused = False
-        self.last_touch = (0,0)
+        self.last_touch = (0, 0)
         self.vote_activated = False
         with self.canvas:
             if self.colored:
@@ -66,12 +67,16 @@ class Critere(Scatter):
         if not est_dedans:
             self.links.append(Link(id_img, id_usr))
             for indicator in self.parent.indicators:
-                if indicator.__class__ == PhysicalIndicator :
+                if indicator.__class__ == PhysicalIndicator:
                     indicator.add_ball(id_usr, self.parent.group.get_user(id_usr).position)
 
     def collide_with_zone(self):
+        """
+        Return if the criterion collides with an user's zone
+        :return: True if collide, else False
+        """
         print self.parent.user_zones
-        for element in self.parent.user_zones :
+        for element in self.parent.user_zones:
             if self.collide_widget(element):
                 return True
         return False
@@ -102,7 +107,6 @@ class Critere(Scatter):
 
         self.draw_critere(self.fusionneurs, self.size)
 
-
     def has_link(self, identifier):
         """
         Return if the criterion is linked to a specified animal
@@ -123,8 +127,13 @@ class Critere(Scatter):
         self.links[index].update(center, self.center)
 
     def validate_by_user(self, user, value):
+        """
+        Validate the criterion by an user
+        :param user: The user that validates the criterion
+        :param value: The value for validation
+        """
         if not self.validated:
-            if self.validator.__contains__(user) :
+            if self.validator.__contains__(user):
                 if value == 0:
                     self.validator.remove(user)
             elif value == 1:
@@ -133,38 +142,47 @@ class Critere(Scatter):
                 self.validate()
 
     def validate(self):
+        """
+        Validate the criterion
+        """
         self.validated = True
         self.vote_activated = False
         self.canvas.clear()
-        self.size = self.size[0]-100,self.size[1]-100
-        self.pos = self.pos[0]+50,self.pos[1]+50
+        self.size = self.size[0] - 100, self.size[1] - 100
+        self.pos = self.pos[0] + 50, self.pos[1] + 50
         self.canvas.clear()
         with self.canvas:
             Color(1, 1, 1, 1)
-            Ellipse(size=(self.size[0]+10,self.size[1]+10),pos=(-5,-5))
+            Ellipse(size=(self.size[0] + 10, self.size[1] + 10), pos=(-5, -5))
         self.draw_critere(self.fusionneurs, self.size)
 
-    def draw_critere(self, users, size, pos=(0,0)):
+    def draw_critere(self, users, size, pos=(0, 0)):
+        """
+        Draw a criterion
+        :param users: the list of users creating the criterion
+        :param size: the size of the criterion
+        :param pos: the position of the criterion
+        """
         cpt = 0
         for user in users:
             with self.canvas:
                 if self.colored:
                     Color(user.color[0], user.color[1], user.color[2])
-                    Ellipse(pos=pos, size=size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
-                    cpt += 360/(len(users)+1)
+                    Ellipse(pos=pos, size=size, angle_start=cpt, angle_end=cpt + (360 / (len(self.fusionneurs) + 1)))
+                    cpt += 360 / (len(users) + 1)
                 else:
                     Color(.25, .25, .25)
-                    Ellipse(size=size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
-                    cpt += 360/(len(users)+1)
+                    Ellipse(size=size, angle_start=cpt, angle_end=cpt + (360 / (len(self.fusionneurs) + 1)))
+                    cpt += 360 / (len(users) + 1)
         with self.canvas:
             if self.colored:
-                    Color(self.createur.color[0], self.createur.color[1], self.createur.color[2])
-                    Ellipse(pos=pos, size=size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
-                    cpt += 360/(len(users)+1)
+                Color(self.createur.color[0], self.createur.color[1], self.createur.color[2])
+                Ellipse(pos=pos, size=size, angle_start=cpt, angle_end=cpt + (360 / (len(self.fusionneurs) + 1)))
+                cpt += 360 / (len(users) + 1)
             else:
-                    Color(.25, .25, .25)
-                    Ellipse(pos=pos, size=size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
-                    cpt += 360/(len(users)+1)
+                Color(.25, .25, .25)
+                Ellipse(pos=pos, size=size, angle_start=cpt, angle_end=cpt + (360 / (len(self.fusionneurs) + 1)))
+                cpt += 360 / (len(users) + 1)
             Label(text=self.texte, halign='left', size=self.size)
 
     def update(self, dt):
@@ -176,7 +194,8 @@ class Critere(Scatter):
         for child in self.parent.children:
             if child.__class__ == Animal:
                 if child.collide_point(self.center[0],
-                                       self.center[1]) and child.current_user is not None and not self.collide_with_zone():
+                                       self.center[
+                                           1]) and child.current_user is not None and not self.collide_with_zone():
                     self.add_link(child.identifier, child.current_user.identifier)
                     child.current_user.add_link(self.createur.identifier)
                     child.remove_user()
@@ -191,30 +210,38 @@ class Critere(Scatter):
                     self.fuse_concept(child)
 
     def on_touch_move(self, touch):
+        """
+        Define actions to perform when the indicator is moved
+        :param touch: the touch point (position, type of touch, ...)
+        """
         from Animal import Animal
         for child in self.parent.children:
             if child.__class__ == Animal:
                 for link in self.links:
                     if link.linked_to_animal(child.identifier):
-                        x = self.center_x + link.distance*math.cos(link.angle+math.pi)
-                        y = self.center_y + link.distance*math.sin(-link.angle+math.pi)
+                        x = self.center_x + link.distance * math.cos(link.angle + math.pi)
+                        y = self.center_y + link.distance * math.sin(-link.angle + math.pi)
                         child.update_coordinate(x,
                                                 y)
         Scatter.on_touch_move(self, touch)
 
     def on_touch_down(self, touch):
+        """
+        Define actions to perform when the indicator is touched up
+        :param touch: the touch point (position, type of touch, ...)
+        """
         if self.collide_point(touch.x, touch.y):
             Scatter.on_touch_down(self, touch)
             self.last_touch = touch.pos
             if self.vote_activated:
                 dx = self.center[0] - touch.x
                 dy = self.center[1] - touch.y
-                angle = (math.atan2(-dy, dx)/(2*math.pi))*360 - 90
-                print angle%360
+                angle = (math.atan2(-dy, dx) / (2 * math.pi)) * 360 - 90
+                print angle % 360
                 for user in self.parent.group.users:
-                    x = user.position[0]/self.parent.size[0]
-                    y = user.position[1]/self.parent.size[1]
-                    if x == 0 :
+                    x = user.position[0] / self.parent.size[0]
+                    y = user.position[1] / self.parent.size[1]
+                    if x == 0:
                         if y == 0:
                             angle2 = 180
                         else:
@@ -224,38 +251,46 @@ class Critere(Scatter):
                             angle2 = 90
                         else:
                             angle2 = 0
-                    x = 5 + self.size[0]/3 + self.size[0]/3 * math.sin((angle2 + 360./(self.parent.group.nb_users()*2.))/360.*2.*math.pi)
-                    y = -5 + self.size[1]/3 + self.size[1]/3 * math.cos((angle2 + 360./(self.parent.group.nb_users()*2.))/360.*2.*math.pi)
+                    x = 5 + self.size[0] / 3 + self.size[0] / 3 * math.sin(
+                        (angle2 + 360. / (self.parent.group.nb_users() * 2.)) / 360. * 2. * math.pi)
+                    y = -5 + self.size[1] / 3 + self.size[1] / 3 * math.cos(
+                        (angle2 + 360. / (self.parent.group.nb_users() * 2.)) / 360. * 2. * math.pi)
 
                     with self.canvas:
-                        if angle2 < angle%360 < angle2+2*(360/(self.parent.group.nb_users()*2)):
+                        if angle2 < angle % 360 < angle2 + 2 * (360 / (self.parent.group.nb_users() * 2)):
                             Color(user.color[0], user.color[1], user.color[2], 1)
-                            Ellipse(size=(self.size[0],self.size[1]), angle_start=angle2, angle_end=angle2+360/(self.parent.group.nb_users()*2))
-                            angle2tmp = angle2 + 360/(self.parent.group.nb_users()*2)
-                            Color(user.color[0]/2., user.color[1]/2., user.color[2]/2., 1)
-                            Ellipse(size=(self.size[0],self.size[1]), angle_start=angle2tmp, angle_end=angle2tmp+360/(self.parent.group.nb_users()*2))
-                            self.draw_critere(self.fusionneurs, (self.size[0]-100, self.size[1]-100), (50,50))
+                            Ellipse(size=(self.size[0], self.size[1]), angle_start=angle2,
+                                    angle_end=angle2 + 360 / (self.parent.group.nb_users() * 2))
+                            angle2tmp = angle2 + 360 / (self.parent.group.nb_users() * 2)
+                            Color(user.color[0] / 2., user.color[1] / 2., user.color[2] / 2., 1)
+                            Ellipse(size=(self.size[0], self.size[1]), angle_start=angle2tmp,
+                                    angle_end=angle2tmp + 360 / (self.parent.group.nb_users() * 2))
+                            self.draw_critere(self.fusionneurs, (self.size[0] - 100, self.size[1] - 100), (50, 50))
 
-                    if angle2 < angle%360 < angle2+360/(self.parent.group.nb_users()*2):
+                    if angle2 < angle % 360 < angle2 + 360 / (self.parent.group.nb_users() * 2):
                         with self.canvas:
-                            Image(source="Images/validate.png", pos=(x,y), size=(50,50), color = (0.93, 0.93, 0.93, .5))
+                            Image(source="Images/validate.png", pos=(x, y), size=(50, 50), color=(0.93, 0.93, 0.93, .5))
                         self.validate_by_user(user.identifier, 1)
 
-                    elif angle2+360/(self.parent.group.nb_users()*2) < angle%360 < angle2+2*(360/(self.parent.group.nb_users()*2)):
+                    elif angle2 + 360 / (self.parent.group.nb_users() * 2) < angle % 360 < angle2 + 2 * (
+                                360 / (self.parent.group.nb_users() * 2)):
                         with self.canvas:
-                            Image(source="Images/unvalidate.png", pos=(x,y), size=(50,50), color = (0.5, 0.5, 0.5, .5))
+                            Image(source="Images/unvalidate.png", pos=(x, y), size=(50, 50), color=(0.5, 0.5, 0.5, .5))
                         self.validate_by_user(user.identifier, 0)
             Clock.schedule_once(self.is_touched, 2)
 
     def activate_vote(self):
+        """
+        Activate the voting phase
+        """
         self.vote_activated = True
-        self.size = self.size[0]+100, self.size[1]+100
-        self.pos = self.pos[0]-50, self.pos[1]-50
+        self.size = self.size[0] + 100, self.size[1] + 100
+        self.pos = self.pos[0] - 50, self.pos[1] - 50
         self.canvas.clear()
         for user in self.parent.group.users:
-            x = user.position[0]/self.parent.size[0]
-            y = user.position[1]/self.parent.size[1]
-            if x == 0 :
+            x = user.position[0] / self.parent.size[0]
+            y = user.position[1] / self.parent.size[1]
+            if x == 0:
                 if y == 0:
                     angle = 180
                 else:
@@ -266,27 +301,34 @@ class Critere(Scatter):
                 else:
                     angle = 0
             with self.canvas:
-                    Color(user.color[0], user.color[1], user.color[2], 1)
-                    Ellipse(size=(self.size[0],self.size[1]), angle_start=angle, angle_end=angle+360/(self.parent.group.nb_users()*2))
-                    angle += 360/(self.parent.group.nb_users()*2)
-                    Color(user.color[0]/2., user.color[1]/2., user.color[2]/2., 1)
-                    Ellipse(size=(self.size[0],self.size[1]), angle_start=angle, angle_end=angle+360/(self.parent.group.nb_users()*2))
-                    angle += 360/(self.parent.group.nb_users()*2)
-        self.draw_critere(self.fusionneurs, (self.size[0]-100, self.size[1]-100), (50,50))
+                Color(user.color[0], user.color[1], user.color[2], 1)
+                Ellipse(size=(self.size[0], self.size[1]), angle_start=angle,
+                        angle_end=angle + 360 / (self.parent.group.nb_users() * 2))
+                angle += 360 / (self.parent.group.nb_users() * 2)
+                Color(user.color[0] / 2., user.color[1] / 2., user.color[2] / 2., 1)
+                Ellipse(size=(self.size[0], self.size[1]), angle_start=angle,
+                        angle_end=angle + 360 / (self.parent.group.nb_users() * 2))
+                angle += 360 / (self.parent.group.nb_users() * 2)
+        self.draw_critere(self.fusionneurs, (self.size[0] - 100, self.size[1] - 100), (50, 50))
 
     def desactivate_vote(self):
+        """
+        Desctivate the voting phase
+        """
         self.vote_activated = False
-        self.size = self.size[0]-100, self.size[1]-100
-        self.pos = self.pos[0]+50, self.pos[1]+50
+        self.size = self.size[0] - 100, self.size[1] - 100
+        self.pos = self.pos[0] + 50, self.pos[1] + 50
         self.canvas.clear()
-        self.draw_critere(self.fusionneurs,self.size)
-
+        self.draw_critere(self.fusionneurs, self.size)
 
     def is_touched(self, dt):
+        """
+        Activate or desactivate the voting phase in fonction of last touch
+        """
         if len(self._touches) == 1:
-            if self._touches[0].pos == self.last_touch :
+            if self._touches[0].pos == self.last_touch:
                 if not self.validated:
-                    if not self.vote_activated :
+                    if not self.vote_activated:
                         self.activate_vote()
-                    else :
+                    else:
                         self.desactivate_vote()

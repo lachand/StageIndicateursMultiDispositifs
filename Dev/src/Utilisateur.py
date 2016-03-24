@@ -5,6 +5,7 @@ class Utilisateur:
     """
     A class representing a user of the application
     """
+
     def __init__(self, identifier, color, max_lvl, pos):
         """
         Initialize an user
@@ -33,7 +34,7 @@ class Utilisateur:
         :param id_criterion: the identifier of the criterion
         :return: true if hte user is the creator, else false
         """
-        if self.criterion.getitem(id_criterion).size == 0:
+        if self.criterion.__getitem__(id_criterion).size == 0:
             return False
         else:
             return True

@@ -23,7 +23,7 @@ Builder.load_file('template.kv')
 
 Config.set('kivy', 'keyboard_mode', 'multi')
 Config.set('kivy', 'keyboard_layout', 'keyboard.json')
-#Config.set('graphics', 'fullscreen', 'auto')
+Config.set('graphics', 'fullscreen', 'auto')
 
 PATH = os.path.join("..", "cfg", "ConfigSimple.json")
 
@@ -124,8 +124,11 @@ class Table(Widget):
 
 
 class TableApp(App):
-    def build(self):
+    def __init__(self, **kwargs):
+        super(TableApp, self).__init__(**kwargs)
         self.table = Table()
+
+    def build(self):
         Clock.schedule_interval(self.table.update, 1.0 / 60.0)
         return self.table
 

@@ -7,10 +7,12 @@ from ProgressObjectif import ProgressObjectif
 from ZoneUtilisateur import ZoneUtilisateur
 from ZoneVote import ZoneVote
 
+
 class Configuration:
     """
     A class in order to dynamically configure the session
     """
+
     def __init__(self, config_file):
         """
         Initialize the configuration
@@ -42,8 +44,8 @@ class Configuration:
             g = float(user["Couleur"]["g"]) / 255.
             b = float(user["Couleur"]["b"]) / 255.
             table.group.add_user(Utilisateur(cpt_users, [r, g, b], max_lvl,
-                                 [int(user["Position"]["x"]) * table.size[0] / 100,
-                                  int(user["Position"]["y"]) * table.size[1] / 100]))
+                                             [int(user["Position"]["x"]) * table.size[0] / 100,
+                                              int(user["Position"]["y"]) * table.size[1] / 100]))
             cpt_users += 1
 
         # Gestion des Indicateurs
@@ -51,21 +53,21 @@ class Configuration:
             # Indicateur : Zone personnelle
             if indicateur["Nom"] == "ZoneUtilisateur":
                 zone = ZoneUtilisateur(table.get_user(int(indicateur["Source"])),
-                                                     [int(indicateur["Position"]["x"]) * table.size[0] / 100,
-                                                     int(indicateur["Position"]["y"]) * table.size[1] / 100])
+                                       [int(indicateur["Position"]["x"]) * table.size[0] / 100,
+                                        int(indicateur["Position"]["y"]) * table.size[1] / 100])
                 table.add_indicateur(zone)
                 table.user_zones.append(zone)
             # Indicateur : Zone de vote
             if indicateur["Nom"] == "ZoneVote":
                 table.add_indicateur(ZoneVote(table.get_user(int(indicateur["Source"])),
-                                                     [int(indicateur["Position"]["x"]) * table.size[0] / 100,
-                                                     int(indicateur["Position"]["y"]) * table.size[1] / 100],
-                                                     int(indicateur["Angle"])))
+                                              [int(indicateur["Position"]["x"]) * table.size[0] / 100,
+                                               int(indicateur["Position"]["y"]) * table.size[1] / 100],
+                                              int(indicateur["Angle"])))
             # Indicateur : Progres de l'objective
             elif indicateur["Nom"] == "ProgressObjectif":
                 table.add_indicateur(ProgressObjectif(table.objective_criterions[int(indicateur["Lvl"])],
                                                       [int(indicateur["Position"]["x"]) * table.size[0] / 100,
-                                                      int(indicateur["Position"]["y"]) * table.size[1] / 100],
+                                                       int(indicateur["Position"]["y"]) * table.size[1] / 100],
                                                       max_lvl))
             # Indicateurs : links colored
             elif indicateur["Nom"] == "Links":

@@ -5,6 +5,7 @@ class Groupe:
     """
     A class to represent a group
     """
+
     def __init__(self, identifier):
         """
         Initialize the group

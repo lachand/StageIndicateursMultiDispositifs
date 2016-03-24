@@ -88,7 +88,7 @@ class Animal(Scatter):
         points = []
         for criterion in self.parent.criterions:
             for link in criterion.links:
-                if link.linked_to_animal(self.identifier) and criterion.fused == False:
+                if link.linked_to_animal(self.identifier) and not criterion.fused:
                     x = criterion.center_x + link.distance*cos(link.angle+pi)
                     y = criterion.center_y + link.distance*sin(-link.angle+pi)
                     points.append([x, y])

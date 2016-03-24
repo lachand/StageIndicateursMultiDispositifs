@@ -10,6 +10,7 @@ class ProgressObjectif(Widget):
     """
     A class to represent the indicator representing the progress comparing to objectives
     """
+
     def __init__(self, objective, position, level_max):
         """
         Initialize the indicator

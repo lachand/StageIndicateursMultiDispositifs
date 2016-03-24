@@ -10,6 +10,6 @@ setup(
     author_email='valentin@lachand.net',
     description='',
     install_requires=[
-          'kivy', 'demjson', 'plotly', 'shapely'
+          'kivy', 'demjson', 'plotly', 'shapely', 'pymunk'
       ]
 )

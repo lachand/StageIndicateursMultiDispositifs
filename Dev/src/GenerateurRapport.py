@@ -3,8 +3,6 @@
 
 import datetime
 
-#locale.setlocale(locale.LC_TIME, "fr_FR.utf8")
-
 import plotly.graph_objs as go
 
 
@@ -12,6 +10,7 @@ class GenerateurRapport:
     """
     A class to represent the report's generator
     """
+
     def __init__(self):
         """
         Initialize the generator
@@ -33,7 +32,7 @@ class GenerateurRapport:
         <style>body{ margin:0 100; background:whitesmoke; }</style>
     </head>
     <body>
-        <h1>Rapport d'activité du '''+datetime.datetime.now().strftime('%A %d %b')+'''</h1>'''
+        <h1>Rapport d'activité du ''' + datetime.datetime.now().strftime('%A %d %b') + '''</h1>'''
 
         if self.ratio_links_perso_collabo:
             id_user = []
@@ -42,11 +41,10 @@ class GenerateurRapport:
             colors = []
             colors2 = []
             for user in table.group.users:
-                    colors.append('rgb(' + str(int(user.color[0] * 255)) + ',' + str(
-                        int(user.color[1] * 255)) + ',' + str(int(user.color[2] * 255)) + ')')
-                    colors2.append('rgb(' + str(int(user.color[0] * 125)) + ',' + str(
-                        int(user.color[1] * 125)) + ',' + str(int(user.color[2] * 125)) + ')')
-
+                colors.append('rgb(' + str(int(user.color[0] * 255)) + ',' + str(
+                    int(user.color[1] * 255)) + ',' + str(int(user.color[2] * 255)) + ')')
+                colors2.append('rgb(' + str(int(user.color[0] * 125)) + ',' + str(
+                    int(user.color[1] * 125)) + ',' + str(int(user.color[2] * 125)) + ')')
 
             for user in table.group.users:
                 id_user.append(user.identifier)
@@ -70,7 +68,7 @@ class GenerateurRapport:
                 barmode='stack'
             )
             fig = go.Figure(data=data, layout=layout)
-            rapport = plotly.offline.plot(fig, filename="ratio_liens_collabo_persos.html",auto_open=False)
+            rapport = plotly.offline.plot(fig, filename="ratio_liens_collabo_persos.html", auto_open=False)
             html_string = html_string + '''<h2>Liens collaboratifs et personnels par utilisateur</h2>
             <iframe width="1000" height="550" frameborder="0" seamless="seamless" scrolling="no" src="''' + rapport + '''"></iframe>'''
 
@@ -108,12 +106,13 @@ class GenerateurRapport:
 
                     }
                 }
-                rapport = plotly.offline.plot(fig, filename='ratio_criterion_group_but_' + str(i) + ".html", auto_open=False)
-                html_string = html_string + '''<h2>'''+fig["layout"]["title"]+'''</h2>
+                rapport = plotly.offline.plot(fig, filename='ratio_criterion_group_but_' + str(i) + ".html",
+                                              auto_open=False)
+                html_string = html_string + '''<h2>''' + fig["layout"]["title"] + '''</h2>
                 <iframe width="1000" height="550" frameborder="0" seamless="seamless" scrolling="no" src="''' + rapport + '''"></iframe>'''
 
-        html_string = html_string+'''</body></html>'''
-        file_ = open('Rapport_'+datetime.datetime.now().strftime('%A_%d_%b')+'.html', 'w')
+        html_string += '''</body></html>'''
+        file_ = open('Rapport_' + datetime.datetime.now().strftime('%A_%d_%b') + '.html', 'w')
         file_.write(html_string)
         file_.close()
 
