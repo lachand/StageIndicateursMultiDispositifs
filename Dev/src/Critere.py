@@ -37,7 +37,7 @@ class Critere(Scatter):
         self.validated = False
         self.color = self.createur.color
         self.links = []
-        self.size = len(text) * 1 + 100, 50
+        self.size = len(text) + 100, 50
         self.colored = colored
         self.fused = False
         self.last_touch = (0,0)
@@ -133,6 +133,10 @@ class Critere(Scatter):
 
     def validate(self):
         self.validated = True
+        self.vote_activated = False
+        self.canvas.clear()
+        self.size = self.size[0]-100,self.size[1]-100
+        self.pos = self.pos[0]+50,self.pos[1]+50
         self.canvas.clear()
         with self.canvas:
             Color(1, 1, 1, 1)
@@ -201,6 +205,28 @@ class Critere(Scatter):
     def on_touch_down(self, touch):
         Scatter.on_touch_down(self, touch)
         self.last_touch = touch.pos
+        if self.vote_activated:
+            dx = self.center[0] - touch.x
+            dy = self.center[1] - touch.y
+            angle = (math.atan2(-dy, dx)/(2*math.pi))*360 - 90
+            print angle%360
+            for user in self.parent.group.users:
+                x = user.position[0]/self.parent.size[0]
+                y = user.position[1]/self.parent.size[1]
+                if x == 0 :
+                    if y == 0:
+                        angle2 = 180
+                    else:
+                        angle2 = 270
+                else:
+                    if y == 0:
+                        angle2 = 90
+                    else:
+                        angle2 = 0
+                if angle2 < angle%360 < angle2+360/(self.parent.group.nb_users()*2):
+                    self.validate_by_user(user.identifier, 1)
+                elif angle2+360/(self.parent.group.nb_users()*2) < angle%360 < angle2+2*(360/(self.parent.group.nb_users()*2)):
+                    self.validate_by_user(user.identifier, 0)
         Clock.schedule_once(self.is_touched, 2)
 
     def activate_vote(self):
@@ -238,10 +264,11 @@ class Critere(Scatter):
         self.draw_critere(self.fusionneurs,self.size)
 
 
-    def is_touched(self, touch):
+    def is_touched(self, dt):
         if len(self._touches) == 1:
             if self._touches[0].pos == self.last_touch :
-                if self.vote_activated == False :
-                    self.activate_vote()
-                else :
-                    self.desactivate_vote()
+                if not self.validated:
+                    if not self.vote_activated :
+                        self.activate_vote()
+                    else :
+                        self.desactivate_vote()

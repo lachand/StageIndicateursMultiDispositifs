@@ -30,7 +30,7 @@ class PhysicalIndicator(Widget):
                 p = int(ball.body.position.x)-ball.radius, int(ball.body.position.y)-ball.radius
                 with self.canvas:
                     Color(self.parent.get_user(self.balls.index(balls)+1).color[0], self.parent.get_user(self.balls.index(balls)+1).color[1], self.parent.get_user(self.balls.index(balls)+1).color[2])
-                    Ellipse(pos=p,size=[1.5*ball.radius]*2)
+                    Ellipse(pos=p,size=[1.75*ball.radius]*2)
 
     def update(self, dt):
         self.canvas.clear()
