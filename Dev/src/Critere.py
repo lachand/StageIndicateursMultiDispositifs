@@ -6,6 +6,7 @@ import math
 from kivy.clock import Clock
 from kivy.graphics import Ellipse
 from kivy.uix.colorpicker import Color
+from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.scatter import Scatter
 
@@ -164,7 +165,6 @@ class Critere(Scatter):
                     Color(.25, .25, .25)
                     Ellipse(pos=pos, size=size, angle_start=cpt, angle_end=cpt+(360/(len(self.fusionneurs)+1)))
                     cpt += 360/(len(users)+1)
-
             Label(text=self.texte, halign='left', size=self.size)
 
     def update(self, dt):
@@ -203,31 +203,49 @@ class Critere(Scatter):
         Scatter.on_touch_move(self, touch)
 
     def on_touch_down(self, touch):
-        Scatter.on_touch_down(self, touch)
-        self.last_touch = touch.pos
-        if self.vote_activated:
-            dx = self.center[0] - touch.x
-            dy = self.center[1] - touch.y
-            angle = (math.atan2(-dy, dx)/(2*math.pi))*360 - 90
-            print angle%360
-            for user in self.parent.group.users:
-                x = user.position[0]/self.parent.size[0]
-                y = user.position[1]/self.parent.size[1]
-                if x == 0 :
-                    if y == 0:
-                        angle2 = 180
+        if self.collide_point(touch.x, touch.y):
+            Scatter.on_touch_down(self, touch)
+            self.last_touch = touch.pos
+            if self.vote_activated:
+                dx = self.center[0] - touch.x
+                dy = self.center[1] - touch.y
+                angle = (math.atan2(-dy, dx)/(2*math.pi))*360 - 90
+                print angle%360
+                for user in self.parent.group.users:
+                    x = user.position[0]/self.parent.size[0]
+                    y = user.position[1]/self.parent.size[1]
+                    if x == 0 :
+                        if y == 0:
+                            angle2 = 180
+                        else:
+                            angle2 = 270
                     else:
-                        angle2 = 270
-                else:
-                    if y == 0:
-                        angle2 = 90
-                    else:
-                        angle2 = 0
-                if angle2 < angle%360 < angle2+360/(self.parent.group.nb_users()*2):
-                    self.validate_by_user(user.identifier, 1)
-                elif angle2+360/(self.parent.group.nb_users()*2) < angle%360 < angle2+2*(360/(self.parent.group.nb_users()*2)):
-                    self.validate_by_user(user.identifier, 0)
-        Clock.schedule_once(self.is_touched, 2)
+                        if y == 0:
+                            angle2 = 90
+                        else:
+                            angle2 = 0
+                    x = 5 + self.size[0]/3 + self.size[0]/3 * math.sin((angle2 + 360./(self.parent.group.nb_users()*2.))/360.*2.*math.pi)
+                    y = -5 + self.size[1]/3 + self.size[1]/3 * math.cos((angle2 + 360./(self.parent.group.nb_users()*2.))/360.*2.*math.pi)
+
+                    with self.canvas:
+                        if angle2 < angle%360 < angle2+2*(360/(self.parent.group.nb_users()*2)):
+                            Color(user.color[0], user.color[1], user.color[2], 1)
+                            Ellipse(size=(self.size[0],self.size[1]), angle_start=angle2, angle_end=angle2+360/(self.parent.group.nb_users()*2))
+                            angle2tmp = angle2 + 360/(self.parent.group.nb_users()*2)
+                            Color(user.color[0]/2., user.color[1]/2., user.color[2]/2., 1)
+                            Ellipse(size=(self.size[0],self.size[1]), angle_start=angle2tmp, angle_end=angle2tmp+360/(self.parent.group.nb_users()*2))
+                            self.draw_critere(self.fusionneurs, (self.size[0]-100, self.size[1]-100), (50,50))
+
+                    if angle2 < angle%360 < angle2+360/(self.parent.group.nb_users()*2):
+                        with self.canvas:
+                            Image(source="Images/validate.png", pos=(x,y), size=(50,50), color = (0.93, 0.93, 0.93, .5))
+                        self.validate_by_user(user.identifier, 1)
+
+                    elif angle2+360/(self.parent.group.nb_users()*2) < angle%360 < angle2+2*(360/(self.parent.group.nb_users()*2)):
+                        with self.canvas:
+                            Image(source="Images/unvalidate.png", pos=(x,y), size=(50,50), color = (0.5, 0.5, 0.5, .5))
+                        self.validate_by_user(user.identifier, 0)
+            Clock.schedule_once(self.is_touched, 2)
 
     def activate_vote(self):
         self.vote_activated = True
@@ -251,7 +269,7 @@ class Critere(Scatter):
                     Color(user.color[0], user.color[1], user.color[2], 1)
                     Ellipse(size=(self.size[0],self.size[1]), angle_start=angle, angle_end=angle+360/(self.parent.group.nb_users()*2))
                     angle += 360/(self.parent.group.nb_users()*2)
-                    Color(user.color[0], user.color[1], user.color[2], .50)
+                    Color(user.color[0]/2., user.color[1]/2., user.color[2]/2., 1)
                     Ellipse(size=(self.size[0],self.size[1]), angle_start=angle, angle_end=angle+360/(self.parent.group.nb_users()*2))
                     angle += 360/(self.parent.group.nb_users()*2)
         self.draw_critere(self.fusionneurs, (self.size[0]-100, self.size[1]-100), (50,50))
