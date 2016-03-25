@@ -233,11 +233,10 @@ class Critere(Scatter):
         if self.collide_point(touch.x, touch.y):
             Scatter.on_touch_down(self, touch)
             self.last_touch = touch.pos
-            if self.vote_activated:
+            if self.vote_activated and not self.in_ellipse((touch.x, touch.y), self.center, (self.size[0]-100,self.size[1]-100)):
                 dx = self.center[0] - touch.x
                 dy = self.center[1] - touch.y
                 angle = (math.atan2(-dy, dx) / (2 * math.pi)) * 360 - 90
-                print angle % 360
                 for user in self.parent.group.users:
                     x = user.position[0] / self.parent.size[0]
                     y = user.position[1] / self.parent.size[1]
@@ -326,9 +325,12 @@ class Critere(Scatter):
         Activate or desactivate the voting phase in fonction of last touch
         """
         if len(self._touches) == 1:
-            if self._touches[0].pos == self.last_touch:
+            if (self.last_touch[0]-10  <= self._touches[0].pos[0] <= self.last_touch[0]+10) and (self.last_touch[1]-10 <= self._touches[0].pos[1] <= self.last_touch[1]+10) :
                 if not self.validated:
                     if not self.vote_activated:
                         self.activate_vote()
                     else:
                         self.desactivate_vote()
+
+    def in_ellipse(self, point, ellipse_center, ellipse_size):
+        return math.pow((point[0]-ellipse_center[0]),2)/math.pow(ellipse_size[0]/2.,2) + math.pow((point[1]-ellipse_center[1]),2)/math.pow(ellipse_size[1]/2.,2) <= 1.

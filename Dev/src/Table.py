@@ -23,7 +23,7 @@ Builder.load_file('template.kv')
 
 Config.set('kivy', 'keyboard_mode', 'multi')
 Config.set('kivy', 'keyboard_layout', 'keyboard.json')
-Config.set('graphics', 'fullscreen', 'auto')
+#Config.set('graphics', 'fullscreen', 'auto')
 
 PATH = os.path.join("..", "cfg", "ConfigSimple.json")
 
