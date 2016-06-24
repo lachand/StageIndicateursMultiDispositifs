@@ -17,9 +17,10 @@ class ZoneVote(Widget):
         :param pos: the position of the indicator
         """
         self.user = user
-        self.position = pos[0] - self.size[0] / 2, pos[1] - self.size[1] / 2
+        self.position = pos
+        print pos
         self.color = self.user.color
         self.angle = angle
         Widget.__init__(self)
-        self.add_widget(Vote(self.user, 1, pos, angle))
-        self.add_widget(Vote(self.user, 0, pos, angle))
+        self.add_widget(Vote(self.user.identifier, 1, pos, angle, self.user))
+        self.add_widget(Vote(self.user.identifier, 0, pos, angle, self.user))

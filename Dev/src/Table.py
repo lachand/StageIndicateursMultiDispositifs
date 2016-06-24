@@ -1,62 +1,191 @@
 #!/usr/local/bin/python
 #  -*- coding: utf-8 -*-
 
-import glob
+import json
 import os
+import threading
+import urllib2
 
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.config import Config
 from kivy.lang import Builder
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 
 from Animal import Animal
 from Configuration import Configuration
 from Critere import Critere
-from GenerateurRapport import GenerateurRapport
 from Groupe import Groupe
+from IndicateurCritere import IndicateurCritere
+from IndicateurVote import IndicateurVote
 from Links import Links
-from PhysicalIndicator import PhysicalIndicator
+from Logger import Logger
 from ProgressObjectif import ProgressObjectif
+from Serveur import Serveur
+from backend.backendweb import BackendWeb
 
 Builder.load_file('template.kv')
 
 Config.set('kivy', 'keyboard_mode', 'multi')
 Config.set('kivy', 'keyboard_layout', 'keyboard.json')
-#Config.set('graphics', 'fullscreen', 'auto')
+Config.set('graphics', 'width', '1300')
+Config.set('graphics', 'height', '700')
+Config.set('graphics', 'fullscreen', 'auto')
 
-PATH = os.path.join("..", "cfg", "ConfigSimple.json")
+PATH = os.path.join("..", "cfg", "ConfigExpeIntegre.json")
 
 
 class Table(Widget):
     """
     A class to represent a table
     """
-    user = []
-    animals = []
-    criterions = []
-    images_folder = []
-    objective_criterions = []
-    current_lvl = 0
-    colored_links = True
-    colored_criterions = True
-    progress_objective = []
-    group = Groupe(1)
-    indicators = []
-    user_zones = []
+
+    def __init__(self, **kwargs):
+        """
+        Initialize the table
+        """
+        super(Table, self).__init__(**kwargs)
+        self.logger = Logger()
+        self.server = Serveur(self)
+        self.has_internet = self.internet_on()
+        if self.has_internet:
+            self.backend = BackendWeb(
+                url="http://museotouch.fr/api/interface_v2/",
+                data_url="http://museotouch.fr/api/interface_v2/",
+                decode=False)
+        self.layout = GridLayout(cols=10, size=self.size)
+        self.configuration = Configuration(PATH)
+        self.menu_mode = True
+        self.image_user = Image(source="Images/user.png")
+        self.image_user_yes = Image(source="Images/user_validate.png")
+        self.image_user_no = Image(source="Images/user_unvalidate.png")
+
+    def internet_on(self):
+        """
+        Check the internet connexion
+        :return: True if internet is OK, False else
+        """
+        try:
+            urllib2.urlopen('http://museotouch.fr',timeout=5)
+            return True
+        except urllib2.URLError as err:
+            return False
+
+    def update_vote(self):
+        """
+        Update all votes of the table
+        :return:
+        """
+        for fils in self.children:
+            if fils.__class__ == IndicateurVote :
+                fils.update()
 
     def initialisation(self, size):
         """
         Initialize the table
         :param size: the size of the screen
         """
-        configuration = Configuration(PATH)
+        self.user = []
+        self.connected = []
+        self.animals = []
+        self.criterions = []
+        self.images_folder = []
+        self.objective_criterions = []
+        self.current_lvl = 0
+        self.integrated_links = None
+        self.integrated_criterions = None
+        self.vote_integrated = None
+        self.progress_objective = []
+        self.group = Groupe(1)
+        self.indicators = []
+        self.user_zones = []
+        self.widget_to_add = []
+
+        from kivy.uix.button import Button
         self.size = size.size
-        configuration.config_table(self)
-        self.add_widget(Links(self.colored_links))
-        physical = PhysicalIndicator()
-        self.indicators.append(physical)
-        self.add_widget(physical)
+        self.layout.size = self.size
+
+        if self.has_internet:
+
+            self.backend.get_expos(uid=7970)
+
+            result = self.backend.req.result
+            with open("tmp.json", 'w') as fd:
+                from json import dump
+                dump([result], fd)
+                fd.close()
+            with open("tmp.json", "r") as fd:
+                json_data = fd.read()
+                data = json.loads(json_data)
+            for elmt in data[0]["items"]:
+                btn = Button(text=elmt["fields"]["Nom"])
+                btn.bind(on_press=self.config)
+                self.layout.add_widget(btn)
+
+        else:
+            for root, dirs, files in os.walk("../Activities"):
+                for name in files:
+                    if name == "config.json":
+                        with open(root+"/config.json", "r") as fd:
+                            json_data = fd.read()
+                            data = json.loads(json_data)
+                            btn = Button(text=data["name"])
+                            btn.bind(on_press=self.config)
+                            self.layout.add_widget(btn)
+        self.add_widget(self.layout)
+
+    def get_zone_utilisateur(self, user):
+        """
+        Return the space linked to an user
+        :param user: The user to get the space
+        :return: The zone of the user
+        """
+        for zone in self.user_zones:
+            if zone.user == user :
+                return zone
+        return None
+
+    def config(self, id):
+        """
+        Configure the application with the correct activity
+        :param id: the name of the activity
+        :return:
+        """
+        self.menu_mode = False
+        if self.has_internet:
+            with open("tmp.json", "r") as fd:
+                json_data = fd.read()
+                data = json.loads(json_data)
+            for elmt in data[0]["items"]:
+                if elmt["fields"]["Nom"] == id.text:
+                    identifier = int(elmt["fields"]["id"])
+        else:
+            for root, dirs, files in os.walk("../Activities"):
+                for name in files:
+                    if name == "config.json":
+                        with open(root+"/config.json", "r") as fd:
+                            json_data = fd.read()
+                            data = json.loads(json_data)
+                            if data["name"] == id.text:
+                                identifier = data["id"]
+
+        self.configuration.config_table(self,identifier)
+        links = Links(self.integrated_links)
+        self.add_widget(links)
+        links.draw_label()
+
+    def remove_user(self,user):
+        """
+        Remove a specified user
+        :param user: the user to remove
+        """
+        self.connected.remove(user.identifier)
+        for zone in self.user_zones:
+            if zone.user == user:
+                zone.set_name("")
+                zone.connected = False
 
     def add_criterion(self, criterion):
         """
@@ -64,17 +193,71 @@ class Table(Widget):
         :param criterion: the criterion to add
         """
         self.add_widget(criterion)
+        criterion.draw()
         self.criterions.append(criterion)
+        self.logger.write("create_critere", criterion.createur.identifier, [1,criterion.texte])
         for child in self.children:
-            if child.__class__ == ProgressObjectif:
+            if child.__class__ == ProgressObjectif or child.__class__ == IndicateurCritere:
                 child.update()
+
+    def new_criterion(self, text, user,fusionneurs=[],text_type=""):
+        """
+        Create a new criterion
+        :param text: text of the criterion
+        :param user: creator of the criterion
+        :param fusionneurs: editors of the criterion
+        :param text_type: Question type of the criterion
+        :return the new criterion
+        """
+        identifier = self.free_criterion_id()
+        if user.identifier == 2 or user.identifier == 3:
+            criterion = Critere(identifier, text, user, (user.position[0],user.position[1]-100), self.integrated_criterions, "table", fusionneurs = fusionneurs, text_type=text_type)
+        else:
+            criterion = Critere(identifier, text, user, (user.position[0], user.position[1]),
+                            self.integrated_criterions, "table", fusionneurs=fusionneurs, text_type=text_type)
+        self.criterions.append(criterion)
+
+        self.logger.write("edit_critere", criterion.createur.identifier, [1, criterion.texte.encode("utf8")])
+        self.add_widget(criterion)
+
+        for child in self.children:
+            if child.__class__ == ProgressObjectif or child.__class__ == IndicateurCritere:
+                child.update()
+
+        criterion.draw()
+        return criterion
+
+    def get_animal(self, identifier):
+        """
+        Get a specified animal
+        :param identifier: the identifier of the animal
+        :return: the animal object
+        """
+        for child in self.children:
+            if child.__class__ == Animal and child.identifier == identifier:
+                return child
+        return None
+
+    def free_criterion_id(self):
+        """
+        Return the id of the first free criterion
+        :return: the id of the first free criterion
+        """
+        tab = []
+        for criterion in self.criterions:
+            tab.append(criterion.identifier)
+        tab.sort()
+        for i in range(0, len(tab) - 1):
+            if tab[i] != i + 1:
+                return i + 1
+        return len(tab)
 
     def news_images(self, level):
         """
         Add images of a level to the table
         :param level: the level of the images
         """
-        self.add_animal_lvl(level)
+        #self.add_animal_lvl(level)
         return self.objective_criterions[self.current_lvl]
 
     def add_animal_lvl(self, lvl):
@@ -84,18 +267,40 @@ class Table(Widget):
         """
         r1 = self.get_root_window().width - 200
         r2 = self.get_root_window().height - 200
-        images = glob.glob(self.images_folder[lvl])
-        for images in images:
-            self.add_animal(len(self.animals) + 1, images, [r1, r2])
+        # images = glob.glob(self.images_folder[lvl])
+        # for images in images:
+        #    self.add_animal(len(self.animals) + 1, images, [r1, r2])
+        for image in self.images_folder[lvl]:
+            self.add_animal(len(self.animals) + 1, image, [r1, r2], lvl)
 
-    def add_animal(self, identifier, image, pos):
+    def lock_animal(self, lvl):
+        """
+        Lock all animals of a level
+        :lvl the lvl to lock
+        """
+        for child in self.children:
+            if child.__class__ == Animal :
+                if child.lvl == lvl :
+                    child.lock()
+
+    def unlock_animal(self, lvl):
+        """
+        Unlock all animals of a level
+        :param lvl: the level to unlock
+        """
+        for child in self.children:
+            if child.__class__ == Animal :
+                if child.lvl == lvl :
+                    child.unlock()
+
+    def add_animal(self, identifier, image, pos, lvl):
         """
         Add an animal to the table
         :param identifier: the identifier of the animal
         :param image: the source of the image representing the animal
         :param pos: the position where to add the animal
         """
-        animal = Animal(identifier, image, pos)
+        animal = Animal(identifier, image, pos, self, "table", lvl)
         self.animals.append(identifier)
         self.add_widget(animal)
 
@@ -109,9 +314,14 @@ class Table(Widget):
     def update(self, dt):
         """
         Update the table
+        :param dt:
         """
+        # from PhysicalIndicator import PhysicalIndicator
+        for elmt in self.widget_to_add:
+            self.add_widget(elmt)
+            self.widget_to_add.remove(elmt)
         for child in self.children:
-            if child.__class__ == Critere or child.__class__ == Links or child.__class__ == PhysicalIndicator:
+            if child.__class__ == Critere or child.__class__ == Links: # or child.__class__ == IndicateurVote:  # or child.__class__ == PhysicalIndicator:
                 child.update(dt)
 
     def get_user(self, identifier):
@@ -122,6 +332,31 @@ class Table(Widget):
         """
         return self.group.get_user(identifier)
 
+    def connect_user(self, newsock):
+        """
+        Connect a tablet to the table
+        :param newsock: the socket of the tablet
+        :return: the user of the tablet
+        """
+        if len(self.connected) == 0:
+            self.connected.append(self.group.users[0].identifier)
+            self.group.users[0].add_socket(newsock)
+            return self.group.users[0]
+        else:
+            for user in self.group.users:
+                if self.connected.count(user.identifier) == 0:
+                    self.connected.append(user.identifier)
+                    user.add_socket(newsock)
+                    return user
+        return None
+
+    def menu(self):
+        """
+        Ge back to main menu
+        """
+        for fils in self.children :
+            self.remove_widget(fils)
+        self.initialisation(self.size)
 
 class TableApp(App):
     def __init__(self, **kwargs):
@@ -134,13 +369,20 @@ class TableApp(App):
 
     def on_start(self):
         self.table.initialisation(self.root_window)
+        t1 = threading.Thread(target=self.table.server.run_server)
+        t1.daemon = True
+        t1.start()
+
+    def on_quit(self):
+        if self.table.menu_mode :
+            exit()
+        else:
+            self.table.menu()
 
     def on_stop(self):
-        configuration = Configuration(PATH)
-        generateur = GenerateurRapport()
-        configuration.config_generateur(generateur)
-        generateur.generation(self.table)
+        self.table.logger.close()
 
 
 if __name__ == '__main__':
-    TableApp().run()
+        app = TableApp()
+        app.run()

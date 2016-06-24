@@ -31,6 +31,18 @@ class Groupe:
                 return user
         return None
 
+    def get_color(self, identifier):
+        """
+        Get the color of an user
+        :param identifier: user's identifier
+        :return: the color of the specified user
+        """
+        for user in self.users:
+            if user.identifier == identifier:
+                tmp = user.color
+                return user.color + [1]
+        return None
+
     def nb_users(self):
         """
         Get the number of users in the group

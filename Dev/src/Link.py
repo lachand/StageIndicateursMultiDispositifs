@@ -1,6 +1,5 @@
 #!/usr/local/bin/python
 #  -*- coding: utf-8 -*-
-
 import math
 
 
@@ -8,7 +7,8 @@ class Link:
     """
     A class representing a link between an animal and a criterion
     """
-    def __init__(self, id_img, id_usr):
+
+    def __init__(self, id_img, id_usr, distance=0, angle=0):
         """
         Initialization of a link
         :param id_img: the id of the image to link
@@ -16,8 +16,8 @@ class Link:
         """
         self.id_img = id_img
         self.id_usr = id_usr
-        self.distance = 0
-        self.angle = 0
+        self.distance = distance
+        self.angle = angle
 
     def linked_to(self, id_img, id_usr):
         """

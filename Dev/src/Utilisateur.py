@@ -6,7 +6,7 @@ class Utilisateur:
     A class representing a user of the application
     """
 
-    def __init__(self, identifier, color, max_lvl, pos):
+    def __init__(self, identifier, color, max_lvl=3, pos=(50, 50)):
         """
         Initialize an user
         :param identifier: the identifier of the user
@@ -24,6 +24,9 @@ class Utilisateur:
         self.links_others = 0
         self.max_lvl = max_lvl
         self.position = pos
+        self.socket = None
+        self.votes = []
+        self.name = ""
 
         for i in range(0, max_lvl):
             self.nb_criterions.append(0)
@@ -63,3 +66,10 @@ class Utilisateur:
         """
         self.nb_criterions[level] += 1
         self.nb_criterion += 1
+
+    def add_socket(self, newsock):
+        """
+        Link a new socket to the user
+        :param newsock: The socket of the user's tablet
+        """
+        self.socket = newsock
