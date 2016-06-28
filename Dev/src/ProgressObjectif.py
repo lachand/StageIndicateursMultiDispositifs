@@ -66,10 +66,6 @@ class ProgressObjectif(Widget):
             self.add_widget(self.pb3)
 
     def _image_loaded(self, proxyImage):
-        """
-        Load an image
-        :param proxyImage: the url of the image to load
-        """
         if proxyImage.image.texture:
             self.pb.texture = proxyImage.image.texture
 

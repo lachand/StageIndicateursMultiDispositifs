@@ -32,7 +32,6 @@ Config.set('kivy', 'keyboard_mode', 'multi')
 Config.set('kivy', 'keyboard_layout', 'keyboard.json')
 Config.set('graphics', 'width', '1300')
 Config.set('graphics', 'height', '700')
-Config.set('graphics', 'fullscreen', 'auto')
 
 PATH = os.path.join("..", "cfg", "ConfigExpeIntegre.json")
 
@@ -43,9 +42,6 @@ class Table(Widget):
     """
 
     def __init__(self, **kwargs):
-        """
-        Initialize the table
-        """
         super(Table, self).__init__(**kwargs)
         self.logger = Logger()
         self.server = Serveur(self)
@@ -63,10 +59,6 @@ class Table(Widget):
         self.image_user_no = Image(source="Images/user_unvalidate.png")
 
     def internet_on(self):
-        """
-        Check the internet connexion
-        :return: True if internet is OK, False else
-        """
         try:
             urllib2.urlopen('http://museotouch.fr',timeout=5)
             return True
@@ -74,10 +66,6 @@ class Table(Widget):
             return False
 
     def update_vote(self):
-        """
-        Update all votes of the table
-        :return:
-        """
         for fils in self.children:
             if fils.__class__ == IndicateurVote :
                 fils.update()
@@ -137,11 +125,6 @@ class Table(Widget):
         self.add_widget(self.layout)
 
     def get_zone_utilisateur(self, user):
-        """
-        Return the space linked to an user
-        :param user: The user to get the space
-        :return: The zone of the user
-        """
         for zone in self.user_zones:
             if zone.user == user :
                 return zone
@@ -177,10 +160,6 @@ class Table(Widget):
         links.draw_label()
 
     def remove_user(self,user):
-        """
-        Remove a specified user
-        :param user: the user to remove
-        """
         self.connected.remove(user.identifier)
         for zone in self.user_zones:
             if zone.user == user:
@@ -200,15 +179,7 @@ class Table(Widget):
             if child.__class__ == ProgressObjectif or child.__class__ == IndicateurCritere:
                 child.update()
 
-    def new_criterion(self, text, user,fusionneurs=[],text_type=""):
-        """
-        Create a new criterion
-        :param text: text of the criterion
-        :param user: creator of the criterion
-        :param fusionneurs: editors of the criterion
-        :param text_type: Question type of the criterion
-        :return the new criterion
-        """
+    def new_criterion(self, text, user,fusionneurs=[],text_type="", edition="False"):
         identifier = self.free_criterion_id()
         if user.identifier == 2 or user.identifier == 3:
             criterion = Critere(identifier, text, user, (user.position[0],user.position[1]-100), self.integrated_criterions, "table", fusionneurs = fusionneurs, text_type=text_type)
@@ -217,7 +188,7 @@ class Table(Widget):
                             self.integrated_criterions, "table", fusionneurs=fusionneurs, text_type=text_type)
         self.criterions.append(criterion)
 
-        self.logger.write("edit_critere", criterion.createur.identifier, [1, criterion.texte.encode("utf8")])
+        self.logger.write("edit_critere", criterion.createur.identifier, [1, criterion.texte])
         self.add_widget(criterion)
 
         for child in self.children:
@@ -228,21 +199,12 @@ class Table(Widget):
         return criterion
 
     def get_animal(self, identifier):
-        """
-        Get a specified animal
-        :param identifier: the identifier of the animal
-        :return: the animal object
-        """
         for child in self.children:
             if child.__class__ == Animal and child.identifier == identifier:
                 return child
         return None
 
     def free_criterion_id(self):
-        """
-        Return the id of the first free criterion
-        :return: the id of the first free criterion
-        """
         tab = []
         for criterion in self.criterions:
             tab.append(criterion.identifier)
@@ -274,24 +236,23 @@ class Table(Widget):
             self.add_animal(len(self.animals) + 1, image, [r1, r2], lvl)
 
     def lock_animal(self, lvl):
-        """
-        Lock all animals of a level
-        :lvl the lvl to lock
-        """
         for child in self.children:
             if child.__class__ == Animal :
                 if child.lvl == lvl :
                     child.lock()
 
     def unlock_animal(self, lvl):
-        """
-        Unlock all animals of a level
-        :param lvl: the level to unlock
-        """
         for child in self.children:
             if child.__class__ == Animal :
                 if child.lvl == lvl :
                     child.unlock()
+
+    def update_animal(self, lvl, value):
+        print "update :",lvl, value
+        for child in self.children:
+            if child.__class__ == Animal :
+                if child.lvl == lvl :
+                    child.set_opacity(value)
 
     def add_animal(self, identifier, image, pos, lvl):
         """
@@ -333,11 +294,6 @@ class Table(Widget):
         return self.group.get_user(identifier)
 
     def connect_user(self, newsock):
-        """
-        Connect a tablet to the table
-        :param newsock: the socket of the tablet
-        :return: the user of the tablet
-        """
         if len(self.connected) == 0:
             self.connected.append(self.group.users[0].identifier)
             self.group.users[0].add_socket(newsock)
@@ -351,9 +307,6 @@ class Table(Widget):
         return None
 
     def menu(self):
-        """
-        Ge back to main menu
-        """
         for fils in self.children :
             self.remove_widget(fils)
         self.initialisation(self.size)
@@ -380,6 +333,11 @@ class TableApp(App):
             self.table.menu()
 
     def on_stop(self):
+        # from GenerateurRapport import GenerateurRapport
+        # configuration = Configuration(PATH)
+        # generateur = GenerateurRapport()
+        # configuration.config_generateur(generateur)
+        # generateur.generation(self.table)
         self.table.logger.close()
 
 

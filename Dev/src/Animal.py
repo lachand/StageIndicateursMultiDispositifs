@@ -4,8 +4,6 @@
 from math import sin, cos, pi
 from random import randint
 
-from kivy.graphics import Rectangle
-from kivy.uix.colorpicker import Color
 from kivy.uix.scatter import Scatter
 
 from ZoneUtilisateur import ZoneUtilisateur
@@ -24,41 +22,49 @@ class Animal(Scatter):
         :param pos: the square where the scatter can be randomly placed
         """
         self.support = support
-        self.color = [0, 0, 0]
         self.scale_min=1
         self.scale_max=3.
-        Scatter.__init__(self)
         self.src_image = image
+
+        from kivy.graphics.texture import Texture
+        self.texture = Texture.create(size=(100, 100))
+        size = 100 * 100 * 3
+        buf = [0 for x in range(size)]
+        buf = b''.join(map(chr, buf))
+        self.texture.blit_buffer(buf, colorfmt='rgb', bufferfmt='ubyte')
+
+        if self.src_image is not None:
+            from kivy.uix.image import Image
+            from kivy.loader import Loader
+            proxy_image = Loader.image(str(self.src_image))
+            proxy_image.bind(on_load=self._image_loaded)
+            self.image = Image()
+
+        self.locked = False
+        self.lvl = lvl
+        self.size_image=self.size[0]-10,self.size[1]-10
+        self.pos_center = self.pos[0]+5, self.pos[1]+5
+
+        Scatter.__init__(self)
+
         if self.support == "table":
             self.center = [randint(200, pos[0]), randint(200, pos[1])]
         else:
             self.center = pos[0], pos[1]
-        self.rotation = randint(0,360)
+
+        self.rotation = randint(0, 360)
         self.identifier = identifier
         self.current_user = None
-        self.on_move = False
-        with self.canvas:
-            if self.src_image is not None:
-                from kivy.uix.image import Image
-                from kivy.loader import Loader
-                proxy_image = Loader.image(str(self.src_image))
-                proxy_image.bind(on_load=self._image_loaded)
-                self.image = Image()
-        self.locked = False
-        self.lvl = lvl
 
 
     def _image_loaded(self, proxy_image):
         """
-        Load the image from educatouch
-
-        :param proxy_image: The adress of the image to load
+        Load the image for an offline use
+        :param proxy_image: The url of the image
         """
         if proxy_image.image.texture:
             self.image.texture = proxy_image.image.texture
             self.image.opacity = 0
-            with self.canvas:
-                Rectangle(texture=self.image.texture, size=self.image.size)
 
     def set_user(self, user):
         """
@@ -66,24 +72,27 @@ class Animal(Scatter):
         :param user: the user that is using the animal
         """
         self.current_user = user
-        self.color = user.color
-        self.canvas.clear()
-        with self.canvas:
-            Color(self.color[0], self.color[1], self.color[2])
-            Rectangle()
-            Color(1, 1, 1, 1)
-            Rectangle(texture=self.image.texture, size=[self.size[0] - 10, self.size[1] - 10])
+        size = 100 * 100 * 3
+        buf = []
+        for i in range(0,size):
+            if i%3 == 0:
+                buf.append(int(user.color[0]*255))
+            elif i%3 ==1:
+                buf.append(int(user.color[1]*255))
+            else:
+                buf.append(int(user.color[2]*255))
+        buf = b''.join(map(chr, buf))
+        self.texture.blit_buffer(buf, colorfmt='rgb', bufferfmt='ubyte')
 
     def remove_user(self):
         """
         Remove the current user of the animal
         """
         self.current_user = None
-        self.color = [1, 1, 1]
-        self.canvas.clear()
-        with self.canvas:
-            Color(1, 1, 1, 1)
-            Rectangle(texture=self.image.texture, size=[self.size[0] - 10, self.size[1] - 10])
+        size = 100 * 100 * 3
+        buf = [0 for x in range(size)]
+        buf = b''.join(map(chr, buf))
+        self.texture.blit_buffer(buf, colorfmt='rgb', bufferfmt='ubyte')
 
     def on_touch_move(self, touch):
         """
@@ -91,25 +100,12 @@ class Animal(Scatter):
         :param touch: the position of the touch
         """
         from main import Tablette
-        if self.parent is not None:
+        if self.collide_point(touch.x, touch.y) and self.parent is not None:
             for criterion in self.parent.criterions:
                 value = criterion.has_link(self.identifier)
                 if value != -1:
                     criterion.update_link(value, self.center)
-        if self.parent.__class__.__name__ == Tablette.__name__:
-            if touch.y > self.parent.height - 40:
-                self.parent.client.send_msg('{"Animal" : "' + str(self.identifier) + '"}')
-                self.parent.remove_animal(self)
-                self.canvas.clear()
-        Scatter.on_touch_move(self, touch)
 
-    def on_touch_up(self, touch):
-        """
-        Action to perform when an user release the animal
-        :param touch:
-        """
-        Scatter.on_touch_up(self, touch)
-        if self.collide_point(touch.x, touch.y) and self.parent is not None:
             for child in self.parent.children:
                 if child.__class__ == ZoneUtilisateur and child.collide_point(self.center[0], self.center[1]):
                     if self.current_user is None or self.current_user.identifier != child.user.identifier:
@@ -117,6 +113,14 @@ class Animal(Scatter):
                             '{"Image" : "' + str(self.src_image) + '", "ID" : "' + str(self.identifier) + '"}\n',
                             child.user.socket)
                         self.set_user(child.user)
+
+        if self.parent.__class__.__name__ == Tablette.__name__:
+            if touch.y > self.parent.height - 40:
+                self.parent.client.send_msg('{"Animal" : "' + str(self.identifier) + '"}')
+                self.parent.remove_animal(self)
+
+        Scatter.on_touch_move(self, touch)
+
 
     def update_coordinate(self, x, y):
         """

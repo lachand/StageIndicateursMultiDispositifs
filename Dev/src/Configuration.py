@@ -92,7 +92,7 @@ class Configuration:
                 fd.close()
 
 
-        ##### Load activity without internet
+        ##### Gérer le load_activity meme si sans internet
         with open("../Activities/"+str(id)+"/config.json", "r") as fd:
             json_data = fd.read()
             data = json2.loads(json_data)
@@ -208,4 +208,12 @@ class Configuration:
                         table.images_folder[int(elmt["fields"]["Niveau"]) - 1].append("../Activities/"+str(id)+"/lvl"+str(elmt["fields"]["Niveau"])+"/"+image_str[1])
 
         table.add_animal_lvl(0)
-        table.add_animal_lvl(1)
+
+
+    def config_generateur(self, generateur):
+        """
+        Configure the indicator's generator
+        :param generateur: the generator to configure
+        """
+        with open(self.config_file) as json_data:
+            data = json.decode(json_data.read())

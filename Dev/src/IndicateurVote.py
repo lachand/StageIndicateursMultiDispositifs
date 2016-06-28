@@ -59,29 +59,28 @@ class IndicateurVote(Widget):
             scatter4.add_widget(self.label4)
             self.add_widget(scatter4)
 
-        for user in self.parent.group.users:
-            global position, rotation
-            if user.identifier == 1:
-                position = 80, -40
-                rotation = 0
-            elif user.identifier == 2:
-                position = 80,self.parent.height -85
-                rotation = 180
-            elif user.identifier == 3:
-                position = self.parent.width-210,self.parent.height -85
-                rotation = 180
-            elif user.identifier == 4:
-                position = self.parent.width-210,-40
-                rotation = 0
+            for user in self.parent.group.users:
+                global position, rotation
+                if user.identifier == 1:
+                    position = 80, -40
+                    rotation = 0
+                elif user.identifier == 2:
+                    position = 80,self.parent.height -85
+                    rotation = 180
+                elif user.identifier == 3:
+                    position = self.parent.width-210,self.parent.height -85
+                    rotation = 180
+                elif user.identifier == 4:
+                    position = self.parent.width-210,-40
+                    rotation = 0
 
-            mygauge = Gauge(value=50, size_gauge=50, size_text=0, angle=rotation)
-            mygauge.value = 50
-            mygauge.pos = position
-            self.jauges.append([mygauge, user])
-            if not self.integrated:
+                mygauge = Gauge(value=50, size_gauge=50, size_text=0, angle=rotation)
+                mygauge.value = 50
+                mygauge.pos = position
+                self.jauges.append([mygauge, user])
                 self.add_widget(mygauge)
 
-        if self.integrated :
+        else :
             for user in self.parent.group.users:
                 if user.identifier == 1:
                     rotation_start = -90
@@ -142,15 +141,14 @@ class IndicateurVote(Widget):
                     rotation_stop2 = 90
 
                 if len(user.votes) > 0 :
-                    ratio = float(user.votes.count(1)) / float(len(user.votes))
+                    ratio = user.votes.count(1) / len(user.votes)
                 else :
                     ratio = 0.5
-
-                if ratio == 0.:
+                if ratio == 0:
                     ratio = 0.000000001
 
-                size = 200. + 300. * ratio, 200. + 300. * ratio
-                size2 = 200. + 300. * (1-ratio), 200. + 300. * (1.-ratio)
+                size = 200 + 300 * ratio, 200 + 300 * ratio
+                size2 = 200 + 300 * (1-ratio), 200 + 300 * (1-ratio)
                 position1 = (user.position[0] - size[0]/2,user.position[1] - size[1]/2)
                 position2 = (user.position[0] - size2[0]/2,user.position[1] - size2[1]/2)
 

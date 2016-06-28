@@ -11,10 +11,6 @@ from kivy.uix.widget import Widget
 class Choix(Widget):
 
     def __init__(self,size):
-        """
-        Initialize the Choice class
-        :param size: Size of the window
-        """
         Widget.__init__(self)
         self.qui = CheckBox(pos=(size[0]/2- 300, size[1] - 100) ,group="choix", text='Qui :')
         self.label_qui = Label(text='Qui ?', font_size=40, pos=(size[0]/2-240, size[1] - 100))
@@ -52,17 +48,9 @@ class Choix(Widget):
                                          font_size=40), size=(600, 400), size_hint=(None, None))
 
     def callback_destroy(self, value):
-        """
-        Return to menu window
-        """
         self.parent.main_menu()
 
     def callback(self, value):
-        """
-        Set the category of the post'it
-        :param value:
-        :return:
-        """
         active = None
         if self.qui.active :
             active = "Qui :"

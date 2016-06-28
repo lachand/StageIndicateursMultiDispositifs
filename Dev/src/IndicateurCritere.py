@@ -28,9 +28,7 @@ class IndicateurCritere(Widget):
 
 
     def add_label(self):
-        """
-        Add a label to the indicator
-        """
+
         scatter = Scatter(size=self.label.size, pos=(0,0), do_rotation=False, do_scale=False,
                           do_translation=False)
         scatter.add_widget(self.label)

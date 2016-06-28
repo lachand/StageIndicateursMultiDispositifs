@@ -1,12 +1,85 @@
 #:kivy 1.0.9
 
 <Critere>:
+
+    canvas:
+        Color:
+            rgb: self.color_validated
+        Rectangle:
+            size: self.size
+        Color:
+            rgba: 0.25, 0.25, 0.25, 1
+        Rectangle:
+            size: self.size[0]-10,self.size[1]-10
+            pos: 5,5
+        Color:
+            rgb: self.color_user1
+        Rectangle:
+            size: (self.size[0]-10)/5,(self.size[0]-10)/5
+            pos: (5, self.size[1] - self.size[1] / 5 - 5)
+            source: self.source_user1
+        Color:
+            rgb: self.color_user2
+        Rectangle:
+            size: (self.size[0]-10)/5,(self.size[0]-10)/5
+            pos: (1 * (self.size[1] / 5) + 5, self.size[1] - self.size[1] / 5 - 5)
+            source: self.source_user2
+        Color:
+            rgb: self.color_user3
+        Rectangle:
+            size: (self.size[0]-10)/5,(self.size[0]-10)/5
+            pos: (2 * (self.size[1] / 5) + 5, self.size[1] - self.size[1] / 5 - 5)
+            source: self.source_user3
+        Color:
+            rgb: self.color_user4
+        Rectangle:
+            size: (self.size[0]-10)/5,(self.size[0]-10)/5
+            pos: (3 * (self.size[1] / 5) + 5, self.size[1] - self.size[1] / 5 - 5)
+            source: self.source_user4
+
+        Color:
+            rgb: self.color_user_edit1
+        Rectangle:
+            size: (self.size[0]-10)/4,(self.size[0]-10)/5
+            pos: (5, 5)
+        Color:
+            rgb: self.color_user_edit2
+        Rectangle:
+            size: (self.size[0]-10)/4,(self.size[0]-10)/5
+            pos: (5 + 1* (self.size[0]-10)/4, 5)
+        Color:
+            rgb: self.color_user_edit3
+        Rectangle:
+            size: (self.size[0]-10)/4,(self.size[0]-10)/5
+            pos: (5 + 2* (self.size[0]-10)/4, 5)
+        Color:
+            rgb: self.color_user_edit4
+        Rectangle:
+            size: (self.size[0]-10)/4,(self.size[0]-10)/5
+            pos: (5 + 3* (self.size[0]-10)/4, 5)
+
+        Color:
+            rgb: 0.5, 0.5, 0.5
+        Rectangle:
+            size: (self.size[1]-10, 2)
+            pos:(5, self.size[0] - self.size[0] / 5 - 10 - self.size_separator)
+
     Scatter:
         do_rotation: True
         do_scale: True
         do_translation: True
 
 <Animal>:
+    canvas:
+        Rectangle:
+            size: self.size
+            texture: self.texture
+        Color:
+            rgba: 1,1,1,1
+        Rectangle:
+            pos:5,5
+            size: self.size_image
+            texture: self.image.texture
     Scatter:
         do_rotation: True
         do_scale: True
@@ -15,6 +88,18 @@
 <Table>:
     size: root.size
     pos: root.pos
+
+<Vote>:
+    canvas:
+        Color:
+            rgb: self.color
+        Rectangle:
+            size: self.size
+            texture: self.texture
+    Scatter:
+        do_rotation: False
+        do_scale: False
+        do_translation: True
 
 <ZoneUtilisateur>:
     pos: self.position

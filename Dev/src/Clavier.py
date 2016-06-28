@@ -47,15 +47,13 @@ class Clavier(Scatter):
         self.text_type = text_type
 
     def initialisation(self):
-        """
-        Add the widget to the main window
-        """
         self.parent.add_widget(self.ti)
         self.parent.edition_mode = True
 
     def destroy(self):
         """
         Destroy the keyboard
+        :param value:
         """
         self.parent.edition_mode = False
         self.ti.focus = False
@@ -74,13 +72,7 @@ class Clavier(Scatter):
                 criterion = Critere(0, self.ti.text, self.user, self.pos, self.parent.integrated_criterions, self.support, text_type=self.text_type)
                 self.parent.add_criterion(criterion)
                 self.user.add_criterion_lvl(self.parent.current_lvl)
-                for indicator in self.parent.indicators:
-                    if self.support == "table":
-                        from PhysicalIndicator import PhysicalIndicator
-                        if indicator.__class__ == PhysicalIndicator:
-                            indicator.add_ball(self.user.identifier, self.user.position)
             else:
                 self.criterion.texte = self.ti.text
                 self.parent.logger.write("edit_critere", self.user.identifier, [self.criterion.createur.identifier])
-                users = self.criterion.fusionneurs
-                self.criterion.draw_critere(users, self.criterion.size)
+                self.criterion.pos = 0,0

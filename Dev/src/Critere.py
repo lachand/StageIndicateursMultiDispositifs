@@ -3,8 +3,7 @@
 
 import math
 
-from kivy.graphics import Rectangle
-from kivy.uix.colorpicker import Color
+from kivy.properties import StringProperty, ListProperty, NumericProperty
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.scatter import Scatter
@@ -16,6 +15,33 @@ class Critere(Scatter):
     """
     A class to represent a criterion
     """
+    source_user1 = StringProperty('Images/user.png')
+    source_user2 = StringProperty('Images/user.png')
+    source_user3 = StringProperty('Images/user.png')
+    source_user4 = StringProperty('Images/user.png')
+
+    color_user1 = ListProperty([1, 1, 1])
+    color_user2 = ListProperty([1, 1, 1])
+    color_user3 = ListProperty([1, 1, 1])
+    color_user4 = ListProperty([1, 1, 1])
+
+    color_validated = ListProperty([0,0,0])
+
+    color_user_edit1 = ListProperty([.25, .25, .25])
+    color_user_edit2 = ListProperty([.25, .25, .25])
+    color_user_edit3 = ListProperty([.25, .25, .25])
+    color_user_edit4 = ListProperty([.25, .25, .25])
+
+    color_separator = ListProperty([.25, .25, .25])
+
+    question_text = StringProperty("")
+
+    size_separator = NumericProperty(10)
+
+    label_text_pos =  ListProperty([0,0])
+    label_text_size = ListProperty([0,0])
+    label_question_pos = ListProperty([0,0])
+    label_question_size = ListProperty([0,0])
 
     def __init__(self, identifier, text, creator, position, integrated, support="table", fusionneurs = [], text_type=""):
         """
@@ -26,11 +52,10 @@ class Critere(Scatter):
         :param position: the position of the criterion
         :param integrated: if the criterion is colored or in grey
         """
-        Scatter.__init__(self)
+
         self.support = support
         self.fusionneurs = fusionneurs
 
-        self.pos = position
         self.nb_liaisons = 0
         self.identifier = identifier
         self.texte = text
@@ -41,10 +66,15 @@ class Critere(Scatter):
         self.validated = False
         self.color = self.createur.color
         self.links = []
+        self.question_text = text_type
+
         if self.support == "tablette":
             self.size=400,400
         else:
-            self.size = 100,100
+            self.size = 120,120
+            if integrated:
+                self.color_separator = [0.5,0.5,0.5]
+
         self.integrated = integrated
         self.fused = False
         self.last_touch = (0, 0)
@@ -57,6 +87,7 @@ class Critere(Scatter):
         self.parent_height = position[1]+100
         self.zoom_mode = False
         self.text_type = text_type
+        self.text=text
 
         if creator.identifier == 1 and self.support != "tablette":
             self.rotation = 0
@@ -67,67 +98,44 @@ class Critere(Scatter):
         elif creator.identifier == 4 and self.support != "tablette":
             self.rotation = 0
 
+        self.label_text_pos = [5, 5+self.size[1]/5]
+        self.label_text_size = [self.size[0] - 10, self.size[1]-30 - 2*self.size[1]/5]
+        self.label_question_pos = [5,self.size[1]-self.size[1]/5 - 25]
+        self.label_question_size = [self.size[0]-10,20]
+
+        self.label_question = Label(text=text_type, text_size=self.label_question_size, pos=self.label_question_pos, halign="left", valign= 'top', size= self.label_question_size)
+        self.label_text = Label(text=text, text_size=self.label_text_size, pos=self.label_text_pos, valign='top', halign="left", size_hint_y=None, multiline=True, size=self.label_text_size)
+        self.size_separator = self.label_question.font_size
+
+        self.color_user_edit1 = self.createur.color
+
+        Scatter.__init__(self)
+        self.pos = position[0], position[1] + 200
+        self.add_widget(self.label_question)
+        self.add_widget(self.label_text)
+
     def draw(self):
-        """
-        Draw the criterion
-        """
-        self.canvas.clear()
 
-        if self.validated:
-             self.canvas.clear()
-             with self.canvas:
-                 Color(1, 1, 1, 1)
-                 Rectangle(size=(self.size[0] + 10, self.size[1] + 10), pos=(-5, -5))
-
-        with self.canvas:
-
-            Color(0, 0, 0, 1)
-            Rectangle(size=(self.size[0] + 4, self.size[1] + 4), pos=(-2, -2))
-            Color(.25, .25, .25)
-
-            Rectangle(size=self.size)
-
-            if self.support != "tablette":
-                cpt = 0
-                for user in self.parent.group.users:
-                    Color(user.color[0], user.color[1], user.color[2])
-                    print "user :"
-                    print user
-                    print "validator :"
-                    print self.validator
-                    print "supress :"
-                    print self.suppression
-                    if self.validator.count(user.identifier) > 0:
-                        texture = self.parent.image_user_yes.texture
-                    elif self.suppression.count(user.identifier) > 0:
-                        texture = self.parent.image_user_no.texture
-                    else:
-                        texture = self.parent.image_user.texture
-                    Rectangle(texture=texture, size=(self.size[0] / 5, self.size[1] / 5),
-                          pos=(cpt * (self.size[1] / 5), self.size[1] - self.size[1] / 5))
-                    if len(user.name) > 0:
-                        Label(size=(self.size[0] / 5,self.size[1] / 5),text=user.name[0], color=(1, 1, 1, 1), pos=(cpt * (self.size[1] / 5), self.size[1] - self.size[1] / 4),valign='bottom')
-                    cpt += 1
-                Color(0.5, 0.5, 0.5, 1)
-                Rectangle(size=(self.size[0], 2),pos=(0,self.size[1] - self.size[1] / 5))
-
-            if self.integrated:
-                Color(self.createur.color[0], self.createur.color[1], self.createur.color[2])
-                Rectangle(size=(self.size[0]/4,self.size[1]/6), pos=(0,0))
-                cpt = 1
-                for fusionneur in self.fusionneurs:
-                    Color(fusionneur.color[0], fusionneur.color[1], fusionneur.color[2])
-                    Rectangle(size=(self.size[0] / 4, self.size[1] / 6),
-                              pos=(cpt*(self.size[0] / 4), 0))
-                    cpt += 1
-                Color(0.5, 0.5, 0.5, 5)
-                Rectangle(size=(self.size[0], 2),
-                          pos=(0, self.size[1]/6))
-            Label(text=str(self.text_type), halign='left', color=(1, 1, 1, 1),size=self.size,text_size=(self.size[0],self.size[1]-2*self.size[1]/5), valign='top', pos=(0,0))
-            Color(0.5, 0.5, 0.5, 1)
-            Rectangle(size=(self.size[0], 2), pos=(0, self.size[1] - self.size[1] / 5 - 20))
-
-            Label(text=self.texte, halign='left', size=self.size, color=(1, 1, 1, 1),text_size=(self.size[0],self.size[1]-3.5*self.size[1]/5),valign='top',pos=(0,0))
+        if self.support != "tablette":
+            for user in self.parent.group.users:
+                if user.identifier == 1:
+                    self.color_user1 = [user.color[0], user.color[1], user.color[2]]
+                elif user.identifier == 2:
+                    self.color_user2 = [user.color[0], user.color[1], user.color[2]]
+                if user.identifier == 3:
+                    self.color_user3 = [user.color[0], user.color[1], user.color[2]]
+                else:
+                    self.color_user4 = [user.color[0], user.color[1], user.color[2]]
+        else:
+            for user in self.parent.group.users:
+                if user.identifier == 1:
+                    self.color_user1 = [user.color[0], user.color[1], user.color[2]]
+                elif user.identifier == 2:
+                    self.color_user2 = [user.color[0], user.color[1], user.color[2]]
+                if user.identifier == 3:
+                    self.color_user3 = [user.color[0], user.color[1], user.color[2]]
+                else:
+                    self.color_user4 = [user.color[0], user.color[1], user.color[2]]
 
 
     def add_link(self, id_img, id_usr, distance=0, angle=0):
@@ -143,7 +151,6 @@ class Critere(Scatter):
             for link in self.links:
                 if link.linked_to_animal(id_img):
                     est_dedans = True
-                    # if link.linked_to_user(id_usr):
                     tab = [link.id_usr, self.createur.identifier]
                     for fusionneur in self.fusionneurs:
                         tab.append(fusionneur.identifier)
@@ -168,6 +175,32 @@ class Critere(Scatter):
                     if self.collide_widget(element):
                         return True
         return False
+
+    def fuse_concept(self, concept):
+        pass
+        """
+        Fuse two criterions together
+        :param concept: the other criterion ton fuse
+        """
+        if self.createur.identifier != concept.createur.identifier and not self.destroyed:
+            if not self.fusionneurs.__contains__(concept.createur):
+                self.fusionneurs.append(concept.createur)
+                self.parent.criterions[self.parent.criterions.index(concept)].fused = True
+
+        for fusionneur in concept.fusionneurs:
+            if self.createur.identifier != fusionneur.identifier and not self.destroyed:
+                if not self.fusionneurs.__contains__(fusionneur):
+                    self.fusionneurs.append(fusionneur)
+                    self.parent.criterions[self.parent.criterions.index(concept)].fused = True
+
+        for link in concept.links:
+            if self.has_link(link.id_img) == -1 and not self.destroyed:
+                self.add_link(link.id_img, link.id_usr)
+
+        for fils in self.parent.children:
+            if fils.__class__ == Critere and fils.collide_widget(self) and fils != self and not self.destroyed:
+                self.parent.remove_widget(fils)
+        #self.draw()
 
     def has_link(self, identifier):
         """
@@ -196,7 +229,7 @@ class Critere(Scatter):
         :param user: The user that validates the criterion
         :param value: The value for validation
         """
-        if not self.validated and not self.destroyed and not self.parent is None:
+        if not self.validated and not self.destroyed:
             self.parent.logger.write("vote", user, [value, self.createur.identifier])
             if value == 0:
                 if self.validator.count(user) > 0:
@@ -205,6 +238,8 @@ class Critere(Scatter):
                 if self.suppression.count(user) == 0:
                     self.suppression.append(user)
                     self.parent.group.get_user(user).votes.append(value)
+                source = "Images/user_unvalidate.png"
+
             elif value == 1:
                 if self.suppression.count(user) > 0:
                     self.suppression.remove(user)
@@ -212,6 +247,17 @@ class Critere(Scatter):
                 if self.validator.count(user) == 0:
                     self.validator.append(user)
                     self.parent.group.get_user(user).votes.append(value)
+                source = "Images/user_validate.png"
+
+            if user == 1:
+                self.source_user1 = source
+            elif user == 2:
+                self.source_user2 = source
+            elif user == 3:
+                self.source_user3 = source
+            else:
+                self.source_user4 = source
+
             if len(self.validator) == len(self.parent.group.users):
                 self.validate()
             elif len(self.suppression) == len(self.parent.group.users):
@@ -231,67 +277,11 @@ class Critere(Scatter):
         if not self.destroyed:
             self.validated = True
             self.vote_activated = False
-            self.draw()
-
-    def draw_critere(self, users, size, pos=(0, 0)):
-        """
-        Draw a criterion
-        :param users: the list of users creating the criterion
-        :param size: the size of the criterion
-        :param pos: the position of the criterion
-        """
-        self.canvas.clear()
-        if not self.destroyed:
-            cpt = 0
-            with self.canvas:
-                Color(0, 0, 0, 1)
-                Rectangle(size=(size[0] + 4, size[1] + 4), pos=(pos[0] - 2, pos[1] - 2))
-
-
-            if self.validated:
-                self.canvas.clear()
-                with self.canvas:
-                    Color(1, 1, 1, 1)
-                    Rectangle (size=(self.size[0] + 10, self.size[1] + 10), pos=(-5, -5))
-
-            with self.canvas:
-                Color(.25, .25, .25)
-                Rectangle(size=self.size)
-
-                if self.integrated:
-                    Color(self.createur.color[0], self.createur.color[1], self.createur.color[2])
-                    if self.validator.count(self.createur) > 0:
-                        texture = self.yes.texture
-                    elif self.suppression.count(self.createur) > 0:
-                        texture = self.no.texture
-                    else :
-                        texture = self.parent.image_user.texture
-                    Rectangle(texture=texture, size=(self.size[0] / 5, self.size[1] / 5),
-                              pos=(0, self.size[1] - self.size[1] / 5))
-                    cpt = 1
-                    for fusionneur in self.fusionneurs:
-                        if self.validator.count(fusionneur) > 0:
-                            texture = self.yes.texture
-                        elif self.suppression.count(fusionneur) > 0:
-                            texture = self.no.texture
-                        else:
-                            texture = self.parent.image_user.texture
-                        Color(fusionneur.color[0], fusionneur.color[1], fusionneur.color[2])
-                        Rectangle(texture=texture, size=(self.size[0] / 5, self.size[1] / 5),
-                                  pos=(cpt * (self.size[1] / 5), self.size[1] - self.size[1] / 5))
-                        cpt += 1
-
-                Label(text=str(self.text_type), halign='left', color=(1, 1, 1, 1),
-                      pos=(0, self.size[1] - 1.8 * self.size[1] / 5), valign='top')
-
-                Label(text=self.texte, halign='left', size=self.size, color=(1, 1, 1, 1),
-                      text_size=(self.size[0], self.size[1] - 2.6 * self.size[1] / 5.), valign='top', pos=(0, 0))
-
+            self.color_validated= [1,1,1]
 
     def update(self, dt):
         """
         Update the criterion
-        :param dt:
         """
         if self.support != "tablette" :
             from Animal import Animal
@@ -338,35 +328,34 @@ class Critere(Scatter):
                 if self.support == "tablette":
 
                     if (touch.pos[1]) >= (self.parent.height - 200) :
-                        data = '{"Criterion" : "' + self.texte + '", "IdUser" : "' + str(
-                            self.parent.user.identifier) + '", "TextType" : "' + self.text_type + '", "Links" : ['
-                        for link in self.links:
-                            data += '{ "IdImage" :"' + str(link.id_img) + '",'
-                            data += '"IdUser" :"' + str(link.id_usr) + '",'
-                            data += '"Distance" :"' + str(link.distance) + '",'
-                            data += '"Angle" :"' + str(link.angle) + '"},'
-                            self.parent.remove_animal(link.id_img)
-                        if len(self.links) > 0:
-                            data = data[:-1]
-                        data += '], "Fusionneurs" : ['
-                        if self.createur.identifier != self.parent.user.identifier:
-                            data += '{"IdUser" : "' + str(self.createur.identifier) + '"},'
-                        for participants in self.fusionneurs:
-                            data += '{"IdUser" : "' + str(participants.identifier) + '"},'
-                        if len(self.fusionneurs) > 0 or self.createur.identifier != self.parent.user.identifier:
-                            data = data[:-1]
-                        data += ']}\n'
-                        self.parent.client.send_msg(data)
-                        self.canvas.clear()
-                        self.destroyed = True
-                        self.parent.remove_widget(self)
+                        self.send_to_table()
                 Scatter.on_touch_move(self, touch)
 
+    def send_to_table(self):
+        data = '{"Criterion" : "' + self.texte + '", "IdUser" : "' + str(
+            self.parent.user.identifier) + '", "TextType" : "' + self.text_type + '", "Links" : ['
+        for link in self.links:
+            data += '{ "IdImage" :"' + str(link.id_img) + '",'
+            data += '"IdUser" :"' + str(link.id_usr) + '",'
+            data += '"Distance" :"' + str(link.distance) + '",'
+            data += '"Angle" :"' + str(link.angle) + '"},'
+            self.parent.remove_animal(link.id_img)
+        if len(self.links) > 0:
+            data = data[:-1]
+        data += '], "Fusionneurs" : ['
+        if self.createur.identifier != self.parent.user.identifier:
+            data += '{"IdUser" : "' + str(self.createur.identifier) + '"},'
+        for participants in self.fusionneurs:
+            data += '{"IdUser" : "' + str(participants.identifier) + '"},'
+        if len(self.fusionneurs) > 0 or self.createur.identifier != self.parent.user.identifier:
+            data = data[:-1]
+        data += ']}\n'
+        self.parent.client.send_msg(data)
+        self.canvas.clear()
+        self.destroyed = True
+        self.parent.remove_widget(self)
+
     def on_touch_up(self, touch):
-        """
-            Define actions to perform when the indicator is touched up
-            :param touch: the touch point (position, type of touch, ...)
-            """
         if not self.destroyed:
             from ZoneUtilisateur import ZoneUtilisateur
             if self.collide_point(touch.x, touch.y) and self.parent is not None and self.support != "tablette" and not self.validated:
@@ -392,11 +381,10 @@ class Critere(Scatter):
                         self.parent.server.send_msg(data, child.user.socket)
                         self.canvas.clear()
                         self.destroyed = True
+                        self.parent.criterions.remove(self)
                         self.parent.remove_widget(self)
 
             Scatter.on_touch_up(self, touch)
-            if self.rotation is not True:
-                self.rotation_value = self.rotation
 
     def on_touch_down(self, touch):
         """
@@ -409,66 +397,25 @@ class Critere(Scatter):
 
                 if touch.is_double_tap and self.support != "tablette":
                     if self.zoom_mode:
-                        self.size = (100,100)
-                        self.draw()
+                        self.size = (120,120)
+                        #self.draw()
                         self.zoom_mode = False
                     else:
                         self.size = (400, 400)
-                        self.draw()
+                        #self.draw()
                         self.zoom_mode = True
-                if touch.is_double_tap and self.support == "tablette":
-                    self.draw_critere(self.fusionneurs, self.size)
-                if self.vote_activated and not self.in_ellipse((touch.x, touch.y), self.center,
-                                                               (self.size[0] - 100, self.size[1] - 100)):
-                    dx = self.center[0] - touch.x
-                    dy = self.center[1] - touch.y
-                    angle = (math.atan2(-dy, dx) / (2 * math.pi)) * 360 - 90
-                    for user in self.parent.group.users:
-                        if user is not None and self.parent is not None:
-                            x = user.position[0] / self.parent.size[0]
-                            y = user.position[1] / self.parent.size[1]
-                            if x == 0:
-                                if y == 0:
-                                    angle2 = 180
-                                else:
-                                    angle2 = 270
-                            else:
-                                if y == 0:
-                                    angle2 = 90
-                                else:
-                                    angle2 = 0
+                    self.remove_widget(self.label_question)
+                    self.remove_widget(self.label_text)
+                    self.label_text_pos = [5, 5 + self.size[1] / 5]
+                    self.label_text_size = [self.size[0] - 10, self.size[1] - 30 - 2 * self.size[1] / 5]
+                    self.label_question_pos = [5, self.size[1] - self.size[1] / 5 - 25]
+                    self.label_question_size = [self.size[0] - 10, 20]
 
-                            if angle2 < angle % 360 < angle2 + 360 / (self.parent.group.nb_users() * 2):
-                                self.validate_by_user(user.identifier, 1)
-                                self.draw_during_vote()
-
-                            elif angle2 + 360 / (self.parent.group.nb_users() * 2) < angle % 360 < angle2 + 2 * (
-                                        360 / (self.parent.group.nb_users() * 2)):
-                                self.validate_by_user(user.identifier, 0)
-                                self.draw_during_vote()
-
-    def is_touched(self, dt):
-        """
-        Activate or desactivate the voting phase in fonction of last touch
-        :param dt:
-        """
-        if not self.destroyed:
-            if len(self._touches) == 1 and self.support == "table":
-                if (self.last_touch[0] - 10 <= self._touches[0].pos[0] <= self.last_touch[0] + 10) and (
-                                    self.last_touch[1] - 10 <= self._touches[0].pos[1] <= self.last_touch[1] + 10):
-                    if not self.validated:
-                        if not self.vote_activated:
-                            self.activate_vote()
-                        else:
-                            self.desactivate_vote()
-
-    def in_ellipse(self, point, ellipse_center, ellipse_size):
-        """
-        Return if the touch is in the ellipse or not
-        :param point: the point to test
-        :param ellipse_center: the center of the ellipse
-        :param ellipse_size: the size of the ellipse
-        :return: if the touch is in the ellipse or not
-        """
-        if not self.destroyed:
-            return math.pow((point[0] - ellipse_center[0]), 2) / math.pow(ellipse_size[0] / 2., 2) + math.pow((point[1] - ellipse_center[1]), 2) / math.pow(ellipse_size[1] / 2., 2) <= 1
+                    self.label_question = Label(text=self.text_type, text_size=self.label_question_size,
+                                                pos=self.label_question_pos, halign="left", valign='top',
+                                                size=self.label_question_size)
+                    self.label_text = Label(text=self.text, text_size=self.label_text_size, pos=self.label_text_pos,
+                                            valign='top', halign="left", size_hint_y=None, multiline=True,
+                                            size=self.label_text_size)
+                    self.add_widget(self.label_question)
+                    self.add_widget(self.label_text)

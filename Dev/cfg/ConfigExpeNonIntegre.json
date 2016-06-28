@@ -1,0 +1,77 @@
+﻿{
+  "Utilisateurs": [
+    {
+      "Couleur": {"r": "150","g": "130","b": "198"},
+      "Position":{"x": 100,"y": 0}
+    },
+    {
+      "Couleur": {"r": "113","g": "175","b": "76"},
+      "Position":{"x": 100,"y": 100 }
+    },
+    {
+      "Couleur": {"r": "195","g": "85","b": "115"},
+      "Position":{"x": 0,"y": 100}
+    },
+    {
+      "Couleur": {"r": "201","g": "116","b": "48"},
+      "Position":{"x": 0,"y": 0}
+    }
+  ],
+  "Images":{
+    "MaxLvl":"2",
+    "Src": [
+      {"Lvl":"0","Src":"Images/Expe/Lvl1/*.jpg","Objectif":"5"},
+      {"Lvl":"1","Src":"Images/Expe/Lvl2/*.jpg","Objectif":"10"},
+      {"Lvl":"2","Src":"Images/Expe/Lvl3/*.jpg","Objectif":"15"}
+    ]
+  },
+  "Indicateurs":[
+    {
+      "Nom":"ZoneUtilisateur",
+      "Source":"1",
+      "Position":{"x": 100,"y": 0}
+    },
+    {
+      "Nom":"ZoneUtilisateur",
+      "Source":"2",
+      "Position":{"x": 100,"y": 100 }
+    },
+    {
+      "Nom":"ZoneUtilisateur",
+      "Source":"3",
+      "Position":{"x": 0,"y": 100}
+    },
+    {
+      "Nom":"ZoneUtilisateur",
+      "Source":"4",
+      "Position":{"x": 0,"y": 0}
+    },
+    {
+      "Nom":"ProgressObjectif",
+      "Source":"1",
+      "Lvl":"0",
+      "Position":{"x": 50,"y": 0},
+      "Integrated":"False"
+    },
+    {
+      "Nom":"Links",
+      "Source":"All",
+      "Integrated":"False"
+    },
+    {
+      "Nom":"Criteres",
+      "Source":"All",
+      "Integrated":"False"
+    },
+    {
+      "Nom":"Votes",
+      "Source":"All",
+      "Integrated":"False"
+    },
+    {
+      "Nom":"Fusions",
+      "Source":"All",
+      "Integrated":"False"
+    }
+  ]
+}

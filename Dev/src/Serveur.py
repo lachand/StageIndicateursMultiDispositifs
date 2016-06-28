@@ -13,14 +13,10 @@ class Serveur:
     A class implementing a server for the table
     """
 
-    IP_TABLE = "10.42.0.131"
+    IP_TABLE = "10.42.0.1"
     PORT_TABLE = 8080
 
     def __init__(self, table):
-        """
-        Initialize the server
-        :param table: The main application
-        """
         self.srvsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.srvsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.srvsock.bind((self.IP_TABLE, self.PORT_TABLE))
@@ -29,9 +25,6 @@ class Serveur:
         self.parent = table
 
     def run_server(self):
-        """
-        Lauch the thread for the server
-        """
         while 1:
             (sread, swrite, sexc) = select.select(self.descriptors, [], [])
             for sock in sread:
@@ -43,7 +36,7 @@ class Serveur:
                         if str == '':
                             host, port = sock.getpeername()
                             str = 'Client left %s:%s\n' % (host, port)
-                            self.broadcast_msg(str.encode('utf8'), sock)
+                            self.broadcast_msg(str, sock)
                             sock.close
                             self.descriptors.remove(sock)
                             for user in self.parent.group.users:
@@ -52,7 +45,7 @@ class Serveur:
                                     self.parent.remove_user(user)
                         else:
                             print str
-                            data = json.decode(str, encoding="utf8")
+                            data = json.decode(str)
                             if data.has_key("Criterion"):
                                 text = data["Criterion"]
                                 creator = self.parent.get_user(int(data["IdUser"]))
@@ -82,10 +75,6 @@ class Serveur:
                         print e
 
     def accept_new_connection(self):
-        """
-        Accept a tablet connexion
-        :return:
-        """
         newsock, (remhost, remport) = self.srvsock.accept()
         self.descriptors.append(newsock)
 
@@ -100,25 +89,14 @@ class Serveur:
                 usr.color[1]) + '", "b" : "' + str(usr.color[2]) + '"}},'
         msg = msg[:-1]
         msg += ']}\n'
-        newsock.send(msg.encode('utf8'))
+        newsock.send(msg)
 
     def broadcast_msg(self, str, omit_sock):
-        """
-        Send a message for all tablets
-        :param str: the message to send
-        :param omit_sock: tablet to ignore
-        """
         for sock in self.descriptors:
             if sock != self.srvsock and sock != omit_sock:
-                sock.send(str.encode('utf8'))
+                sock.send(str)
                 print str
 
     def send_msg(self, str, socket):
-        """
-        Send a message to a specified tablet
-        :param str: the message to send
-        :param socket: tablet to send the message
-        :return:
-        """
         if socket is not None:
             socket.send(str.encode('utf8'))

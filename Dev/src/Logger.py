@@ -14,7 +14,7 @@ class Logger:
         Initialize the logger
         """
         now = datetime.datetime.now()
-        self.log_file_path = str(now.strftime("%Y_%m_%d_%H_%M"))
+        self.log_file_path = "logs/"+str(now.strftime("%Y_%m_%d_%H_%M"))
         self.file = open(self.log_file_path+".csv", "w")
         msg = "log_type;log_source;time;value_1;value_2;value_3;value_4;value_5\n"
         self.file.write(msg)
@@ -39,7 +39,7 @@ class Logger:
 
     def close(self):
         """
-        Close the log file
+        Close the og file
         """
         pass
         #self.file.close()

@@ -19,40 +19,32 @@ class ZoneUtilisateur(Widget):
         self.size = [300, 300]
         self.position = pos[0] - self.size[0] / 2, pos[1] - self.size[1] / 2
         self.color = self.user.color
-        self.name = None
         self.connected = False
+        self.name = None
         Widget.__init__(self)
 
     def set_name(self, name):
-        """
-        Set name of the space
-        :param name: name of the user linked to the space
-        """
         if self.name is not None:
             self.remove_widget(self.name)
         print "ajout du nom :" + name
         if self.user.identifier == 1:
             self.name = Label(text=name)
-            self.name.pos=(self.position[0]+self.name.size[0],10)
+            self.name.pos=(self.position[0]+self.name.size[0],0)
         elif self.user.identifier == 2:
             self.name = Label(text=name)
-            self.name.pos = (self.position[0]+self.name.size[0],self.parent.height -110)
+            self.name.pos = (self.position[0]+self.name.size[0],self.parent.height -100)
         elif self.user.identifier == 3:
             self.name = Label(text=name)
-            self.name.pos = (self.position[0] + self.name.size[0], self.parent.height - 110)
+            self.name.pos = (self.position[0] + self.name.size[0], self.parent.height - 100)
         elif self.user.identifier == 4:
             self.name = Label(text=name)
-            self.name.pos = (self.position[0] + self.name.size[0], 10)
+            self.name.pos = (self.position[0] + self.name.size[0], 0)
 
         self.user.name = name
         self.connected = True
         self.add_widget(self.name)
 
     def is_connected(self):
-        """
-        Return if the user is connected or not
-        :return: True if the user is connected, else False
-        """
         return self.connected
 
     def on_touch_down(self, touch):
@@ -60,9 +52,6 @@ class ZoneUtilisateur(Widget):
         Define actions to perform when the indicator is touched down
         :param touch: the touch point (position, type of touch, ...)
         """
-        if touch.is_double_tap and self.collide_point(touch.x, touch.y):
-            clav = self.get_keyboard(None)
-            self.parent.add_widget(clav)
         if self.collide_point(touch.x, touch.y):
             self.user.validate = True
 
