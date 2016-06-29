@@ -1,3 +1,6 @@
+#!/usr/local/bin/python
+#  -*- coding: utf-8 -*-
+
 import telnetlib
 
 import demjson as json
@@ -12,6 +15,12 @@ class Client:
     """
 
     def __init__(self, tablette, ip=IP_TABLE, port=PORT_TABLE):
+        """
+        Initialize the client
+        :param tablette: main application
+        :param ip: server's ip
+        :param port: server's port
+        """
         self.parent = tablette
         self.telnet = telnetlib.Telnet()
         print ip.__class__
@@ -32,19 +41,32 @@ class Client:
         self.parent.set_user(identifier, [r, g, b])
 
     def connect(self):
+        """
+        Connect the tablet to the table
+        """
         msg = '{"User" : "' + self.parent.name +'"}'
         self.send_msg(msg)
 
     def send_msg(self, msg):
+        """
+        Send a message to the table
+        :param msg: the message to send
+        """
         msg.replace("'","\'")
         msg.replace('"','\"')
         self.telnet.write(msg.encode('utf-8') + '\n')
 
     def on_stop(self):
+        """
+        Close connection
+        """
         print('Closing')
         self.telnet.close()
 
     def run_client(self):
+        """
+        Thread for parsing incoming messages
+        """
         self.connect()
         while 1:
             msg = self.telnet.read_until('\n')

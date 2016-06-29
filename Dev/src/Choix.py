@@ -9,8 +9,15 @@ from kivy.uix.widget import Widget
 
 
 class Choix(Widget):
+    """
+    Class representing the choice window
+    """
 
     def __init__(self,size):
+        """
+        Initialize the window
+        :param size: size of the window
+        """
         Widget.__init__(self)
         self.qui = CheckBox(pos=(size[0]/2- 300, size[1] - 100) ,group="choix", text='Qui :')
         self.label_qui = Label(text='Qui ?', font_size=40, pos=(size[0]/2-240, size[1] - 100))
@@ -48,9 +55,15 @@ class Choix(Widget):
                                          font_size=40), size=(600, 400), size_hint=(None, None))
 
     def callback_destroy(self, value):
+        """"
+        Go back to the main menu
+        """
         self.parent.main_menu()
 
     def callback(self, value):
+        """
+        Set the question type for the creation of criterion
+        """
         active = None
         if self.qui.active :
             active = "Qui :"

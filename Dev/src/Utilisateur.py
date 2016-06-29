@@ -68,4 +68,8 @@ class Utilisateur:
         self.nb_criterion += 1
 
     def add_socket(self, newsock):
+        """
+        Add a socket for the user
+        :param newsock: the socket of the user
+        """
         self.socket = newsock

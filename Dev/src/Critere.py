@@ -115,6 +115,10 @@ class Critere(Scatter):
         self.add_widget(self.label_text)
 
     def draw(self):
+        """
+        First draw of the criterion
+        :return:
+        """
 
         if self.support != "tablette":
             for user in self.parent.group.users:
@@ -200,7 +204,6 @@ class Critere(Scatter):
         for fils in self.parent.children:
             if fils.__class__ == Critere and fils.collide_widget(self) and fils != self and not self.destroyed:
                 self.parent.remove_widget(fils)
-        #self.draw()
 
     def has_link(self, identifier):
         """
@@ -310,7 +313,7 @@ class Critere(Scatter):
 
     def on_touch_move(self, touch):
         """
-        Define actions to perform when the indicator is moved
+        Defines actions to perform when the criterion is moved
         :param touch: the touch point (position, type of touch, ...)
         """
         from Animal import Animal
@@ -356,6 +359,10 @@ class Critere(Scatter):
         self.parent.remove_widget(self)
 
     def on_touch_up(self, touch):
+        """
+        Defines action whe the criterion is touched up
+        :param touch: the touch point (position, type of touch, ...)
+        """
         if not self.destroyed:
             from ZoneUtilisateur import ZoneUtilisateur
             if self.collide_point(touch.x, touch.y) and self.parent is not None and self.support != "tablette" and not self.validated:
@@ -388,7 +395,7 @@ class Critere(Scatter):
 
     def on_touch_down(self, touch):
         """
-        Define actions to perform when the indicator is touched up
+        Defines actions to perform when the criterion is touched up
         :param touch: the touch point (position, type of touch, ...)
         """
         if not self.destroyed:
@@ -398,11 +405,9 @@ class Critere(Scatter):
                 if touch.is_double_tap and self.support != "tablette":
                     if self.zoom_mode:
                         self.size = (120,120)
-                        #self.draw()
                         self.zoom_mode = False
                     else:
                         self.size = (400, 400)
-                        #self.draw()
                         self.zoom_mode = True
                     self.remove_widget(self.label_question)
                     self.remove_widget(self.label_text)

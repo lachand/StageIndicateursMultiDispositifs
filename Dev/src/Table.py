@@ -42,6 +42,9 @@ class Table(Widget):
     """
 
     def __init__(self, **kwargs):
+        """
+        Initialize the table
+        """
         super(Table, self).__init__(**kwargs)
         self.logger = Logger()
         self.server = Serveur(self)
@@ -59,6 +62,10 @@ class Table(Widget):
         self.image_user_no = Image(source="Images/user_unvalidate.png")
 
     def internet_on(self):
+        """
+        Check the internet connection
+        :return: if the internet connection is on or not
+        """
         try:
             urllib2.urlopen('http://museotouch.fr',timeout=5)
             return True
@@ -66,6 +73,10 @@ class Table(Widget):
             return False
 
     def update_vote(self):
+        """
+        Update votes for the vote's indicator
+        :return:
+        """
         for fils in self.children:
             if fils.__class__ == IndicateurVote :
                 fils.update()
@@ -125,6 +136,11 @@ class Table(Widget):
         self.add_widget(self.layout)
 
     def get_zone_utilisateur(self, user):
+        """
+        Get the zone corresponding to a specified user
+        :param user: the user to get the zone
+        :return: the thone of the user
+        """
         for zone in self.user_zones:
             if zone.user == user :
                 return zone
@@ -160,6 +176,10 @@ class Table(Widget):
         links.draw_label()
 
     def remove_user(self,user):
+        """
+        Remove a specified user
+        :param user: the user to remove
+        """
         self.connected.remove(user.identifier)
         for zone in self.user_zones:
             if zone.user == user:
@@ -179,7 +199,15 @@ class Table(Widget):
             if child.__class__ == ProgressObjectif or child.__class__ == IndicateurCritere:
                 child.update()
 
-    def new_criterion(self, text, user,fusionneurs=[],text_type="", edition="False"):
+    def new_criterion(self, text, user,fusionneurs=[],text_type=""):
+        """
+        Create a new criterion
+        :param text: text of the criterion
+        :param user: creator of the criterion
+        :param fusionneurs: editors of the criterion
+        :param text_type: question's type
+        :return:
+        """
         identifier = self.free_criterion_id()
         if user.identifier == 2 or user.identifier == 3:
             criterion = Critere(identifier, text, user, (user.position[0],user.position[1]-100), self.integrated_criterions, "table", fusionneurs = fusionneurs, text_type=text_type)
@@ -195,16 +223,24 @@ class Table(Widget):
             if child.__class__ == ProgressObjectif or child.__class__ == IndicateurCritere:
                 child.update()
 
-        criterion.draw()
         return criterion
 
     def get_animal(self, identifier):
+        """
+        Get a specified animal
+        :param identifier: identifier of the animal
+        :return: the specified animal
+        """
         for child in self.children:
             if child.__class__ == Animal and child.identifier == identifier:
                 return child
         return None
 
     def free_criterion_id(self):
+        """
+        Check the first free criterion identifier
+        :return: the first free criterion identifier
+        """
         tab = []
         for criterion in self.criterions:
             tab.append(criterion.identifier)
@@ -236,19 +272,32 @@ class Table(Widget):
             self.add_animal(len(self.animals) + 1, image, [r1, r2], lvl)
 
     def lock_animal(self, lvl):
+        """
+        Lock all animal of a level
+        :param lvl: the level to lock
+        """
         for child in self.children:
             if child.__class__ == Animal :
                 if child.lvl == lvl :
                     child.lock()
 
     def unlock_animal(self, lvl):
+        """
+        Unlock all animal of a level
+        :param lvl: the level to unlock
+        """
         for child in self.children:
             if child.__class__ == Animal :
                 if child.lvl == lvl :
                     child.unlock()
 
     def update_animal(self, lvl, value):
-        print "update :",lvl, value
+        """
+        Change opacity of images
+        :param lvl: the level to change opacity
+        :param value: the new value of the opacity
+        :return:
+        """
         for child in self.children:
             if child.__class__ == Animal :
                 if child.lvl == lvl :
@@ -294,6 +343,11 @@ class Table(Widget):
         return self.group.get_user(identifier)
 
     def connect_user(self, newsock):
+        """
+        Connect an user
+        :param newsock: the socket of the user
+        :return: the user
+        """
         if len(self.connected) == 0:
             self.connected.append(self.group.users[0].identifier)
             self.group.users[0].add_socket(newsock)
@@ -307,6 +361,9 @@ class Table(Widget):
         return None
 
     def menu(self):
+        """
+        Go back to the main menu
+        """
         for fils in self.children :
             self.remove_widget(fils)
         self.initialisation(self.size)

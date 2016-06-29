@@ -3,7 +3,6 @@
 
 import datetime
 
-
 class Logger:
     """
     A class representing a data logger for our application
@@ -39,7 +38,7 @@ class Logger:
 
     def close(self):
         """
-        Close the og file
+        Close the log file
         """
         pass
         #self.file.close()

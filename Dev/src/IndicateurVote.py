@@ -122,7 +122,6 @@ class IndicateurVote(Widget):
         else:
             self.canvas.clear()
             for user in self.parent.group.users:
-                print "user : " + str(user.identifier)
                 if user.identifier == 1:
                     rotation_start = 270
                     rotation_stop = 0

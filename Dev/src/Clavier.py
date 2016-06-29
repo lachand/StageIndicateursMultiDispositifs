@@ -47,6 +47,9 @@ class Clavier(Scatter):
         self.text_type = text_type
 
     def initialisation(self):
+        """
+        Initialize the keyboard
+        """
         self.parent.add_widget(self.ti)
         self.parent.edition_mode = True
 

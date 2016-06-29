@@ -17,6 +17,10 @@ class Serveur:
     PORT_TABLE = 8080
 
     def __init__(self, table):
+        """
+        Initialize the server
+        :param table: application running on the table
+        """
         self.srvsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.srvsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.srvsock.bind((self.IP_TABLE, self.PORT_TABLE))
@@ -25,6 +29,9 @@ class Serveur:
         self.parent = table
 
     def run_server(self):
+        """
+        Thread for parsing incoming messages and to send messages
+        """
         while 1:
             (sread, swrite, sexc) = select.select(self.descriptors, [], [])
             for sock in sread:
@@ -41,10 +48,8 @@ class Serveur:
                             self.descriptors.remove(sock)
                             for user in self.parent.group.users:
                                 if user.socket == sock:
-                                    print "remove user"
                                     self.parent.remove_user(user)
                         else:
-                            print str
                             data = json.decode(str)
                             if data.has_key("Criterion"):
                                 text = data["Criterion"]
@@ -75,6 +80,9 @@ class Serveur:
                         print e
 
     def accept_new_connection(self):
+        """
+        Accept incoming connections
+        """
         newsock, (remhost, remport) = self.srvsock.accept()
         self.descriptors.append(newsock)
 
@@ -92,11 +100,20 @@ class Serveur:
         newsock.send(msg)
 
     def broadcast_msg(self, str, omit_sock):
+        """
+        Send a message to all socket
+        :param str: the message
+        :param omit_sock: socket to omit
+        """
         for sock in self.descriptors:
             if sock != self.srvsock and sock != omit_sock:
                 sock.send(str)
-                print str
 
     def send_msg(self, str, socket):
+        """
+        Send a message to a specified socket
+        :param str: the message
+        :param socket: the socket to send the message
+        """
         if socket is not None:
             socket.send(str.encode('utf8'))

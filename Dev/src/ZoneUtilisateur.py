@@ -24,6 +24,10 @@ class ZoneUtilisateur(Widget):
         Widget.__init__(self)
 
     def set_name(self, name):
+        """
+        Set the name of the thone
+        :param name: new name of the zone
+        """
         if self.name is not None:
             self.remove_widget(self.name)
         print "ajout du nom :" + name
@@ -45,6 +49,10 @@ class ZoneUtilisateur(Widget):
         self.add_widget(self.name)
 
     def is_connected(self):
+        """
+        Return if the user is connected or not
+        :return: if the user is connected or not
+        """
         return self.connected
 
     def on_touch_down(self, touch):

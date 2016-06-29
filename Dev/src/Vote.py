@@ -1,3 +1,6 @@
+#!/usr/local/bin/python
+#  -*- coding: utf-8 -*-
+
 from math import cos
 
 from kivy.uix.image import Image
@@ -6,13 +9,12 @@ from kivy.uix.scatter import Scatter
 
 class Vote(Scatter):
     """
-    A class to represent the indicator of the user's zone
+    A class to represent vote token
     """
 
     def __init__(self, id_usr, value, pos, angle, user):
         """
-
-        :return:
+        Initialize the vote token
         """
         self.value = value
         self.id_usr = id_usr
@@ -51,7 +53,7 @@ class Vote(Scatter):
 
     def on_touch_up(self, touch):
         """
-        Define actions to perform when the indicator is touched up
+        Define actions to perform when the token is touched up
         :param touch: the touch point (position, type of touch, ...)
         """
         if self.collide_point(touch.x, touch.y):

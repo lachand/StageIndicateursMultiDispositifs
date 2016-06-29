@@ -17,7 +17,6 @@ from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
 
-from Animal import Animal
 from Choix import Choix
 from Clavier import Clavier
 from Client import Client
@@ -31,6 +30,9 @@ Builder.load_file('template.kv')
 
 
 class Tablette(Widget):
+    """
+    A class for the main apllication of tablet
+    """
     current_lvl = 0
     colored_links = True
     integrated_criterions = True
@@ -38,6 +40,10 @@ class Tablette(Widget):
     name = ''
 
     def __init__(self, parent):
+        """
+        Initialize the tablet
+        :param parent: the main window
+        """
         Widget.__init__(self)
         self.group = Groupe(1)
         self.identifier = 0
@@ -53,17 +59,34 @@ class Tablette(Widget):
         self.image_user = Image(source="Images/user.png")
 
     def get_user(self, identifier):
+        """
+        Return a specified user
+        :param identifier: the identifier of the user
+        :return: the selected user
+        """
         return self.group.get_user(identifier)
 
     def set_user(self, identifier, color):
+        """
+        Set the user of the tablet
+        :param identifier: identifier of the user
+        :param color: color of the user
+        """
         self.user = Utilisateur(identifier, color, 3, [0, 50])
 
     def add_criterion(self, criterion):
+        """
+        Add a criterion to the tablet
+        :param criterion: the criterion to add
+        """
         self.add_widget(criterion)
         criterion.draw()
         self.criterions.append(criterion)
 
     def callback(self, value):
+        """
+        Callback to create a new criterion
+        """
         if not self.edition_mode:
             self.edition_mode = True
             self.remove_widget(self.button)
@@ -76,12 +99,19 @@ class Tablette(Widget):
             self.clavier.initialisation()
 
     def main_menu(self):
+        """
+        Go back to the main menu
+        """
         self.remove_widget(self.choix)
         self.clavier.destroy()
         self.add_widget(self.button)
         self.add_widget(self.lab)
 
     def set_color(self, color):
+        """
+        Set the color of the user
+        :param color: the new color for the tablet's user
+        """
         self.size = self.get_root_window().size
         self.TrueColor = color
         with self.canvas:
@@ -92,9 +122,16 @@ class Tablette(Widget):
         self.add_widget(self.lab)
 
     def set_identifier(self, identifier):
+        """
+        Set the identifier of the user
+        :param color: the new identifier for the tablet's user
+        """
         self.identifier = identifier
 
     def ask_server_adress(self, root):
+        """
+        Connect to the server
+        """
         self.size = root.size
         label_ip = Label(text='IP serveur :', font_size=40, size=(400, 80),
                          pos=(self.width / 2 - 200, self.height / 2 + 200))
@@ -131,6 +168,11 @@ class Tablette(Widget):
         button.bind(on_press=self.initialisation)
 
     def initialisation(self, value):
+        """
+        Initialize the tablet
+        :param value:
+        :return:
+        """
         if len(self.ti_name.text) > 0:
             self.name = self.ti_name.text
             self.client = Client(self, self.widget_connection[0].text, self.widget_connection[1].text)
@@ -149,13 +191,25 @@ class Tablette(Widget):
             self.popup.open()
 
     def new_criterion(self, text, user):
+        """
+        Create a new criterion
+        :param text: the text of the criterion
+        :param user: the creator of the criterion
+        :return: the created criterion
+        """
         criterion = Critere(1, text, user, (self.width / 2, self.height - 100), True, "tablette")
         self.criterions.append(criterion)
         self.add_widget(criterion)
-        criterion.draw()
         return criterion
 
     def edit_criterion(self,text,user,fusionneurs=[],text_type=""):
+        """
+        Edit an existing criterion
+        :param text: text of the criterion
+        :param user: creator of the criterion
+        :param fusionneurs: editors of the criterion
+        :param text_type: question type
+        """
         criterion = Critere(1, text, user, (self.width / 2, self.height - 100), True, "tablette",fusionneurs=fusionneurs,text_type=text_type)
         self.add_widget(criterion)
         if not self.edition_mode:
@@ -171,23 +225,10 @@ class Tablette(Widget):
         else :
             criterion.send_to_table()
 
-
-
-    def add_animal(self, src_img, identifier):
-        here = False
-        for child in self.children:
-            if child.__class__ == Animal and child.identifier == identifier:
-                here = True
-        if not here:
-            self.to_load.append((src_img, identifier))
-
-    def remove_animal(self, identifier):
-        for child in self.children:
-            if child.__class__ == Animal and child.identifier == identifier:
-                child.canvas.clear()
-                self.remove_widget(child)
-
     def update(self, dt):
+        """
+        Update criterions
+        """
         tmp = set(self.to_load)
         self.to_load = list(tmp)
 
@@ -195,10 +236,12 @@ class Tablette(Widget):
             if child.__class__ == Critere :
                 child.update(dt)
 
-    def get_user(self, identifier):
-        return self.group.get_user(identifier)
-
     def add_user(self, identifier, color):
+        """
+        Add an user to the group
+        :param identifier: identifier of the user
+        :param color: color of the user
+        """
         user = Utilisateur(identifier, color)
         self.group.add_user(user)
 

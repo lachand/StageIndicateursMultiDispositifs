@@ -34,10 +34,10 @@ class Links(Widget):
         self.label4 = Label(text='Liens :', size=(75, 15))
 
     def draw_label(self):
-        print "draw_label"
-        print self.integrated
+        """
+        Draw labels of the indicator
+        """
         if not self.integrated:
-            print "toto"
             scatter = Scatter(size=self.label.size, pos=(0, 100), do_rotation=False, do_scale=False,
                               do_translation=False, rotation = 270)
             scatter.add_widget(self.label)
@@ -89,6 +89,9 @@ class Links(Widget):
             self.draw_not_integrated()
 
     def draw_not_integrated(self):
+        """
+        Draw the indicator when not in integrated condition
+        """
         global position, rotation
         position = (-100, -100)
         rotation = 0
