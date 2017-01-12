@@ -5,7 +5,7 @@ from math import sin, cos, pi
 from random import randint
 
 from kivy.uix.scatter import Scatter
-
+from kivy.input.motionevent import MotionEvent
 from ZoneUtilisateur import ZoneUtilisateur
 
 
@@ -25,10 +25,11 @@ class Animal(Scatter):
         self.scale_min=1
         self.scale_max=3.
         self.src_image = image
+        self.size = (182,268)
 
         from kivy.graphics.texture import Texture
-        self.texture = Texture.create(size=(100, 100))
-        size = 100 * 100 * 3
+        self.texture = Texture.create(size=(182, 268))
+        size = 182 * 268 * 3
         buf = [0 for x in range(size)]
         buf = b''.join(map(chr, buf))
         self.texture.blit_buffer(buf, colorfmt='rgb', bufferfmt='ubyte')
@@ -72,7 +73,7 @@ class Animal(Scatter):
         :param user: the user that is using the animal
         """
         self.current_user = user
-        size = 100 * 100 * 3
+        size = 182 * 268 * 3
         buf = []
         for i in range(0,size):
             if i%3 == 0:
@@ -89,7 +90,7 @@ class Animal(Scatter):
         Remove the current user of the animal
         """
         self.current_user = None
-        size = 100 * 100 * 3
+        size = 182 * 268 * 3
         buf = [0 for x in range(size)]
         buf = b''.join(map(chr, buf))
         self.texture.blit_buffer(buf, colorfmt='rgb', bufferfmt='ubyte')

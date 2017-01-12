@@ -27,16 +27,18 @@ class Links(Widget):
         """
         self.integrated = integrated
         Widget.__init__(self)
-        self.nb_links_users = [0] * 4
+        self.nb_links_users = [0] * 3#4
         self.label = Label(text='Liens :', size=(75, 15))
         self.label2 = Label(text='Liens :', size=(75, 15))
         self.label3 = Label(text='Liens :', size=(75, 15))
-        self.label4 = Label(text='Liens :', size=(75, 15))
+        #self.label4 = Label(text='Liens :', size=(75, 15))
 
     def draw_label(self):
         """
         Draw labels of the indicator
         """
+        print "links : "
+        print self.integrated
         if not self.integrated:
             scatter = Scatter(size=self.label.size, pos=(0, 100), do_rotation=False, do_scale=False,
                               do_translation=False, rotation = 270)
@@ -56,11 +58,11 @@ class Links(Widget):
             scatter3.add_widget(self.label3)
             self.add_widget(scatter3)
 
-            scatter4 = Scatter(size=self.label.size, pos=(self.get_root_window().width - 100, 125), do_rotation=False,
-                               do_scale=False,
-                               do_translation=False, rotation = 90)
-            scatter4.add_widget(self.label4)
-            self.add_widget(scatter4)
+            #scatter4 = Scatter(size=self.label.size, pos=(self.get_root_window().width - 100, 125), do_rotation=False,
+            #                   do_scale=False,
+            #                   do_translation=False, rotation = 90)
+            #scatter4.add_widget(self.label4)
+            #self.add_widget(scatter4)
 
     def update(self, dt):
         """
@@ -105,12 +107,12 @@ class Links(Widget):
             elif user.identifier == 3:
                 position = 15, self.get_root_window().height-100
                 rotation = pi
-            elif user.identifier == 4:
-                position = self.get_root_window().width - 15, 100
-                rotation = 0
+            #elif user.identifier == 4:
+            #    position = self.get_root_window().width - 15, 100
+            #    rotation = 0
 
             cpt = 1
-            total = (self.nb_links_users[0]) + (self.nb_links_users[1]) + (self.nb_links_users[2]) + (self.nb_links_users[3])
+            total = (self.nb_links_users[0]) + (self.nb_links_users[1]) + (self.nb_links_users[2]) #+ (self.nb_links_users[3])
             if total == 0:
                 total = 1
             for elmt in self.nb_links_users:
@@ -129,4 +131,4 @@ class Links(Widget):
                     Rectangle(size=size, pos=pos)
 
                 cpt += 1
-        self.nb_links_users = [0] * 4
+        self.nb_links_users = [0] * 3#4

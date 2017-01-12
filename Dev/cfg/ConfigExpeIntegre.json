@@ -1,20 +1,21 @@
 ﻿{
+  "Server": {
+  "Ip": "127.0.0.1"
+,
+"Port": "8080"
+},
   "Utilisateurs": [
     {
       "Couleur": {"r": "150","g": "130","b": "198"},
-      "Position":{"x": 26,"y": -10}
+      "Position":{"x": 40,"y": -10}
     },
     {
       "Couleur": {"r": "113","g": "175","b": "76"},
-      "Position":{"x": 26,"y": 110 }
+      "Position":{"x": 40,"y": 110 }
     },
     {
       "Couleur": {"r": "195","g": "85","b": "115"},
-      "Position":{"x": 74,"y": 110}
-    },
-    {
-      "Couleur": {"r": "201","g": "116","b": "48"},
-      "Position":{"x": 74,"y": -10}
+      "Position":{"x": -5,"y": 50}
     }
   ],
   "Images":{
@@ -29,53 +30,35 @@
     {
       "Nom":"ZoneUtilisateur",
       "Source":"1",
-      "Position":{"x": 26,"y": -10}
+      "Position":{"x": 40,"y": -10}
     },
     {
       "Nom":"ZoneUtilisateur",
       "Source":"2",
-      "Position":{"x": 26,"y": 110 }
+      "Position":{"x": 40,"y": 110 }
     },
     {
       "Nom":"ZoneUtilisateur",
       "Source":"3",
-      "Position":{"x": 74,"y": 110}
-    },
-    {
-      "Nom":"ZoneUtilisateur",
-      "Source":"4",
-      "Position":{"x": 74,"y": -10}
+      "Position":{"x": -5,"y": 50}
     },
     {
       "Nom":"ZoneVote",
       "Source":"1",
-      "Position":{"x": 26,"y": 0},
+      "Position":{"x": 40,"y": 0},
       "Angle":"0"
     },
     {
       "Nom":"ZoneVote",
       "Source":"2",
-      "Position":{"x": 26,"y": 100 },
+      "Position":{"x": 40,"y": 100 },
       "Angle":"180"
     },
     {
       "Nom":"ZoneVote",
       "Source":"3",
-      "Position":{"x": 74,"y": 100},
-      "Angle":"180"
-    },
-    {
-      "Nom":"ZoneVote",
-      "Source":"4",
-      "Position":{"x": 74,"y": 0},
-      "Angle":"0"
-    },
-    {
-      "Nom":"ProgressObjectif",
-      "Source":"1",
-      "Lvl":"0",
-      "Position":{"x": 50,"y": 0},
-      "Integrated":"True"
+      "Position":{"x": 0,"y": 50},
+      "Angle":"90"
     },
     {
       "Nom":"Links",

@@ -363,35 +363,37 @@ class Critere(Scatter):
         Defines action whe the criterion is touched up
         :param touch: the touch point (position, type of touch, ...)
         """
-        if not self.destroyed:
-            from ZoneUtilisateur import ZoneUtilisateur
-            if self.collide_point(touch.x, touch.y) and self.parent is not None and self.support != "tablette" and not self.validated:
-                for child in self.parent.children:
-                    if child.__class__ == ZoneUtilisateur and child.collide_point(self.center[0], self.center[1]) and child.is_connected():
-                        data = '{"Criterion" : "' + self.texte + '", "IdUser" : "' + str(
-                            self.createur.identifier) + '", "TextType" : "' + self.text_type + '", "Links" : ['
-                        for link in self.links:
-                            data += '{ "IdImage" :"' + str(link.id_img) + '",'
-                            data += '"SrcImage" : "' + self.parent.get_animal(link.id_img).src_image + '",'
-                            data += '"IdUser" :"' + str(link.id_usr) + '",'
-                            data += '"Distance" :"' + str(link.distance) + '",'
-                            data += '"Angle" :"' + str(link.angle) + '"},'
-                        if len(self.links) > 0:
-                            data = data[:-1]
+        #Temporary desactivated for new version
+        # if not self.destroyed:
+        #     from ZoneUtilisateur import ZoneUtilisateur
+        #     if self.collide_point(touch.x, touch.y) and self.parent is not None and self.support != "tablette" and not self.validated:
+        #         for child in self.parent.children:
+        #             if child.__class__ == ZoneUtilisateur and child.collide_point(self.center[0], self.center[1]) and child.is_connected():
+        #                 data = '{"Criterion" : "' + self.texte + '", "IdUser" : "' + str(
+        #                     self.createur.identifier) + '", "TextType" : "' + self.text_type + '", "Links" : ['
+        #                 for link in self.links:
+        #                     data += '{ "IdImage" :"' + str(link.id_img) + '",'
+        #                     data += '"SrcImage" : "' + self.parent.get_animal(link.id_img).src_image + '",'
+        #                     data += '"IdUser" :"' + str(link.id_usr) + '",'
+        #                     data += '"Distance" :"' + str(link.distance) + '",'
+        #                     data += '"Angle" :"' + str(link.angle) + '"},'
+        #                 if len(self.links) > 0:
+        #                     data = data[:-1]
+        #
+        #                 data += '], "Fusionneurs" : ['
+        #                 for participants in self.fusionneurs:
+        #                     data += '{"IdUser" : "' + str(participants.identifier) + '"},'
+        #                 if len(self.fusionneurs) > 0 :
+        #                    data = data[:-1]
+        #                 data += ']}\n'
+        #                 self.parent.server.send_msg(data, child.user.socket)
+        #                 self.canvas.clear()
+        #                 self.destroyed = True
+        #                 self.parent.criterions.remove(self)
+        #                 self.parent.remove_widget(self)
 
-                        data += '], "Fusionneurs" : ['
-                        for participants in self.fusionneurs:
-                            data += '{"IdUser" : "' + str(participants.identifier) + '"},'
-                        if len(self.fusionneurs) > 0 :
-                           data = data[:-1]
-                        data += ']}\n'
-                        self.parent.server.send_msg(data, child.user.socket)
-                        self.canvas.clear()
-                        self.destroyed = True
-                        self.parent.criterions.remove(self)
-                        self.parent.remove_widget(self)
-
-            Scatter.on_touch_up(self, touch)
+        #    Scatter.on_touch_up(self, touch)
+        Scatter.on_touch_up(self, touch)
 
     def on_touch_down(self, touch):
         """

@@ -5,7 +5,7 @@ import telnetlib
 
 import demjson as json
 
-IP_TABLE = "10.42.0.1"
+IP_TABLE = "127.0.0.1"
 PORT_TABLE = "8080"
 
 

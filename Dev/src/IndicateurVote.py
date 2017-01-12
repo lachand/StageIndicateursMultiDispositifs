@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 #  -*- coding: utf-8 -*-
 
-from kivy.garden.gauge import Gauge
+from Dev.src.libs.gauge import Gauge
 from kivy.graphics import Ellipse
 from kivy.uix.colorpicker import Color
 from kivy.uix.label import Label
@@ -33,6 +33,8 @@ class IndicateurVote(Widget):
         Initialize the visualisation
         """
 
+        print "votes : "
+        print self.integrated
         if not self.integrated :
             scatter = Scatter(size=self.label.size, pos=(120, 0), do_rotation=False, do_scale=False,
                               do_translation=False)
@@ -69,7 +71,8 @@ class IndicateurVote(Widget):
                     rotation = 180
                 elif user.identifier == 3:
                     position = self.parent.width-210,self.parent.height -85
-                    rotation = 180
+                    #rotation = 180
+                    rotation = 90
                 elif user.identifier == 4:
                     position = self.parent.width-210,-40
                     rotation = 0
@@ -91,9 +94,12 @@ class IndicateurVote(Widget):
                     rotation_stop = 180
                     rotation_stop2 = 270
                 elif user.identifier == 3:
-                    rotation_start = -90
-                    rotation_stop = 180
-                    rotation_stop2 = 270
+                    #rotation_start = -90
+                    #rotation_stop = 180
+                    #rotation_stop2 = 270
+                    rotation_start = 0
+                    rotation_stop = 90
+                    rotation_stop2 = 180
                 elif user.identifier == 4:
                     rotation_start = 270
                     rotation_stop = 0

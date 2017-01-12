@@ -30,6 +30,14 @@ class Configuration:
         #     decode=False)
         self.config_file = config_file
 
+    def server_infos(self):
+        with open(self.config_file) as json_data:
+            data = json.decode(json_data.read())
+            print data["Server"]
+            ip = data["Server"]["Ip"]
+            port = data["Server"]["Port"]
+            return[ip,port]
+
     def config_table(self, table, id):
         """
         Configure the table
@@ -43,7 +51,7 @@ class Configuration:
             os.makedirs("../Activities/"+str(id))
 
         if table.has_internet:
-            from backend.backendweb import BackendWeb
+            from Dev.src.libs.backend.backendweb import BackendWeb
             self.backend = BackendWeb(
              url="http://museotouch.fr/api/interface_v2/",
              data_url="http://museotouch.fr/api/interface_v2/",
@@ -72,6 +80,7 @@ class Configuration:
                                         int(indicateur["Position"]["y"]) * table.size[1] / 100])
                 table.add_indicateur(zone)
                 table.user_zones.append(zone)
+                zone.initialisation()
             # Indicator : vote zone
             if indicateur["Nom"] == "ZoneVote":
                 print "ajout zone vote"
@@ -183,28 +192,38 @@ class Configuration:
                         else:
                             table.integrated_links = None
 
-                        if elmt["fields"]["Indicateur-progres-objectifs"] == [prog_integre]:
-                            table.add_indicateur(ProgressObjectif(table.objective_criterions[0],
-                                                                  [50. * table.size[0] / 100.,
-                                                                   0. * table.size[1] / 100.],
-                                                                  int(max_lvl), True, url))
-                        elif elmt["fields"]["Indicateur-progres-objectifs"] == [prog_ajoute]:
-                            table.add_indicateur(ProgressObjectif(table.objective_criterions[0],
-                                                                  [50. * table.size[0] / 100.,
-                                                                   0. * table.size[1] / 100.],
-                                                                  int(max_lvl), False))
+                        #if elmt["fields"]["Indicateur-progres-objectifs"] == [prog_integre]:
+                            #table.add_indicateur(ProgressObjectif(table.objective_criterions[0],
+                            #                                      [50. * table.size[0] / 100.,
+                            #                                       0. * table.size[1] / 100.],
+                            #                                      int(max_lvl), True, url))
+                        #elif elmt["fields"]["Indicateur-progres-objectifs"] == [prog_ajoute]:
+                            #table.add_indicateur(ProgressObjectif(table.objective_criterions[0],
+                            #                                      [50. * table.size[0] / 100.,
+                            #                                       0. * table.size[1] / 100.],
+                            #                                      int(max_lvl), False))
 
             # Adding images to the activity
-            for struct in data["structures"]:
 
-                if struct["structureConstId"] == "Element":
-                    if elmt["structureId"] == struct["structureId"]:
-                        if not os.path.exists("../Activities/"+str(id)+"/lvl"+str(elmt["fields"]["Niveau"])):
-                            os.makedirs("../Activities/"+str(id)+"/lvl"+str(elmt["fields"]["Niveau"]))
-                        url = "http://" + elmt["mainMedia"]["url"].replace("%2F", "/")
-                        image_str =url.rsplit('/', 1)
-                        if not os.path.exists("../Activities/"+str(id)+"/lvl"+str(elmt["fields"]["Niveau"])+"/"+image_str[1]):
-                            urllib.urlretrieve (url, "../Activities/"+str(id)+"/lvl"+str(elmt["fields"]["Niveau"])+"/"+image_str[1])
-                        table.images_folder[int(elmt["fields"]["Niveau"]) - 1].append("../Activities/"+str(id)+"/lvl"+str(elmt["fields"]["Niveau"])+"/"+image_str[1])
+            #for struct in data["structures"]:
+
+            #    if struct["structureConstId"] == "Element":
+            #        if elmt["structureId"] == struct["structureId"]:
+            #            if not os.path.exists("../Activities/"+str(id)+"/lvl"+str(elmt["fields"]["Niveau"])):
+            #                os.makedirs("../Activities/"+str(id)+"/lvl"+str(elmt["fields"]["Niveau"]))
+            #            url = "http://" + elmt["mainMedia"]["url"].replace("%2F", "/")
+            #            image_str =url.rsplit('/', 1)
+            #            if not os.path.exists("../Activities/"+str(id)+"/lvl"+str(elmt["fields"]["Niveau"])+"/"+image_str[1]):
+            #                urllib.urlretrieve (url, "../Activities/"+str(id)+"/lvl"+str(elmt["fields"]["Niveau"])+"/"+image_str[1])
+            #            table.images_folder[int(elmt["fields"]["Niveau"]) - 1].append("../Activities/"+str(id)+"/lvl"+str(elmt["fields"]["Niveau"])+"/"+image_str[1])
+
+        import glob
+        images = glob.glob("../Activities/"+str(id)+"/lvl1/*.jpeg")
+        cpt = 0
+        print images
+        for image in images:
+            table.images_folder[0].append(image)
+            cpt = cpt + 1
+            print cpt
 
         table.add_animal_lvl(0)

@@ -13,17 +13,14 @@ class Serveur:
     A class implementing a server for the table
     """
 
-    IP_TABLE = "10.42.0.1"
-    PORT_TABLE = 8080
-
-    def __init__(self, table):
+    def __init__(self, table, ip, port):
         """
         Initialize the server
         :param table: application running on the table
         """
         self.srvsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.srvsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.srvsock.bind((self.IP_TABLE, self.PORT_TABLE))
+        self.srvsock.bind((ip, int(port)))
         self.srvsock.listen(4)
         self.descriptors = [self.srvsock]
         self.parent = table

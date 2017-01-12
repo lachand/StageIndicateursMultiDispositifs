@@ -12,7 +12,7 @@ class Clavier(Scatter):
     A class representing a keyboard for criterion creation
     """
 
-    def __init__(self, user, color, position, angle, support, size,criterion=None,text_type="",edition="creation"):
+    def __init__(self, user, color, position, angle, support, size=200,criterion=None,text_type="",edition="creation"):
         """
         Initialize the keyboard
         :param user: the user which is creating the criterion
@@ -22,7 +22,6 @@ class Clavier(Scatter):
         """
         Scatter.__init__(self)
         self.support = support
-
         self.user = user
         self.identifier = self.user.identifier
         self.color = color
@@ -38,19 +37,23 @@ class Clavier(Scatter):
             self.ti = TextInput(size_hint=(None, None), multiline=True, text=text,font_size=40, pos=(position[0],size[1]-position[1]-(size[1]/3)) ,size = (size[0],size[1]/3),
                                 text_size=self.size)
         else:
-            self.ti = TextInput(size_hint=(None, None), multiline=False, size=(100, 30), text=text, focus=False,text_size=self.size)
-        self.do_rotation = False
+            self.ti = TextInput(size_hint=(None, None), multiline=False, size=(100, 30), text=text, focus=False)
+            self.ti.bind(on_text_validate=self.validate)
+            self.ti.bind(on_double_tap=self.destroy)
+        self.do_rotation= False
         self.do_scale = False
         self.do_translation = False
         self.ti.background_color = self.color + [1]
         self.ti.foreground_color = [1, 1, 1, 1]
         self.text_type = text_type
+        self.add_widget(self.ti)
+        print self.ti
+        print "added"
 
     def initialisation(self):
         """
         Initialize the keyboard
         """
-        self.parent.add_widget(self.ti)
         self.parent.edition_mode = True
 
     def destroy(self):
@@ -72,10 +75,15 @@ class Clavier(Scatter):
 
         if len(self.ti.text) != 0:
             if self.criterion is None:
-                criterion = Critere(0, self.ti.text, self.user, self.pos, self.parent.integrated_criterions, self.support, text_type=self.text_type)
+                criterion = Critere(0, self.ti.text, self.user, [500,500], self.parent.integrated_criterions)
                 self.parent.add_criterion(criterion)
                 self.user.add_criterion_lvl(self.parent.current_lvl)
             else:
                 self.criterion.texte = self.ti.text
                 self.parent.logger.write("edit_critere", self.user.identifier, [self.criterion.createur.identifier])
                 self.criterion.pos = 0,0
+            for child in self.parent.children :
+                from ZoneUtilisateur import ZoneUtilisateur
+                if child.__class__ == ZoneUtilisateur and child.user == self.user :
+                    child.has_text_input = False
+            self.destroy()

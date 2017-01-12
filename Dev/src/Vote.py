@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 #  -*- coding: utf-8 -*-
 
-from math import cos
+from math import cos, sin
 
 from kivy.uix.image import Image
 from kivy.uix.scatter import Scatter
@@ -22,6 +22,8 @@ class Vote(Scatter):
         self.size = (50, 50)
         self.vote = []
         self.user = user
+        self.do_rotation = False
+        self.do_scale = False
 
         if self.value == 0:
             self.texture = Image(source="Images/unvalidate.png").texture
@@ -29,8 +31,10 @@ class Vote(Scatter):
         else:
             if angle == 180 :
                 self.texture = Image(source="Images/validate180.png").texture
-            else:
+            elif angle == 0:
                 self.texture = Image(source="Images/validate.png").texture
+            else :
+                self.texture = Image(source="Images/validate90.png").texture
             self.color = (3 * self.user.color[0] / 4, 3 * self.user.color[1] / 4, 3 * self.user.color[2] / 4, 1)
 
         move_x = +125
@@ -40,13 +44,19 @@ class Vote(Scatter):
             move_x = -175
             move_y = -50
 
+        if self.angle == 90:
+            move_x= 0
+            move_y= -180
+
         if self.value == 0:
             self.Position = (pos[0]+move_x,pos[1]+move_y)
         else:
             if self.angle == 180:
                 self.Position = (pos[0] + (move_x - 300) * cos(self.angle) - 160, pos[1] + move_y)
-            else:
+            elif self.angle == 0:
                 self.Position = (pos[0]+(move_x - 300)*cos(self.angle),pos[1]+move_y)
+            else :
+                self.Position = (pos[0]+move_x,pos[1]+(move_y-105)*cos(self.angle))
         Scatter.__init__(self)
         self.pos = self.Position
 

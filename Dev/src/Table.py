@@ -3,41 +3,36 @@
 
 import json
 import os
-import threading
 import urllib2
-
-from kivy.app import App
-from kivy.clock import Clock
 from kivy.config import Config
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
 from kivy.uix.widget import Widget
-
 from Animal import Animal
 from Configuration import Configuration
 from Critere import Critere
+from Dev.src.libs.backend.backendweb import BackendWeb
 from Groupe import Groupe
+from TableApp import TableApp
 from IndicateurCritere import IndicateurCritere
 from IndicateurVote import IndicateurVote
 from Links import Links
 from Logger import Logger
 from ProgressObjectif import ProgressObjectif
 from Serveur import Serveur
-from backend.backendweb import BackendWeb
-
-Builder.load_file('template.kv')
+Builder.load_file(os.path.join(os.path.dirname(__file__),'template.kv'))
 
 Config.set('kivy', 'keyboard_mode', 'multi')
-Config.set('kivy', 'keyboard_layout', 'keyboard.json')
+#Config.set('kivy', 'keyboard_layout', 'keyboard.json')
 Config.set('graphics', 'width', '1300')
 Config.set('graphics', 'height', '700')
+Config.set('graphics','fullscreen','1')
 
 PATH = os.path.join("..", "cfg", "ConfigExpeIntegre.json")
 
 
-class Table(Widget):
-    """
+class Table(Widget):    """
     A class to represent a table
     """
 
@@ -46,8 +41,10 @@ class Table(Widget):
         Initialize the table
         """
         super(Table, self).__init__(**kwargs)
+        self.configuration = Configuration(PATH)
         self.logger = Logger()
-        self.server = Serveur(self)
+        ipport = self.configuration.server_infos()
+        self.server = Serveur(self,ipport[0],ipport[1])
         self.has_internet = self.internet_on()
         if self.has_internet:
             self.backend = BackendWeb(
@@ -55,7 +52,6 @@ class Table(Widget):
                 data_url="http://museotouch.fr/api/interface_v2/",
                 decode=False)
         self.layout = GridLayout(cols=10, size=self.size)
-        self.configuration = Configuration(PATH)
         self.menu_mode = True
         self.image_user = Image(source="Images/user.png")
         self.image_user_yes = Image(source="Images/user_validate.png")
@@ -368,36 +364,9 @@ class Table(Widget):
             self.remove_widget(fils)
         self.initialisation(self.size)
 
-class TableApp(App):
-    def __init__(self, **kwargs):
-        super(TableApp, self).__init__(**kwargs)
-        self.table = Table()
-
-    def build(self):
-        Clock.schedule_interval(self.table.update, 1.0 / 60.0)
-        return self.table
-
-    def on_start(self):
-        self.table.initialisation(self.root_window)
-        t1 = threading.Thread(target=self.table.server.run_server)
-        t1.daemon = True
-        t1.start()
-
-    def on_quit(self):
-        if self.table.menu_mode :
-            exit()
-        else:
-            self.table.menu()
-
-    def on_stop(self):
-        # from GenerateurRapport import GenerateurRapport
-        # configuration = Configuration(PATH)
-        # generateur = GenerateurRapport()
-        # configuration.config_generateur(generateur)
-        # generateur.generation(self.table)
-        self.table.logger.close()
-
-
 if __name__ == '__main__':
-        app = TableApp()
-        app.run()
+    app = TableApp()
+    app.run()
+
+
+

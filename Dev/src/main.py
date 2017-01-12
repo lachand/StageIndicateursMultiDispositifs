@@ -135,7 +135,7 @@ class Tablette(Widget):
         self.size = root.size
         label_ip = Label(text='IP serveur :', font_size=40, size=(400, 80),
                          pos=(self.width / 2 - 200, self.height / 2 + 200))
-        ti_ip = TextInput(text="10.42.0.1", font_size=40, size=(400, 60),
+        ti_ip = TextInput(text="127.0.0.1", font_size=40, size=(400, 60),
                           pos=(self.width / 2 - 200, self.height / 2 + 140), on_text_validate=self.initialisation, multiline = False)
         label_port = Label(text='Port serveur :', font_size=40, size=(400, 80),
                            pos=(self.width / 2 - 200, self.height / 2 + 60))
